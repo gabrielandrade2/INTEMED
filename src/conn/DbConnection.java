@@ -7,9 +7,10 @@ import java.sql.Connection;
 public class DbConnection {
 	
 	//private String path = "jdbc:mysql://localhost:3306/irdischarge";
-	private String path = "jdbc:mysql://localhost:3306/intemed";
+//	private String path = "jdbc:mysql://localhost:3306/intemed";
+	private String path = "jdbc:mysql://pucpr-br-intemed.cewey8isjmxh.us-west-2.rds.amazonaws.com:3306/intemed";
 	private String usuario = "root";
-	private String password = "root";
+	private String password = "#int3m3d#";
 	private static DbConnection conexao = null;
 	private Connection conn = null;
 

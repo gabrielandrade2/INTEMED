@@ -55,9 +55,19 @@ public class Tagger{
 		return text;
 	}
 
-	public String sentencaRapidMiner (String sentenca)
+	public String sentencaRapidMiner (String sentencaEntrada)
 	{
-		sentenca=preProccessText(sentenca);
+		String[] sentencas = cogroo.sentDetect(sentencaEntrada);
+		String sentenca="";
+                for (String sentencaSFN : sentencas) {
+			List<Token> tokens = processCogroo(sentencaSFN);
+                        if(!temFraseNegativa(sentencaSFN))
+                        {
+                            sentenca=sentenca+sentencaSFN;
+                
+                        }
+                }
+                sentenca=preProccessText(sentenca);
 		//Tokeniza sentença
 		SentenceCogroo sc = new SentenceCogroo(sentenca);
 		cogroo.tokenizer(sc);

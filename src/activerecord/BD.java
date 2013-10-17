@@ -195,13 +195,13 @@ public class BD extends ActiveRecord {
 		PreparedStatement ps = null;
 		try{
 			if(idConjunto == 0 && idElemento == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+");");
+				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+") order by previa desc;");
 			else if(idConjunto == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+");");
+				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+") order by previa desc;");
 			else if(idElemento == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idConjunto="+idConjunto+");");
+				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idConjunto="+idConjunto+") order by previa desc;");
 			else
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+" AND idConjunto="+idConjunto+");");
+				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+" AND idConjunto="+idConjunto+") order by previa desc;");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				Regra r = new Regra();
@@ -554,7 +554,7 @@ public class BD extends ActiveRecord {
 					int idTexto2=res.getInt("idTexto");
 					if(idTextoAnt!=idTexto2)
 					{
-//						insereRapidMiner(trechosDistintos, idExecucao, idArquivo, idUsuario, idTexto);
+						insereRapidMiner(trechosDistintos, idExecucao, idArquivo, idUsuario, idTexto);
 						idTextoAnt=idTexto2;
 					}
 					l.add(t);
@@ -616,7 +616,7 @@ public class BD extends ActiveRecord {
 			List<String> trechosDistintosDeUmResultado = 
 					selectDistinctTrechoEncontradoDeUmResultado(idExecucao, idArquivo, idUsuario,idTexto);
 			PreparedStatement psResultado = (PreparedStatement) con.prepareStatement(
-"SELECT texto FROM textos WHERE idTexto="+idTexto+";");
+"SELECT texto FROM textos WHERE idTexto="+idTexto+" and idArquivo="+idArquivo+" and idUsuario="+idUsuario+ ";");
 			ResultSet res = psResultado.executeQuery();
 			while(res.next()){
 				String td="";
@@ -629,6 +629,7 @@ public class BD extends ActiveRecord {
 					td = trechosDistintosDeUmResultado.get(i);
 					td=td.trim();
 					textoAuxiliar=textoAuxiliar.replace(td, td.replace(" ", "_"));
+					textoAuxiliar=textoAuxiliar.replace(td.replace(" ", "_")+" ",td.replace(" ", "_")+"_SIM ");
 				}
 				for(int i=0;i<trechosDistintos.size();i++)
 				{
@@ -636,12 +637,12 @@ public class BD extends ActiveRecord {
 					td=td.trim();
 					if(!textoAuxiliar.contains(td.replace(" ", "_")))
 					{
-						textoAuxiliar=textoAuxiliar.concat(" NAO_"+td.replace(" ", "_"));
+						textoAuxiliar=textoAuxiliar.concat(" "+td.replace(" ", "_")+"_NAO");
 					}
 				}
 				PreparedStatement ps2 = null;
 				ps2 = (PreparedStatement) con.prepareStatement(
-				"INSERT into textoRapidMiner(idtexto,texto) values ("+idTexto+", '"+textoAuxiliar+"');");
+				"INSERT into textosRapidMiner(idtexto,texto) values ("+idTexto+", '"+textoAuxiliar+"');");
 				boolean erro = ps2.execute();
 				erro = false;
 			}
