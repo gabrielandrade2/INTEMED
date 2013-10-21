@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import br.gpri.controle.Principal;
 
 /**
- *
+ *a
  * @author sikeira
  */
 public class JanelaCadastroUsuario extends javax.swing.JFrame {

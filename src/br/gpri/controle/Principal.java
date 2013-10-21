@@ -9,7 +9,7 @@ public class Principal{
 }
 
 /*Rodar no MYSQL
-
+..
 create table arquivos(
 idUsuario int,
 idArquivo int,

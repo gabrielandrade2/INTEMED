@@ -14,12 +14,13 @@ public class ControleLogin extends Variaveis {
 
 	private JanelaLogin Janela;
 	
-		
+		//
 	public ControleLogin(){
 		Janela = new JanelaLogin();
 		Janela.BotaoCadastro.addActionListener(Cadastro);
 		Janela.BotaoLogin.addActionListener(Login);
 		Janela.setLocationRelativeTo(null);
+		Janela.getRootPane().setDefaultButton(Janela.BotaoLogin);
 	}
 
 	public void abreJanela(){

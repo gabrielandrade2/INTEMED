@@ -44,7 +44,8 @@ public class ControleArquivo extends Variaveis {
 	public void abreJanela(){
 		Janela.setVisible(true);
 	}
-	
+
+        //
 	public void fechaJanela(){
 		Janela.setVisible(false);
 		Janela.dispose();

@@ -26,11 +26,11 @@ public class ControleCadastroRegra extends Variaveis{
 	List<Subregra> subregras;
 	List<String> textos = new ArrayList<String>();
 	
-		
+	//	
 	public ControleCadastroRegra(boolean botao, Integer textonumero){
 		linha=0;
 		linha = textonumero;
-		System.out.println(linha);
+		
 		numTextos = BD.getNumTextos(idUsuario, idArquivo);
 		
 		Janela = new JanelaCadastroRegra();
@@ -39,10 +39,11 @@ public class ControleCadastroRegra extends Variaveis{
 		
 		if(botao == true)
 			Janela.CRBotaoExecutar.addActionListener(this.Executar);
-		else
+		else{
 			Janela.CRBotaoExecutar.setName( "Ok");
 			Janela.CRBotaoExecutar.setText("OK");
 			Janela.CRBotaoExecutar.addActionListener(this.Ok);	
+		}
 		
 		Janela.CRBotaoVoltar.addActionListener(this.Voltar);
 		Janela.BotaoGerarRegra1.addActionListener(this.GerarRegra);

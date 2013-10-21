@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import br.gpri.janelas.JanelaCadastroUsuario;
 
 public class ControleCadastroUsuario extends Variaveis {
-	
+	//
 	private String nome;
 	private String email;
 	private String usuario;

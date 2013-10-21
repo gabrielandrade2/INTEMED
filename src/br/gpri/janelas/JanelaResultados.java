@@ -11,7 +11,7 @@ package br.gpri.janelas;
 public class JanelaResultados extends javax.swing.JFrame {
 
     /**
-     * Creates new form JanelaResultados
+     *Creates new form JanelaResultados
      */
     public JanelaResultados() {
         initComponents();

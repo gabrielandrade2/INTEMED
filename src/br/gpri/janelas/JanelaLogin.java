@@ -11,7 +11,6 @@ public class JanelaLogin extends javax.swing.JFrame{
     }
 
       private void initComponents() {
-
         UsuarioField = new javax.swing.JTextField();
         PasswordField = new javax.swing.JPasswordField();
         jLabel1 = new javax.swing.JLabel();

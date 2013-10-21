@@ -3,7 +3,7 @@
 package br.gpri.janelas;
 
 /**
- *
+ *a
  * @author sikeira
  */
 public class JanelaErro extends javax.swing.JFrame {

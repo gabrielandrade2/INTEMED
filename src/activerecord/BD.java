@@ -1,5 +1,6 @@
 package activerecord;
 import br.gpri.nlp.Tagger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -195,13 +196,13 @@ public class BD extends ActiveRecord {
 		PreparedStatement ps = null;
 		try{
 			if(idConjunto == 0 && idElemento == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+");");
 			else if(idConjunto == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+");");
 			else if(idElemento == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idConjunto="+idConjunto+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idConjunto="+idConjunto+");");
 			else
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+" AND idConjunto="+idConjunto+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+" AND idConjunto="+idConjunto+");");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				Regra r = new Regra();
@@ -439,7 +440,7 @@ public class BD extends ActiveRecord {
 	public List<String> selectTextos(int idUsuario, int idArquivo){
 		List<String> textos = new ArrayList<String>();
 		try{
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT texto from textos WHERE idUsuario="+idUsuario+" AND idArquivo="+idArquivo+";");
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT texto from textos WHERE idUsuario="+idUsuario+" AND idArquivo="+idArquivo+" ORDER BY idTexto;");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				String texto;
@@ -519,27 +520,33 @@ public class BD extends ActiveRecord {
 	
 
 	
-	public List<List<TrechoEncontrado>> selectResultados(int idExecucao, int idArquivo, int idUsuario){
+	public List<Resultados> selectResultados(int idExecucao, int idArquivo, int idUsuario){
 		List<String> trechosDistintos = selectDistinctTrechoEncontrado(idExecucao, idArquivo, idUsuario);
-		List<List<TrechoEncontrado>> lista = new ArrayList<List<TrechoEncontrado>>();
+		List<Resultados> lista = new ArrayList<Resultados>();
+		
+		List<String> textos = selectTextos(idUsuario, idArquivo);
+		
 		int idTexto =-1;
 		int idTextoAnt=-1;
 		boolean once = true;
 		try{
-		PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT * FROM resultados WHERE idExecucao="+idExecucao+" ORDER BY idTexto;");
+		PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT * FROM resultados JOIN textos on resultados.idTexto = textos.idTexto WHERE idExecucao="+idExecucao+" ORDER BY resultados.idTexto;");
 		ResultSet res = ps.executeQuery();
-		List<TrechoEncontrado> l = new ArrayList<TrechoEncontrado>();
+		Resultados ResultadoTexto = new Resultados();
 				while(res.next()){
 					if(once){
 						idTexto = res.getInt("idTexto");
 						once = false;
 					}
 					if(!(res.getInt("idTexto") == idTexto)){
-						lista.add(l);
-						l = new ArrayList<TrechoEncontrado>();
+						lista.add(ResultadoTexto);
+						ResultadoTexto = new Resultados();
 						idTexto = res.getInt("idTexto");
-						}
-						
+					}
+					
+					ResultadoTexto.setTexto(res.getString("texto")); //Adiciona texto no objeto resultado
+					ResultadoTexto.setIsEncontrado(res.getBoolean("isEncontrado")); //Verifica se é resultado encontrado ou não
+					
 					TrechoEncontrado t = new TrechoEncontrado();
 					if(res.getInt("isSubregra") == 1){
 						Subregra s = selectSubRegra(res.getInt("idRegra"), res.getInt("idSubregra"));
@@ -557,7 +564,7 @@ public class BD extends ActiveRecord {
 //						insereRapidMiner(trechosDistintos, idExecucao, idArquivo, idUsuario, idTexto);
 						idTextoAnt=idTexto2;
 					}
-					l.add(t);
+					ResultadoTexto.addTrecho(t);
 				}
 				
 			}
@@ -576,7 +583,7 @@ public class BD extends ActiveRecord {
 			List<String> lista = new ArrayList<String>();
 			try{
 				PreparedStatement psResultado = (PreparedStatement) con.prepareStatement(
-				"SELECT count(*) as a, trechoencontrado FROM resultados WHERE idExecucao="+idExecucao+" group by trechoencontrado having a>1 order by a;");
+				"SELECT distinct(trechoencontrado) FROM resultados WHERE idExecucao="+idExecucao+";");
 				ResultSet res = psResultado.executeQuery();
 				while(res.next()){
 					lista.add(res.getString("trechoEncontrado"));
@@ -595,7 +602,7 @@ public class BD extends ActiveRecord {
 		List<String> lista = new ArrayList<String>();
 		try{
 			PreparedStatement psResultado = (PreparedStatement) con.prepareStatement(
-			"SELECT distinct(trechoencontrado) FROM resultados WHERE idExecucao="+idExecucao+" and idTexto="+idTexto+" order by length(trechoencontrado) desc;");
+			"SELECT distinct(trechoencontrado) FROM resultados WHERE idExecucao="+idExecucao+" and idTexto="+idTexto+";");
 			ResultSet res = psResultado.executeQuery();
 			while(res.next()){
 				lista.add(res.getString("trechoEncontrado"));
@@ -616,7 +623,7 @@ public class BD extends ActiveRecord {
 			List<String> trechosDistintosDeUmResultado = 
 					selectDistinctTrechoEncontradoDeUmResultado(idExecucao, idArquivo, idUsuario,idTexto);
 			PreparedStatement psResultado = (PreparedStatement) con.prepareStatement(
-"SELECT texto FROM textos WHERE idTexto="+idTexto+" and idArquivo="+idArquivo+" and idUsuario="+idUsuario+ ";");
+"SELECT texto FROM textos WHERE idTexto="+idTexto+";");
 			ResultSet res = psResultado.executeQuery();
 			while(res.next()){
 				String td="";
@@ -629,7 +636,6 @@ public class BD extends ActiveRecord {
 					td = trechosDistintosDeUmResultado.get(i);
 					td=td.trim();
 					textoAuxiliar=textoAuxiliar.replace(td, td.replace(" ", "_"));
-					textoAuxiliar=textoAuxiliar.replace(td.replace(" ", "_")+" ",td.replace(" ", "_")+"_SIM ");
 				}
 				for(int i=0;i<trechosDistintos.size();i++)
 				{
@@ -637,12 +643,12 @@ public class BD extends ActiveRecord {
 					td=td.trim();
 					if(!textoAuxiliar.contains(td.replace(" ", "_")))
 					{
-						textoAuxiliar=textoAuxiliar.concat(" "+td.replace(" ", "_")+"_NAO");
+						textoAuxiliar=textoAuxiliar.concat(" NAO_"+td.replace(" ", "_"));
 					}
 				}
 				PreparedStatement ps2 = null;
 				ps2 = (PreparedStatement) con.prepareStatement(
-				"INSERT into textosRapidMiner(idtexto,texto) values ("+idTexto+", '"+textoAuxiliar+"');");
+				"INSERT into textoRapidMiner(idtexto,texto) values ("+idTexto+", '"+textoAuxiliar+"');");
 				boolean erro = ps2.execute();
 				erro = false;
 			}
@@ -653,7 +659,9 @@ public class BD extends ActiveRecord {
 		return true;
 	}
 
-	public boolean insertResultados(int idTexto, List<TrechoEncontrado> encontrados, int idExecucao){
+	public boolean insertResultados(Resultados ResultadoTexto, int idTexto, int idExecucao){
+		
+		List<TrechoEncontrado> encontrados = ResultadoTexto.getTrechos();
 		boolean erro = true;
 		
 		for(int i=0; i<encontrados.size(); i++){
@@ -667,18 +675,18 @@ public class BD extends ActiveRecord {
 						Subregra sr = t.getSubregra();
 						int idSubregra = sr.getId();
 						int idRegra = sr.getIdRegra();
-						ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto, idExecucao, trechoEncontrado, idRegra, idSubregra,isSubregra) values ("+idTexto+","+idExecucao+",'"+trecho+"',"+idRegra+","+idSubregra+",1);");
+						ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto, idExecucao, trechoEncontrado, idRegra, idSubregra,isSubregra, isEncontrado) values ("+idTexto+","+idExecucao+",'"+trecho+"',"+idRegra+","+idSubregra+",1,1);");
 				}
 				else
 				{
 				if(t.hasRegra()){
 					Regra r = t.getRegra();
 					int idRegra = r.getId();
-					ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto, idExecucao, trechoEncontrado, idRegra,isSubregra) values ("+idTexto+","+idExecucao+",'"+trecho+"',"+idRegra+",0);");
+					ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto, idExecucao, trechoEncontrado, idRegra,isSubregra, isEncontrado) values ("+idTexto+","+idExecucao+",'"+trecho+"',"+idRegra+",0,1);");
 				}
 				
 				else
-					ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto, idExecucao, trechoEncontrado) values ("+idTexto+","+idExecucao+",'Nada Encontrado');");
+					ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto, idExecucao, trechoEncontrado, isEncontrado) values ("+idTexto+","+idExecucao+",'Nada Encontrado',0);");
 				}
 				 erro = ps.execute();
 				 erro = false;
@@ -862,5 +870,22 @@ public class BD extends ActiveRecord {
 			comentario="Erro Banco de Dados";
 		}
 		return comentario;
+	}
+	
+	public int selectidSR(int idResultado){
+		int idSubregra=0;
+		try{
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT idSubregra from resultados WHERE id="+idResultado+";");
+			ResultSet res = ps.executeQuery();
+			while(res.next()){
+				idSubregra = res.getInt("idSubregra");
+			}
+		}
+		
+		catch(SQLException e){
+			e.printStackTrace();
+			idSubregra=0;
+		}
+		return idSubregra;
 	}
 }

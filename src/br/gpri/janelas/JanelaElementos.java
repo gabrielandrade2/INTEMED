@@ -1,7 +1,7 @@
 package br.gpri.janelas;
 
 /**
- *
+ *a
  * @author sikeira
  */
 public class JanelaElementos extends javax.swing.JFrame {

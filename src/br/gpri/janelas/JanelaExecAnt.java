@@ -5,7 +5,7 @@
 package br.gpri.janelas;
 
 /**
- *
+ *a
  * @author sikeira
  */
 public class JanelaExecAnt extends javax.swing.JFrame {

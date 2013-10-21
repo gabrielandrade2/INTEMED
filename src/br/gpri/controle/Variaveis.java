@@ -8,7 +8,7 @@ public class Variaveis {
 	protected static ControleExcel Excel = new ControleExcel();
 	protected static BD BD = new BD();
 	protected static int idArquivo;
-		
+	//	
 	protected static ControleArquivo JanelaArquivo;
 	protected static ControleCadastroRegra JanelaCadRegra;
 	protected static ControleCadastroUsuario JanelaCadUsuario;

@@ -9,19 +9,22 @@ public class ControleComentario extends Variaveis{
 
 	private JanelaComentario Janela;
 	Integer id;
+	Integer idSubregra;
 	String comentario;
 	public ControleComentario(int idResultado){
 		Janela = new JanelaComentario();
 		Janela.BotaoOk.addActionListener(this.Ok);
 		Janela.TextoComentario.setEditable(true);
 		id = idResultado;
+		idSubregra=BD.selectidSR(id);
 		Janela.TextoComentario.setText(BD.selectComentario(id));
 		Janela.setLocationRelativeTo(null);
 	}
 	
 	public void abreJanela(){
 		Janela.setVisible(true);
-	}
+	//
+        }
 	
 	public void fechaJanela(){
 		Janela.setVisible(false);

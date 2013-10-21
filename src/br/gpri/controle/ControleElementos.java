@@ -11,7 +11,7 @@ import br.gpri.janelas.JanelaElementos;
 import activerecord.*;
 
 public class ControleElementos extends Variaveis{
-	
+	//
 	private JanelaElementos Janela;
 	private Regra Regra;
 	private Subregra Subregra;

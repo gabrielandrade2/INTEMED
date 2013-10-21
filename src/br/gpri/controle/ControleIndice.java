@@ -11,7 +11,7 @@ import br.gpri.janelas.JanelaIndices;
 import activerecord.*;
 
 public class ControleIndice extends Variaveis{
-	
+	//
 	private JanelaIndices Janela;
 	private Regra Regra;
 	private Subregra Subregra;

@@ -14,7 +14,7 @@ public class JanelaArquivo extends javax.swing.JFrame {
 
     /**
      * Creates new form Arquivo
-     */
+     ;*/
     public JanelaArquivo() {
         initComponents();
     }
