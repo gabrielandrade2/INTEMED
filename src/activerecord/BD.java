@@ -554,7 +554,7 @@ public class BD extends ActiveRecord {
 					int idTexto2=res.getInt("idTexto");
 					if(idTextoAnt!=idTexto2)
 					{
-						insereRapidMiner(trechosDistintos, idExecucao, idArquivo, idUsuario, idTexto);
+//						insereRapidMiner(trechosDistintos, idExecucao, idArquivo, idUsuario, idTexto);
 						idTextoAnt=idTexto2;
 					}
 					l.add(t);
@@ -576,7 +576,7 @@ public class BD extends ActiveRecord {
 			List<String> lista = new ArrayList<String>();
 			try{
 				PreparedStatement psResultado = (PreparedStatement) con.prepareStatement(
-				"SELECT distinct(trechoencontrado) FROM resultados WHERE idExecucao="+idExecucao+";");
+				"SELECT count(*) as a, trechoencontrado FROM resultados WHERE idExecucao="+idExecucao+" group by trechoencontrado having a>1 order by a;");
 				ResultSet res = psResultado.executeQuery();
 				while(res.next()){
 					lista.add(res.getString("trechoEncontrado"));
@@ -595,7 +595,7 @@ public class BD extends ActiveRecord {
 		List<String> lista = new ArrayList<String>();
 		try{
 			PreparedStatement psResultado = (PreparedStatement) con.prepareStatement(
-			"SELECT distinct(trechoencontrado) FROM resultados WHERE idExecucao="+idExecucao+" and idTexto="+idTexto+";");
+			"SELECT distinct(trechoencontrado) FROM resultados WHERE idExecucao="+idExecucao+" and idTexto="+idTexto+" order by length(trechoencontrado) desc;");
 			ResultSet res = psResultado.executeQuery();
 			while(res.next()){
 				lista.add(res.getString("trechoEncontrado"));

@@ -31,7 +31,9 @@ public class Tagger{
 	}
 	
 	public String preProccessText(String text){
-		//Adiciona espaço para acronimos no começo/final frase
+            //coloca um espa�o entre um ponto seguido de letra
+                text = retiraPontoLetra(text);
+            //Adiciona espaço para acronimos no começo/final frase
 		text = espacaTexto(text);
 		//Expande as datas	
 		text = expandirData(text);
@@ -60,7 +62,7 @@ public class Tagger{
 		String[] sentencas = cogroo.sentDetect(sentencaEntrada);
 		String sentenca="";
                 for (String sentencaSFN : sentencas) {
-			List<Token> tokens = processCogroo(sentencaSFN);
+//			List<Token> tokens = processCogroo(sentencaSFN);
                         if(!temFraseNegativa(sentencaSFN))
                         {
                             sentenca=sentenca+sentencaSFN;
@@ -176,7 +178,9 @@ public class Tagger{
 						}
 					}
 				}
+                                if (igual) break;
 			}
+                        if (igual) break;
 		}
 		
 		Regra r = new Regra();
@@ -398,6 +402,18 @@ public class Tagger{
 		
 	}
 	
+	private String retiraPontoLetra(String text){
+		String aux="";
+                aux=text.replaceAll("\\.",". ");
+                String pattern="(\\.)( )([0-9])";
+                text=aux.replaceAll(pattern,"$1$3");
+                System.out.println("retiraPontoLetra");
+                System.out.println(text);
+                System.out.println("<><><><><><><><><><><><><><<><><>< ");
+                return text;
+//		return text.replaceAll("[.][a-z]", "$1").replaceAll("[.][A-Z]", "$1");
+		
+	}
 	private String retiraPontuacao(String text){
 		
 		return text.replaceAll("[-!?><=%;/#,@*]", " ");
