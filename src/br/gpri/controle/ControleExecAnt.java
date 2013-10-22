@@ -13,7 +13,7 @@ import activerecord.TrechoEncontrado;
 import br.gpri.janelas.JanelaExecAnt;
 
 public class ControleExecAnt extends Variaveis{
-	//
+	
 	private JanelaExecAnt Janela;
 	List<Execucao> execucoes;
 

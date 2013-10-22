@@ -38,7 +38,7 @@ public class ControleResultados extends Variaveis{
 	public ControleResultados(List<Resultados> listaResultados){
 		linha = 0;
 		this.listaResultados = listaResultados;
-		//
+		
 		Janela = new JanelaResultados();
 		Janela.setLocationRelativeTo(null);
 		

@@ -530,35 +530,48 @@ public class BD extends ActiveRecord {
 		int idTextoAnt=-1;
 		boolean once = true;
 		try{
-		PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT * FROM resultados JOIN textos on resultados.idTexto = textos.idTexto WHERE idExecucao="+idExecucao+" ORDER BY resultados.idTexto;");
+		PreparedStatement ps = (PreparedStatement) con.prepareStatement(
+ "select exe.id, exe.idusuario,exe.idarquivo,exe.idarquivo,"
+ + "res.idtexto,res.idexecucao,res.id,res.trechoencontrado,res.idregra,res.idsubregra, res.issubregra, "
+ + "res.comentario, res.isEncontrado, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento,reg.dataregra,reg.previa,reg.texto,"
+ + "reg.idtexto,reg.idarquivo,sub.idregra,sub.idsubregra,sub.dataregra,sub.previa,sub.texto, txt.texto "
+ + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra,"
+     + " intemed.regras reg, intemed.textos txt, intemed.execucoes exe "
+     + "where res.idregra=reg.idregra and res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
+     + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and exe.id="+idExecucao
+     + " order by res.idtexto , res.trechoencontrado;");
 		ResultSet res = ps.executeQuery();
 		Resultados ResultadoTexto = new Resultados();
 				while(res.next()){
 					if(once){
-						idTexto = res.getInt("idTexto");
+						idTexto = res.getInt("res.idTexto");
 						once = false;
 					}
-					if(!(res.getInt("idTexto") == idTexto)){
+					if(!(res.getInt("res.idTexto") == idTexto)){
 						lista.add(ResultadoTexto);
 						ResultadoTexto = new Resultados();
-						idTexto = res.getInt("idTexto");
+						idTexto = res.getInt("res.idTexto");
 					}
 					
-					ResultadoTexto.setTexto(res.getString("texto")); //Adiciona texto no objeto resultado
-					ResultadoTexto.setIsEncontrado(res.getBoolean("isEncontrado")); //Verifica se é resultado encontrado ou não
+					ResultadoTexto.setTexto(res.getString("txt.texto")); //Adiciona texto no objeto resultado
+					ResultadoTexto.setIsEncontrado(res.getBoolean("res.isEncontrado")); //Verifica se é resultado encontrado ou não
 					
 					TrechoEncontrado t = new TrechoEncontrado();
-					if(res.getInt("isSubregra") == 1){
-						Subregra s = selectSubRegra(res.getInt("idRegra"), res.getInt("idSubregra"));
+					if(res.getInt("res.isSubregra") == 1){
+						Subregra s = selectSubRegra(res.getInt("res.idRegra"), res.getInt("res.idSubregra"));
 						t.setSubregra(s);
 						t.setIsSubregra(true);
 					}
-					Regra r = selectRegra(idUsuario, res.getInt("idRegra"));
+                                    Regra r = new Regra();
+       				r.setId(res.getInt("res.idRegra"));
+				r.setPrevia(res.getString("reg.previa"));
+				r.setTexto(res.getString("reg.texto"));
+		
 					t.setRegra(r);
-					t.setTrechoEncontrado(res.getString("trechoEncontrado"));
-					t.setidResultado(res.getInt("id"));
+					t.setTrechoEncontrado(res.getString("res.trechoEncontrado"));
+					t.setidResultado(res.getInt("res.id"));
 //executar médoto passando a lista e o idtexto para que este método faça os edits e inserts
-					int idTexto2=res.getInt("idTexto");
+					int idTexto2=res.getInt("res.idTexto");
 					if(idTextoAnt!=idTexto2)
 					{
 //						insereRapidMiner(trechosDistintos, idExecucao, idArquivo, idUsuario, idTexto);

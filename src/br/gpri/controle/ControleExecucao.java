@@ -19,7 +19,7 @@ import br.gpri.janelas.JanelaExecucao;
 import br.gpri.nlp.Tagger;
 
 public class ControleExecucao extends Variaveis{
-//
+
 	private JanelaExecucao Janela; 
 	private List<Elemento> elementos = new ArrayList<Elemento>();
 	private List<Conjunto> conjuntos = new ArrayList<Conjunto>();
