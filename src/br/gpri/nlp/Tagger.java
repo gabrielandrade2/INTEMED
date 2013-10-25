@@ -13,6 +13,7 @@ import activerecord.TrechoEncontrado;
 import br.usp.pcs.lta.cogroo.entity.Token;
 import br.usp.pcs.lta.cogroo.entity.impl.runtime.SentenceCogroo;
 import br.usp.pcs.lta.cogroo.util.viewer.CogrooWrapper;
+import br.usp.pcs.lta.cogroo.entity.impl.runtime.MorphologicalTag;
 
 public class Tagger{
 	
@@ -21,6 +22,7 @@ public class Tagger{
 
 	private List<Acronimo> acronimos;
 	public List <String> frasesNegativas;
+        public static MorphologicalTag mtADJ_F_S=null;
 	
 	public Tagger(BD BD){
 
@@ -104,7 +106,27 @@ public class Tagger{
 		//Realiza POS_tagging
 		cogroo.tagger(sc);
 		tokens = sc.getTokens();
-		return tokens;
+                //flair - est� como PRP_ e devia ser ADJ_F_S
+                //peritoneal - est� como PRP_ e devia ser ADJ_F_S
+                 MorphologicalTag mt=null;
+                for (int i=0;i<tokens.size();i++)
+                {
+                    Token tk = tokens.get(i);
+                    if (tk.getMorphologicalTag().toString().equals("ADJ_F_S_"))
+                    {
+                        mtADJ_F_S=tk.getMorphologicalTag();
+                    }
+                }
+                
+                for (int i=0;i<tokens.size();i++)
+                {
+                    Token tk = tokens.get(i);
+                    if(tk.getLexeme().equals("flair")||tk.getLexeme().equals("peritoneal"))
+                    {
+                        tk.setMorphologicalTag(mtADJ_F_S);
+                    }
+                }
+                return tokens;
 	}
 	public boolean temFraseNegativa(String s)
 	{
@@ -265,7 +287,7 @@ public class Tagger{
 	public List<TrechoEncontrado> executaRegra(String texto_sumario, List<Regra> regras){
 		
 		List<TrechoEncontrado> encontrados = new ArrayList<TrechoEncontrado>();
-		
+		String trechosEncontradosConcatenados="";
 		//Executa operações de PRÉ-PROCESSAMENTO
 		String text_sumario = preProccessText(texto_sumario);
 		//Separa texto em sentenças
@@ -304,7 +326,10 @@ public class Tagger{
 						//
 						//Se toda a comparação for igual, se tiver subregras testa
 						//Se tudo der certo, adiona na lista de encontrados e limpa a string trecho
-						if(igual){
+						if (trechosEncontradosConcatenados.contains(trecho))
+                                                        {igual=false;}      
+                                                if(igual){
+                                                               
 //							boolean testeSubregra = true;
 							boolean encontrou_algum_sr = true;
 							List<TrechoEncontrado> subregrasEncontrados = new ArrayList<TrechoEncontrado>();
@@ -320,7 +345,8 @@ public class Tagger{
 								t.setIsSubregra(false);
 								t.setHasRegra(true);
 								t.setTrechoEncontrado(trecho);
-								trecho="";
+								trechosEncontradosConcatenados = trechosEncontradosConcatenados+trecho;
+                                                                trecho="";
 								encontrados.add(t);
 								igual = false;
 								
