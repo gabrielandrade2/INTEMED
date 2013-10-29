@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import activerecord.Acronimo;
+import activerecord.Dicionario;
 import activerecord.BD;
 import activerecord.Regra;
 import activerecord.Subregra;
@@ -21,6 +22,7 @@ public class Tagger{
 	public final int conjuntoTeste = 1;
 
 	private List<Acronimo> acronimos;
+        private Dicionario tabelamt;
 	public List <String> frasesNegativas;
         public static MorphologicalTag mtADJ_F_S=null;
 	
@@ -30,6 +32,7 @@ public class Tagger{
 
 		acronimos =  BD.selectAcronimos();
 		frasesNegativas = BD.selectFrasesNegativas();
+                tabelamt=BD.selectTabelaMT();
 	}
 	
 	public String preProccessText(String text){
@@ -124,6 +127,17 @@ public class Tagger{
                     if(tk.getLexeme().equals("flair")||tk.getLexeme().equals("peritoneal"))
                     {
                         tk.setMorphologicalTag(mtADJ_F_S);
+                    }
+                }
+                for (int i=0;i<tokens.size();i++)
+                {
+                    Token tk = tokens.get(i);
+                    for(int j=0;j<tabelamt.tamanhoLista();j++){
+                        if(tk.getLexeme().equals(tabelamt.getpalavra(j))){
+                            MorphologicalTag m = new MorphologicalTag(tabelamt.getMT(j));
+                            tk.setMorphologicalTag(m); 
+                        }
+                    
                     }
                 }
                 return tokens;

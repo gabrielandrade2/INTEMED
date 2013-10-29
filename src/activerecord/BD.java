@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
+import activerecord.Dicionario;
 import com.mysql.jdbc.PreparedStatement;
 
 public class BD extends ActiveRecord {
@@ -901,5 +901,26 @@ public class BD extends ActiveRecord {
 			idSubregra=0;
 		}
 		return idSubregra;
+	}
+        
+        	
+	public Dicionario selectTabelaMT(){
+		Dicionario tabelamt = new Dicionario();
+		try{
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT * from tabelamt");
+			ResultSet res = ps.executeQuery();
+			while(res.next()){
+				
+                            tabelamt.addpalavra(res.getString("tabela"));
+                            tabelamt.addMT(res.getString("mt"));
+		
+			}
+		}
+		
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	
+		return tabelamt;
 	}
 }
