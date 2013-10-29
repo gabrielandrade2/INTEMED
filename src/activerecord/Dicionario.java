@@ -4,6 +4,8 @@
  */
 package activerecord;
 import java.util.List;
+import java.util.ArrayList;
+
 /**
  *
  * @author sikeira
@@ -12,7 +14,12 @@ public class Dicionario {
  
     private List<String> palavra;
     private List<String> mt;
-    
+    public Dicionario()
+    {
+        this.palavra = new ArrayList<String>();
+        this.mt = new ArrayList<String>();
+
+    }
     public String getpalavra(int i){
         return palavra.get(i);
 }

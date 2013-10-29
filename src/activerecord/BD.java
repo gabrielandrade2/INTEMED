@@ -911,7 +911,7 @@ public class BD extends ActiveRecord {
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				
-                            tabelamt.addpalavra(res.getString("tabela"));
+                            tabelamt.addpalavra(res.getString("palavra"));
                             tabelamt.addMT(res.getString("mt"));
 		
 			}
