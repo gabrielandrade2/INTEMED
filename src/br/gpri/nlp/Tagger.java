@@ -80,7 +80,7 @@ public class Tagger{
 		cogroo.tokenizer(sc);
 
 		//Aplica o NAMEFINDER
-		cogroo.nameFinder(sc);
+// retirado porque estava tirando a "base" do trecho "núcleos da base"		cogroo.nameFinder(sc);
 		
 		//ExpansÃ£o de preposiÃ§Ãµes
 		cogroo.preTagger(sc);
@@ -100,7 +100,7 @@ public class Tagger{
 		cogroo.tokenizer(sc);
 
 		//Aplica o NAMEFINDER
-		cogroo.nameFinder(sc);
+// retirado porque estava tirando a "base" do trecho "núcleos da base"		cogroo.nameFinder(sc);
 		
 		//ExpansÃ£o de preposiÃ§Ãµes
 		cogroo.preTagger(sc);
@@ -163,7 +163,7 @@ public class Tagger{
 		//Separa texto selecionado em palavras
 		SentenceCogroo selecionado = new SentenceCogroo(text_selecionado);
 		cogroo.tokenizer(selecionado);
-		cogroo.nameFinder(selecionado);
+// retirado porque estava tirando a "base" do trecho "núcleos da base"		cogroo.nameFinder(selecionado);
 		cogroo.preTagger(selecionado);
 		List<Token> text_separado = selecionado.getTokens();
 						
@@ -241,7 +241,7 @@ public class Tagger{
 		//Separa texto selecionado em palavras
 		SentenceCogroo selecionado = new SentenceCogroo(text_selecionado);
 		cogroo.tokenizer(selecionado);
-		cogroo.nameFinder(selecionado);
+// retirado porque estava tirando a "base" do trecho "núcleos da base"		cogroo.nameFinder(selecionado);
 		cogroo.preTagger(selecionado);
 		List<Token> text_separado = selecionado.getTokens();
 						

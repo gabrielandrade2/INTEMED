@@ -266,7 +266,7 @@ public class BD extends ActiveRecord {
 		List<Termo> Lista = new ArrayList<Termo>();
 		int idRegra = r.getId();
 		try{
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT * FROM termosregras WHERE idRegra="+idRegra+";");
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT * FROM termosregras WHERE idRegra="+idRegra+" order by idTermo;");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				Termo t = new Termo();
@@ -537,7 +537,7 @@ public class BD extends ActiveRecord {
  + "reg.idtexto,reg.idarquivo,sub.idregra,sub.idsubregra,sub.dataregra,sub.previa,sub.texto, txt.texto "
  + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra,"
      + " intemed.regras reg, intemed.textos txt, intemed.execucoes exe "
-     + "where res.idregra=reg.idregra and res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
+     + "where and res.idregra=reg.idregra and res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
      + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and exe.id="+idExecucao
      + " order by res.idtexto , res.trechoencontrado;");
 		ResultSet res = ps.executeQuery();
@@ -593,11 +593,12 @@ public class BD extends ActiveRecord {
 	
 	
 	public List<String> selectDistinctTrechoEncontrado(int idExecucao, int idArquivo, int idUsuario){
-			List<String> lista = new ArrayList<String>();
+			System.gc();
+                        List<String> lista = new ArrayList<String>();
 			try{
 				PreparedStatement psResultado = (PreparedStatement) con.prepareStatement(
 				"SELECT count(*) a, trechoencontrado FROM intemed.resultados where idexecucao=" +idExecucao+
-                                   " group by trechoencontrado having a>10  order by a;");
+                                   " group by trechoencontrado having a>50  order by a;");
 				ResultSet res = psResultado.executeQuery();
 				while(res.next()){
 					lista.add(res.getString("trechoEncontrado"));
