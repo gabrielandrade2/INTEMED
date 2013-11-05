@@ -28,6 +28,10 @@ public class BD extends ActiveRecord {
 		catch(SQLException e){
 			e.printStackTrace();
 		}
+                
+                catch(NullPointerException e){
+			bdNaoExiste();
+		}
 		return Login;
 			
 	}
@@ -416,7 +420,12 @@ public class BD extends ActiveRecord {
 		
 		catch (SQLException e) {
 			System.out.println("Erro ao efetuar Insert");
-			e.printStackTrace();}
+			e.printStackTrace();
+                }
+                catch(NullPointerException e){
+			bdNaoExiste();
+		}
+                
 		return false;
 		}
 	
@@ -922,5 +931,10 @@ public class BD extends ActiveRecord {
 		}
 	
 		return tabelamt;
+	}
+        
+        	private void bdNaoExiste(){
+		System.out.println("Banco de Dados inexistente!");
+		System.out.println("NullPointerException");
 	}
 }

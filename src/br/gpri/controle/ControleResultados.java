@@ -27,11 +27,13 @@ public class ControleResultados extends Variaveis{
 	int idResult;
 	int idResultSR;
 	private JanelaResultados Janela;
+        
 	private List<Resultados> listaResultados;
 	private List<Resultados> listaResultadosSelecionados;
 	private List<Elemento> elementos;
 	private List<Regra> regras;
 	List<Subregra> subregras;
+        
 	private List<TrechoEncontrado> trechosTextoSelecionadoRegras = new ArrayList<TrechoEncontrado>();
 	private List<TrechoEncontrado> trechosTextoSelecionadoSubregras = new ArrayList<TrechoEncontrado>();
 	
@@ -95,8 +97,6 @@ public class ControleResultados extends Variaveis{
 		Janela.ListaTextos.setLayoutOrientation(JList.VERTICAL);
 		Janela.ListaTextos.addListSelectionListener(this.Textos);
 	
-		geraListaResultados();
-
 		Janela.ListaRegra.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		Janela.ListaRegra.setLayoutOrientation(JList.VERTICAL);
 		Janela.ListaRegra.addListSelectionListener(this.Regras);
@@ -104,6 +104,8 @@ public class ControleResultados extends Variaveis{
 		Janela.ListaSubRegra.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		Janela.ListaSubRegra.setLayoutOrientation(JList.VERTICAL);
 		Janela.ListaSubRegra.addListSelectionListener(this.Subregras);
+                
+                geraListaResultados();
 	}
 	
 	public void abreJanela(){
@@ -264,6 +266,7 @@ public class ControleResultados extends Variaveis{
 				
 		ListSelectionListener Textos = new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent Regras) {
+                            
 				limpaCaixasTexto();
 				Janela.AreaTexto.setText((String) Janela.ListaTextos.getSelectedValue());
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
@@ -271,7 +274,7 @@ public class ControleResultados extends Variaveis{
 					textoSelecionado = 0;
 				}	
 				
-				List<TrechoEncontrado> trechosTextoSelecionado = listaResultados.get(textoSelecionado).getTrechos();
+				List<TrechoEncontrado> trechosTextoSelecionado = listaResultadosSelecionados.get(textoSelecionado).getTrechos();
 				//List<TrechoEncontrado> trechosTextoSelecionado = listaEncontrados.get(textoSelecionado);
 				
 				separaTrechos(trechosTextoSelecionado);
