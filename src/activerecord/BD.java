@@ -196,20 +196,20 @@ public class BD extends ActiveRecord {
 		PreparedStatement ps = null;
 		try{
 			if(idConjunto == 0 && idElemento == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+") group by regras.idregra order by a desc;");
 			else if(idConjunto == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+" AND idElemento="+idElemento+") group by regras.idregra order by a desc;");
 			else if(idElemento == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idConjunto="+idConjunto+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+" AND idConjunto="+idConjunto+") group by regras.idregra order by a desc;");
 			else
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+" AND idConjunto="+idConjunto+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+" AND idElemento="+idElemento+" AND idConjunto="+idConjunto+") group by regras.idregra order by a desc;");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				Regra r = new Regra();
-				r.setId(res.getInt("idRegra"));
+				r.setId(res.getInt("regras.idRegra"));
 				r.setPrevia(res.getString("previa"));
 				r.setTexto(res.getString("texto"));
-				r.setElemento(res.getInt("idElemento"));
+				r.setElemento(res.getInt("regras.idElemento"));
 				r.setConjunto(res.getInt("idConjunto"));
 				Lista.add(r);
 			}
