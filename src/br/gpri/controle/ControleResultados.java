@@ -273,15 +273,20 @@ public class ControleResultados extends Variaveis{
 				if(textoSelecionado == -1){
 					textoSelecionado = 0;
 				}	
-				
+				if(listaResultadosSelecionados.isEmpty()){
+                                 //Provisório
+                                }
+                                
+                                else{
 				List<TrechoEncontrado> trechosTextoSelecionado = listaResultadosSelecionados.get(textoSelecionado).getTrechos();
 				//List<TrechoEncontrado> trechosTextoSelecionado = listaEncontrados.get(textoSelecionado);
-				
+                               
 				separaTrechos(trechosTextoSelecionado);
-				linha = Janela.ListaTextos.getSelectedIndex();
+                                linha = Janela.ListaTextos.getSelectedIndex();
 				Integer l = linha + 1;
 				Janela.NumeroTexto.setText(l.toString());
 				geraListaRegras();
+                                }
 			}	
 		};
 		
