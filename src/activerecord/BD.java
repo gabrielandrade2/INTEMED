@@ -957,6 +957,7 @@ public class BD extends ActiveRecord {
 		System.out.println("Banco de Dados inexistente!");
 		System.out.println("NullPointerException");
 	}
+
                 
         public boolean trocaConjunto(int idRegra, int idUsuario, int idConjunto){
                     
@@ -974,4 +975,5 @@ public class BD extends ActiveRecord {
 		
 		return true;
 	}
+
 }
