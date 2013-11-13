@@ -957,23 +957,4 @@ public class BD extends ActiveRecord {
 		System.out.println("Banco de Dados inexistente!");
 		System.out.println("NullPointerException");
 	}
-
-                
-        public boolean trocaConjunto(int idRegra, int idUsuario, int idConjunto){
-                    
-		try{
-			
-				PreparedStatement ps;
-				ps = (PreparedStatement) con.prepareStatement("UPDATE regras set idConjunto ="+idConjunto+" where idUsuario ="+idUsuario+" AND idRegra="+idRegra+";");
-				ps.execute();
-		    
-		    return false;
-		}
-		catch(SQLException e){
-			e.printStackTrace();
-		}
-		
-		return true;
-	}
-
 }
