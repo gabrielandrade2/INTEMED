@@ -359,7 +359,7 @@ public class Tagger{
 								t.setIsSubregra(false);
 								t.setHasRegra(true);
 								t.setTrechoEncontrado(trecho);
-								trechosEncontradosConcatenados = trechosEncontradosConcatenados+trecho;
+								trechosEncontradosConcatenados = trechosEncontradosConcatenados+trecho+"|";
                                                                 trecho="";
 								encontrados.add(t);
 								igual = false;

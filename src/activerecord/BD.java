@@ -28,6 +28,10 @@ public class BD extends ActiveRecord {
 		catch(SQLException e){
 			e.printStackTrace();
 		}
+                
+                catch(NullPointerException e){
+			bdNaoExiste();
+		}
 		return Login;
 			
 	}
@@ -196,20 +200,20 @@ public class BD extends ActiveRecord {
 		PreparedStatement ps = null;
 		try{
 			if(idConjunto == 0 && idElemento == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+") group by regras.idregra order by a desc;");
 			else if(idConjunto == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+" AND idElemento="+idElemento+") group by regras.idregra order by a desc;");
 			else if(idElemento == 0)
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idConjunto="+idConjunto+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+" AND idConjunto="+idConjunto+") group by regras.idregra order by a desc;");
 			else
-				ps = (PreparedStatement) con.prepareStatement("SELECT idRegra,previa,texto,idElemento,idConjunto FROM regras WHERE (idUsuario="+idUsuario+" AND idElemento="+idElemento+" AND idConjunto="+idConjunto+") order by previa desc;");
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+" AND idElemento="+idElemento+" AND idConjunto="+idConjunto+") group by regras.idregra order by a desc;");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				Regra r = new Regra();
-				r.setId(res.getInt("idRegra"));
+				r.setId(res.getInt("regras.idRegra"));
 				r.setPrevia(res.getString("previa"));
 				r.setTexto(res.getString("texto"));
-				r.setElemento(res.getInt("idElemento"));
+				r.setElemento(res.getInt("regras.idElemento"));
 				r.setConjunto(res.getInt("idConjunto"));
 				Lista.add(r);
 			}
@@ -416,7 +420,12 @@ public class BD extends ActiveRecord {
 		
 		catch (SQLException e) {
 			System.out.println("Erro ao efetuar Insert");
-			e.printStackTrace();}
+			e.printStackTrace();
+                }
+                catch(NullPointerException e){
+			bdNaoExiste();
+		}
+                
 		return false;
 		}
         
@@ -545,16 +554,16 @@ public class BD extends ActiveRecord {
 		int idTextoAnt=-1;
 		boolean once = true;
 		try{
-		PreparedStatement ps = (PreparedStatement) con.prepareStatement(
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(
  "select exe.id, exe.idusuario,exe.idarquivo,exe.idarquivo,"
  + "res.idtexto,res.idexecucao,res.id,res.trechoencontrado,res.idregra,res.idsubregra, res.issubregra, "
  + "res.comentario, res.isEncontrado, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento,reg.dataregra,reg.previa,reg.texto,"
  + "reg.idtexto,reg.idarquivo,sub.idregra,sub.idsubregra,sub.dataregra,sub.previa,sub.texto, txt.texto "
- + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra,"
+ + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra and res.idregra=sub.idregra,"
      + " intemed.regras reg, intemed.textos txt, intemed.execucoes exe "
-     + "where and res.idregra=reg.idregra and res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
+     + "where res.idregra=reg.idregra and res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
      + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and exe.id="+idExecucao
-     + " order by res.idtexto , res.trechoencontrado;");
+     + " order by res.id;");
 		ResultSet res = ps.executeQuery();
 		Resultados ResultadoTexto = new Resultados();
 				while(res.next()){
@@ -571,12 +580,16 @@ public class BD extends ActiveRecord {
 					ResultadoTexto.setTexto(res.getString("txt.texto")); //Adiciona texto no objeto resultado
 					ResultadoTexto.setIsEncontrado(res.getBoolean("res.isEncontrado")); //Verifica se é resultado encontrado ou não
 					
-					TrechoEncontrado t = new TrechoEncontrado();
-					if(res.getInt("res.isSubregra") == 1){
-						Subregra s = selectSubRegra(res.getInt("res.idRegra"), res.getInt("res.idSubregra"));
-						t.setSubregra(s);
-						t.setIsSubregra(true);
-					}
+                                    TrechoEncontrado t = new TrechoEncontrado();
+                                    if(res.getInt("res.isSubregra") == 1){
+                                            Subregra s = new Subregra();
+                                            s.setIdRegra(res.getInt("res.idRegra"));
+                                            s.setId(res.getInt("res.idSubregra"));
+                                            s.setPrevia(res.getString("sub.previa"));
+                                            s.setTexto(res.getString("sub.texto"));
+                                            t.setSubregra(s);
+                                            t.setIsSubregra(true);
+                                    }
                                     Regra r = new Regra();
        				r.setId(res.getInt("res.idRegra"));
 				r.setPrevia(res.getString("reg.previa"));
@@ -585,7 +598,7 @@ public class BD extends ActiveRecord {
 					t.setRegra(r);
 					t.setTrechoEncontrado(res.getString("res.trechoEncontrado"));
 					t.setidResultado(res.getInt("res.id"));
-//executar médoto passando a lista e o idtexto para que este método faça os edits e inserts
+    //executar médoto passando a lista e o idtexto para que este método faça os edits e inserts
 					int idTexto2=res.getInt("res.idTexto");
 					if(idTextoAnt!=idTexto2)
 					{
@@ -940,7 +953,12 @@ public class BD extends ActiveRecord {
 		return tabelamt;
 	}
         
-        	public boolean trocaConjunto(int idRegra, int idUsuario, int idConjunto){
+        	private void bdNaoExiste(){
+		System.out.println("Banco de Dados inexistente!");
+		System.out.println("NullPointerException");
+	}
+                
+        public boolean trocaConjunto(int idRegra, int idUsuario, int idConjunto){
                     
 		try{
 			
@@ -956,6 +974,4 @@ public class BD extends ActiveRecord {
 		
 		return true;
 	}
-	 
-        
 }
