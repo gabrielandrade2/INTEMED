@@ -271,8 +271,10 @@ public class ControleExecucao extends Variaveis{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
-					
+				List<Integer> indiceRegras = pegaSelecaoRegras(); //Verifica os checkbox	
+				JanelaTrocaConj = new ControleTrocaConj(indiceRegras, idUsuario);
+                               
+                                JanelaTrocaConj.abreJanela();
 				}
 			};
 			

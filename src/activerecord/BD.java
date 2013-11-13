@@ -419,6 +419,21 @@ public class BD extends ActiveRecord {
 			e.printStackTrace();}
 		return false;
 		}
+        
+        public boolean insertConjunto(String textoConjunto){
+        
+            try{
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT INTO conjuntos (nomeConjunto) VALUES('"+textoConjunto+"');");		
+			boolean erro = ps.execute();
+			return erro;}
+		
+		catch (SQLException e) {
+			System.out.println("Erro ao efetuar Insert");
+			e.printStackTrace();}
+		return false;
+            
+        }
+        
 	
 	public String selectTexto(int idUsuario, int idArquivo, int idTexto){
 		String texto = new String();
@@ -924,4 +939,23 @@ public class BD extends ActiveRecord {
 	
 		return tabelamt;
 	}
+        
+        	public boolean trocaConjunto(int idRegra, int idUsuario, int idConjunto){
+                    
+		try{
+			
+				PreparedStatement ps;
+				ps = (PreparedStatement) con.prepareStatement("UPDATE regras set idConjunto ="+idConjunto+" where idUsuario ="+idUsuario+" AND idRegra="+idRegra+";");
+				ps.execute();
+		    
+		    return false;
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	 
+        
 }
