@@ -15,6 +15,7 @@ import activerecord.Regra;
 import activerecord.Resultados;
 import activerecord.Subregra;
 import activerecord.TrechoEncontrado;
+import static br.gpri.controle.Variaveis.BD;
 import br.gpri.janelas.JanelaExecucao;
 import br.gpri.nlp.Tagger;
 
@@ -243,13 +244,13 @@ public class ControleExecucao extends Variaveis{
 						}
 						
 						else{
+							ResultadoTexto.setTrechos(encontrados);
 							ResultadoTexto.setIsEncontrado(true);
 						}
 						
 						
 						ResultadoTexto.setTexto(texto);
-						ResultadoTexto.setTrechos(encontrados);
-												
+																		
 						listaResultados.add(ResultadoTexto);
 						
 						//textos.add(texto);
@@ -271,8 +272,10 @@ public class ControleExecucao extends Variaveis{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
-					
+				List<Integer> indiceRegras = pegaSelecaoRegras(); //Verifica os checkbox	
+				JanelaTrocaConj = new ControleTrocaConj(indiceRegras, idUsuario);
+                               
+                                JanelaTrocaConj.abreJanela();
 				}
 			};
 			

@@ -18,6 +18,7 @@ public class Variaveis {
 	protected static ControleResultados JanelaResultados;
 	protected static ControleExecAnt JanelaExecAnt;
 	protected static ControleComentario JanelaComentario;
-	
+	protected static ControleTrocaConj JanelaTrocaConj;
+        
 	}
 

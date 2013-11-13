@@ -18,6 +18,7 @@ public class ControleCadastroUsuario extends Variaveis {
 		Janela.CBotaoOk.addActionListener(OK);
 		Janela.CBotaoVoltar.addActionListener(Voltar);
 		Janela.setLocationRelativeTo(null);
+                Janela.getRootPane().setDefaultButton(Janela.CBotaoOk);
 	}
 	
 	public void abreJanela(){

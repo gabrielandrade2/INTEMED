@@ -28,6 +28,10 @@ public class BD extends ActiveRecord {
 		catch(SQLException e){
 			e.printStackTrace();
 		}
+                
+                catch(NullPointerException e){
+			bdNaoExiste();
+		}
 		return Login;
 			
 	}
@@ -416,9 +420,29 @@ public class BD extends ActiveRecord {
 		
 		catch (SQLException e) {
 			System.out.println("Erro ao efetuar Insert");
-			e.printStackTrace();}
+			e.printStackTrace();
+                }
+                catch(NullPointerException e){
+			bdNaoExiste();
+		}
+                
 		return false;
 		}
+        
+        public boolean insertConjunto(String textoConjunto){
+        
+            try{
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT INTO conjuntos (nomeConjunto) VALUES('"+textoConjunto+"');");		
+			boolean erro = ps.execute();
+			return erro;}
+		
+		catch (SQLException e) {
+			System.out.println("Erro ao efetuar Insert");
+			e.printStackTrace();}
+		return false;
+            
+        }
+        
 	
 	public String selectTexto(int idUsuario, int idArquivo, int idTexto){
 		String texto = new String();
@@ -530,7 +554,7 @@ public class BD extends ActiveRecord {
 		int idTextoAnt=-1;
 		boolean once = true;
 		try{
-		PreparedStatement ps = (PreparedStatement) con.prepareStatement(
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(
  "select exe.id, exe.idusuario,exe.idarquivo,exe.idarquivo,"
  + "res.idtexto,res.idexecucao,res.id,res.trechoencontrado,res.idregra,res.idsubregra, res.issubregra, "
  + "res.comentario, res.isEncontrado, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento,reg.dataregra,reg.previa,reg.texto,"
@@ -574,7 +598,7 @@ public class BD extends ActiveRecord {
 					t.setRegra(r);
 					t.setTrechoEncontrado(res.getString("res.trechoEncontrado"));
 					t.setidResultado(res.getInt("res.id"));
-//executar médoto passando a lista e o idtexto para que este método faça os edits e inserts
+    //executar médoto passando a lista e o idtexto para que este método faça os edits e inserts
 					int idTexto2=res.getInt("res.idTexto");
 					if(idTextoAnt!=idTexto2)
 					{
@@ -928,4 +952,27 @@ public class BD extends ActiveRecord {
 	
 		return tabelamt;
 	}
+        
+        	private void bdNaoExiste(){
+		System.out.println("Banco de Dados inexistente!");
+		System.out.println("NullPointerException");
+	}
+                
+          public boolean trocaConjunto(int idRegra, int idUsuario, int idConjunto){
+                    
+		try{
+			
+				PreparedStatement ps;
+				ps = (PreparedStatement) con.prepareStatement("UPDATE regras set idConjunto ="+idConjunto+" where idUsuario ="+idUsuario+" AND idRegra="+idRegra+";");
+				ps.execute();
+		    
+		    return false;
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+
 }
