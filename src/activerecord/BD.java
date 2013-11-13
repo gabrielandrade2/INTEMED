@@ -535,11 +535,11 @@ public class BD extends ActiveRecord {
  + "res.idtexto,res.idexecucao,res.id,res.trechoencontrado,res.idregra,res.idsubregra, res.issubregra, "
  + "res.comentario, res.isEncontrado, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento,reg.dataregra,reg.previa,reg.texto,"
  + "reg.idtexto,reg.idarquivo,sub.idregra,sub.idsubregra,sub.dataregra,sub.previa,sub.texto, txt.texto "
- + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra,"
+ + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra and res.idregra=sub.idregra,"
      + " intemed.regras reg, intemed.textos txt, intemed.execucoes exe "
-     + "where and res.idregra=reg.idregra and res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
+     + "where res.idregra=reg.idregra and res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
      + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and exe.id="+idExecucao
-     + " order by res.idtexto , res.trechoencontrado;");
+     + " order by res.id;");
 		ResultSet res = ps.executeQuery();
 		Resultados ResultadoTexto = new Resultados();
 				while(res.next()){
@@ -556,16 +556,20 @@ public class BD extends ActiveRecord {
 					ResultadoTexto.setTexto(res.getString("txt.texto")); //Adiciona texto no objeto resultado
 					ResultadoTexto.setIsEncontrado(res.getBoolean("res.isEncontrado")); //Verifica se é resultado encontrado ou não
 					
-					TrechoEncontrado t = new TrechoEncontrado();
-					if(res.getInt("res.isSubregra") == 1){
-						Subregra s = selectSubRegra(res.getInt("res.idRegra"), res.getInt("res.idSubregra"));
-						t.setSubregra(s);
-						t.setIsSubregra(true);
-					}
-                                    Regra r = new Regra();
-       				r.setId(res.getInt("res.idRegra"));
-				r.setPrevia(res.getString("reg.previa"));
-				r.setTexto(res.getString("reg.texto"));
+                                            TrechoEncontrado t = new TrechoEncontrado();
+                                            if(res.getInt("res.isSubregra") == 1){
+                                                Subregra s = new Subregra();
+                                                s.setIdRegra(res.getInt("res.idRegra"));
+                                                s.setId(res.getInt("res.idSubregra"));
+                                                s.setPrevia(res.getString("sub.previa"));
+                                                s.setTexto(res.getString("sub.texto"));
+                                                t.setSubregra(s);
+                                                t.setIsSubregra(true);
+                                            }
+                                        Regra r = new Regra();
+                                    r.setId(res.getInt("res.idRegra"));
+                                    r.setPrevia(res.getString("reg.previa"));
+                                    r.setTexto(res.getString("reg.texto"));
 		
 					t.setRegra(r);
 					t.setTrechoEncontrado(res.getString("res.trechoEncontrado"));
@@ -574,7 +578,7 @@ public class BD extends ActiveRecord {
 					int idTexto2=res.getInt("res.idTexto");
 					if(idTextoAnt!=idTexto2)
 					{
-						insereRapidMiner(trechosDistintos, idExecucao, idArquivo, idUsuario, idTexto2);
+//						insereRapidMiner(trechosDistintos, idExecucao, idArquivo, idUsuario, idTexto2);
 						idTextoAnt=idTexto2;
 					}
 					ResultadoTexto.addTrecho(t);

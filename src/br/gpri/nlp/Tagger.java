@@ -285,7 +285,9 @@ public class Tagger{
 						}
 					}
 				}
-			}
+                                if (igual) break;
+                        }
+                        if (igual) break;
 		}
 		
 		Subregra s = new Subregra();
@@ -302,7 +304,7 @@ public class Tagger{
 		
 		List<TrechoEncontrado> encontrados = new ArrayList<TrechoEncontrado>();
 		String trechosEncontradosConcatenados="";
-		//Executa operações de PRÉ-PROCESSAMENTO
+                //Executa operações de PRÉ-PROCESSAMENTO
 		String text_sumario = preProccessText(texto_sumario);
 		//Separa texto em sentenças
 		String[] sentencas = cogroo.sentDetect(text_sumario);
@@ -345,15 +347,13 @@ public class Tagger{
                                                 if(igual){
                                                                
 //							boolean testeSubregra = true;
-							boolean encontrou_algum_sr = true;
 							List<TrechoEncontrado> subregrasEncontrados = new ArrayList<TrechoEncontrado>();
-							if(r.hasSubregra())
+                                                        if(r.hasSubregra())
 							{
 								List<Subregra> subregras = r.getSubregras();
-								executaSubRegra(subregras, tokens, trecho, subregrasEncontrados);
+								executaSubRegra(subregras, tokens, trecho, subregrasEncontrados,i);
 							}
 //							if(testeSubregra){ trocado pela linha de baixo para manter os loops de regra e subregra parecidos
-							if(encontrou_algum_sr){
 								TrechoEncontrado t = new TrechoEncontrado();
 								t.setRegra(r);
 								t.setIsSubregra(false);
@@ -368,7 +368,6 @@ public class Tagger{
 								if(!subregrasEncontrados.isEmpty())
 									for(int k=0; k<subregrasEncontrados.size(); k++)
 										encontrados.add(subregrasEncontrados.get(k));
-							}
 							
 					}
 				}		
@@ -378,15 +377,16 @@ public class Tagger{
 		return encontrados;	
 	}
 	
-	private boolean executaSubRegra(List<Subregra> subregras, List<Token> tokens, String trecho, List<TrechoEncontrado> subregraEncontrados){
+	private boolean executaSubRegra(List<Subregra> subregras, List<Token> tokens, String trecho, List<TrechoEncontrado> subregraEncontrados,int i_token_regra){
 		//inicio alteração Fernando.
 		//	testeSubregra = executaSubRegra(r.getSubregras()); //Testa as subregras, retorna true se ela validarem a regra
 		boolean igual_sr = true;
-		
 		//Executa cada uma das subregras
 		boolean encontrou_algum_sr = false;
 		for (Subregra sr : subregras){
-			
+                        boolean encontrou_esta_sr=false;
+                        TrechoEncontrado t = new TrechoEncontrado();
+        		int diferencaPosicaoTokenRegraTokenSubRegra=99999;
 			igual_sr = false;
 			
 			
@@ -401,7 +401,8 @@ public class Tagger{
 					catch(IndexOutOfBoundsException e){
 						c = "";
 					}
-					String d = sr.getTermo(j_sr).getTermo();                
+					String d = sr.getTermo(j_sr).getTermo();    
+//                                        System.out.println("i_sr->"+i_sr+" j_sr->"+j_sr+" c->"+c+" d->"+d+" trecho->"+trecho+" tokens.get(i_sr+j_sr).getLexeme()->"+tokens.get(i_sr+j_sr).getLexeme());
 					if(c.contentEquals(d) && !trecho.contains((tokens.get(i_sr+j_sr).getLexeme()))){
 						 
 						igual_sr = true;
@@ -414,19 +415,28 @@ public class Tagger{
 					}
 				}
 					//
-				if(igual_sr){
-					TrechoEncontrado t = new TrechoEncontrado();
-					t.setSubregra(sr);
-					t.setIsSubregra(true);
-					t.setTrechoEncontrado(trecho_sr);
-					trecho_sr = "";
-					subregraEncontrados.add(t);
-					encontrou_algum_sr=true;
-					
+				if(igual_sr)
+                                {
+                                        if(diferencaPosicaoTokenRegraTokenSubRegra>(i_sr-i_token_regra)*(i_sr-i_token_regra))
+                                        {
+                                            diferencaPosicaoTokenRegraTokenSubRegra=(i_sr-i_token_regra)*(i_sr-i_token_regra);
+                                        
+                                            System.out.println("trecho_sr->"+trecho_sr+" diferencaPosicaoTokenRegraTokenSubRegra->"+diferencaPosicaoTokenRegraTokenSubRegra);
+	
+                                            t.setSubregra(sr);
+                                            t.setIsSubregra(true);
+                                            t.setTrechoEncontrado(trecho_sr);
+                                            trecho_sr = "";
+                                            encontrou_algum_sr=true;
+                                            encontrou_esta_sr=true;
+                                        }
 						
+                                }
 			}
-			}
-
+                        if(encontrou_esta_sr)
+                        {
+                            subregraEncontrados.add(t);
+                        }
 		}
 		return encontrou_algum_sr;
 	}
