@@ -23,10 +23,10 @@ public class JanelaExecucao extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
+        TabelaExecucao = new javax.swing.JTable();
         DropDownlistboxConjunto = new javax.swing.JComboBox();
         BotaoTrocar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        TabelaExecucao = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         BotaoOk = new javax.swing.JButton();

@@ -766,6 +766,25 @@ public class BD extends ActiveRecord {
 		}
 		return id;
 	}
+        
+        public boolean removeExecucao(int idExecucao){
+            boolean erro = false;
+            try{
+                        PreparedStatement ps = (PreparedStatement) con.prepareStatement("DELETE from resultados where idExecucao="+idExecucao+";");
+                        ps.execute();
+                        System.out.println("Resultados removidos com sucesso");
+                        
+                        ps = (PreparedStatement) con.prepareStatement("DELETE from execucoes where idExecucao="+idExecucao+";");
+			ps.execute();
+                        System.out.println("Execução removida com sucesso");
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+			System.out.println("Falha ao remover execução");
+                        erro = true;
+		}
+		return erro;
+        }
 	
 	public boolean insertRegrasExecucao(int idExecucao, List<Regra> regrasSelecionadas){
 		boolean erro = false;
@@ -785,6 +804,25 @@ public class BD extends ActiveRecord {
 		return erro;
 	}
 	
+        public List<Regra> selectRegrasExecucao(int idExecucao){
+                List<Regra> listaRegras = new ArrayList<Regra>();
+		try{
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT previa, texto FROM regrasexecucao INNER JOIN regras ON regrasexecucao.idRegra = regras. idRegra WHERE idExecucao="+idExecucao+";");
+			ResultSet res = ps.executeQuery();
+			while(res.next()){
+                                Regra r = new Regra();
+				r.setPrevia(res.getString("previa"));
+                                r.setTexto(res.getString("texto"));
+                                listaRegras.add(r);
+			}
+		}
+		
+		catch(SQLException e){
+			e.printStackTrace();
+                        return null;
+		}
+                return listaRegras;
+        }
 	
 	private int selectMaxIdResultados(int idUsuario, int idArquivo, int idTexto){
 		int maxId = 0;
@@ -805,7 +843,7 @@ public class BD extends ActiveRecord {
 	public List<Execucao> selectExecucoes(int idUsuario){
 		List<Execucao> execucoes = new ArrayList<Execucao>();
 		try{
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT id,dataExecucao,nomeArquivo,execucoes.idArquivo from execucoes JOIN arquivos ON execucoes.idArquivo = arquivos.idArquivo WHERE execucoes.idUsuario="+idUsuario+";");
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT id,dataExecucao,nomeArquivo,execucoes.idArquivo,execucoes.descricao from execucoes JOIN arquivos ON execucoes.idArquivo = arquivos.idArquivo WHERE execucoes.idUsuario="+idUsuario+";");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				Execucao e = new Execucao();
@@ -813,6 +851,7 @@ public class BD extends ActiveRecord {
 				e.setData(res.getString("dataExecucao"));
 				e.setArquivo(res.getString("nomeArquivo"));
 				e.setIdArquivo(res.getInt("idArquivo"));
+                                e.setDescricao(res.getString("descricao")); //Inserir no BD alter table execucoes add column descricao text;
 				execucoes.add(e);
 			}
 		}
@@ -827,14 +866,16 @@ public class BD extends ActiveRecord {
 	public List<Execucao> selectExecucoes(int idUsuario, int idArquivo){
 	List<Execucao> execucoes = new ArrayList<Execucao>();
 		try{
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT id,dataExecucao,nomeArquivo,execucoes.idArquivo from execucoes JOIN arquivos ON execucoes.idArquivo = arquivos.idArquivo WHERE execucoes.idUsuario="+idUsuario+" AND execucoes.idArquivo="+idArquivo+";");
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT id,dataExecucao,nomeArquivo,execucoes.idArquivo,execucoes.descricao from execucoes JOIN arquivos ON execucoes.idArquivo = arquivos.idArquivo WHERE execucoes.idUsuario="+idUsuario+" AND execucoes.idArquivo="+idArquivo+";");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				Execucao e = new Execucao();
 				e.setId(res.getInt("id"));
+                                e.setIdArquivo(res.getInt("idArquivo"));
 				e.setData(res.getString("dataExecucao"));
 				e.setArquivo(res.getString("nomeArquivo"));
-				e.setIdArquivo(res.getInt("idArquivo"));
+				e.setDescricao(res.getString("descricao"));  //Inserir no BD alter table execucoes add column descricao text;
+                                
 				execucoes.add(e);
 			}
 		}
@@ -974,5 +1015,7 @@ public class BD extends ActiveRecord {
 		
 		return true;
 	}
+          
+          
 
 }

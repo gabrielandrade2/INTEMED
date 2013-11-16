@@ -8,19 +8,28 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import activerecord.Execucao;
+import activerecord.Regra;
 import activerecord.Resultados;
 import activerecord.TrechoEncontrado;
 import br.gpri.janelas.JanelaExecAnt;
+import br.gpri.janelas.JanelaRegras;
+import java.beans.PropertyChangeListener;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JTable;
 
 public class ControleExecAnt extends Variaveis{
 	
 	private JanelaExecAnt Janela;
-	List<Execucao> execucoes;
-
+	private List<Execucao> execucoes;
+        private JCheckBox[] checkbox;
+        private int idArquivo = -1;
+        
 	public ControleExecAnt(){
 		Janela = new JanelaExecAnt();
-		execucoes = BD.selectExecucoes(idUsuario);
-		geraListaExecucoes(execucoes);
+		geraListaExecucoes();
 		
 		Janela.ABotaoOk.addActionListener(this.OK);
 		Janela.ABotaoVoltar.addActionListener(this.Volta);
@@ -28,9 +37,9 @@ public class ControleExecAnt extends Variaveis{
 	}
 	
 	public ControleExecAnt(int idArquivo){
+                this.idArquivo = idArquivo;
 		Janela = new JanelaExecAnt();
-		execucoes = BD.selectExecucoes(idUsuario, idArquivo);
-		geraListaExecucoes(execucoes);
+		geraListaExecucoes();
 		
 		Janela.ABotaoOk.addActionListener(this.OK);
 		Janela.ABotaoVoltar.addActionListener(this.Volta);
@@ -38,25 +47,54 @@ public class ControleExecAnt extends Variaveis{
 	}
 	
 	
-	private void geraListaExecucoes(List<Execucao> execucoes){
-		DefaultTableModel tabela = new DefaultTableModel();
-		tabela.addColumn("Data / Hora");
+	private void geraListaExecucoes(){
+            if(this.idArquivo < 0)
+                execucoes = BD.selectExecucoes(idUsuario);
+            else
+                execucoes = BD.selectExecucoes(idUsuario,this.idArquivo);
+            
+                       
+            DefaultTableModel tabela = new DefaultTableModel() { 
+                
+                  public boolean isCellEditable(int row, int column) {
+                        if(column == 0 || column == 4)
+                            return true;
+                        else
+                            return false;
+                   }
+                  //Deixa a Tabela não editável
+                  
+                  public Class<?> getColumnClass(int column) {  
+                            if (column == 0)  
+                                return Boolean.class;  
+                            return super.getColumnClass(column);  
+                        }  };
+                    checkbox = new JCheckBox[execucoes.size()];
+                    for(int i=0; i<checkbox.length;i++){
+                            checkbox[i]=new JCheckBox();
+                 }	
+                
+                  
+		tabela.addColumn("Excluir");
+                tabela.addColumn("Data / Hora");
 		tabela.addColumn("Arquivo");
-		
-		if(execucoes.isEmpty()){
+                tabela.addColumn("Descrição"); //Inserir no BD alter table execucoes add column descricao text;
+                tabela.addColumn("Regras");
+        
+                if(execucoes.isEmpty()){
 			Object[] o = {"Nenhuma Execução",""};
 			tabela.addRow(o);
 			}
 		else{
-			for(int i=0; i<execucoes.size(); i++){
-				Execucao e = execucoes.get(i);
-				Object[] o = {e.getData(),e.getArquivo()};
+			for(Execucao e:execucoes){
+				Object[] o = {false,e.getData(),e.getArquivo(),e.getDescricao(),"Regras"};
 				tabela.addRow(o);
 			}
 		}
 		
 		Janela.tabelaExec.setModel(tabela);
 		Janela.tabelaExec.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                ButtonColumn buttonColumn = new ButtonColumn(Janela.tabelaExec, Regras, 4);
 	}
 	
 	public void abreJanela(){
@@ -92,11 +130,62 @@ public class ControleExecAnt extends Variaveis{
     			JanelaResultados = new ControleResultados(listaResultados);
     			JanelaResultados.abreJanela();
     		}
-        	
-        	
-        	
         }
-	};  
+	};
+        
+        ActionListener Excluir = new ActionListener() {
+        public void actionPerformed(ActionEvent Excluir) {
+            
+           for(int i=0; i<Janela.tabelaExec.getModel().getRowCount(); i++){
+               boolean r = (Boolean) Janela.tabelaExec.getModel().getValueAt(i,0);
+               if(r){
+                   int idExecucao = execucoes.get(i).getId();
+                   BD.removeExecucao(idExecucao);
+               }
+           }
+            geraListaExecucoes();
+	}
+    };
+        
+  Action Regras = new AbstractAction()
+{
+    public void actionPerformed(ActionEvent e)
+    {
+        JTable table = (JTable)e.getSource();
+        JanelaRegras JanelaRegras = new JanelaRegras();
+        
+        //int linhaModelo = Integer.valueOf( e.getActionCommand() ); //Linha selecionada na
+        int linhaModelo = Janela.tabelaExec.getSelectedRow();
+        Execucao a = execucoes.get(linhaModelo);
+        List<Regra> listaRegras = BD.selectRegrasExecucao(a.getId());
+        
+        DefaultTableModel tabela = new DefaultTableModel();
+        tabela.addColumn("Prévia");
+        tabela.addColumn("Texto Original");
+        for(Regra r : listaRegras){
+            Object[] o = {r.getPrevia(),r.getTexto()};
+            tabela.addRow(o);
+        }
+        JanelaRegras.TabelaRegras.setModel(tabela);
+        JanelaRegras.TabelaRegras.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        JanelaRegras.LabelExecucao.setText("Execução: "+a.getData());
+        JanelaRegras.LabelDescricao.setText("Descrição: "+a.getDescricao());
+        
+        JanelaRegras.setLocationRelativeTo(null);
+        JanelaRegras.setVisible(true);
+    }
+};
+
+Action delete = new AbstractAction()
+{
+    public void actionPerformed(ActionEvent e)
+    {
+        JTable table = (JTable)e.getSource();
+        int modelRow = Integer.valueOf( e.getActionCommand() );
+        ((DefaultTableModel)table.getModel()).removeRow(modelRow);
+    }
+};
 	
 	
 }

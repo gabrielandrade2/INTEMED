@@ -18,6 +18,7 @@ import activerecord.TrechoEncontrado;
 import static br.gpri.controle.Variaveis.BD;
 import br.gpri.janelas.JanelaExecucao;
 import br.gpri.nlp.Tagger;
+import javax.swing.JTable;
 
 public class ControleExecucao extends Variaveis{
 
@@ -42,7 +43,7 @@ public class ControleExecucao extends Variaveis{
 	}
 	
 	private void criaTabela(){
-		int indexConjunto = Janela.DropDownlistboxConjunto.getSelectedIndex();
+            	int indexConjunto = Janela.DropDownlistboxConjunto.getSelectedIndex();
 		int indexElemento = Janela.DropDownlistboxElementos.getSelectedIndex();
 		
 		int idConjunto = 0;
@@ -54,17 +55,24 @@ public class ControleExecucao extends Variaveis{
 		
 		regras = BD.selectRegraExecucao(idUsuario,idConjunto,idElemento);
 		DefaultTableModel tabela = new DefaultTableModel() {  
-	    @Override  
-	    public Class<?> getColumnClass(int column) {  
-	        if (column == 0)  
-	            return Boolean.class;  
-	        return super.getColumnClass(column);  
-	    }  };
-	checkbox = new JCheckBox[regras.size()];
-	for(int i=0; i<checkbox.length;i++){
-		checkbox[i]=new JCheckBox();
-		
-	}
+                        public boolean isCellEditable(int row, int column) {
+                            if(column == 0) 
+                                return true;
+                            else
+                                return false;
+                        }  
+                        //Deixa a Tabela não editável
+                        
+                        public Class<?> getColumnClass(int column) {  
+                            if (column == 0)  
+                                return Boolean.class;  
+                            return super.getColumnClass(column);  
+                        }  };
+                    checkbox = new JCheckBox[regras.size()];
+                    for(int i=0; i<checkbox.length;i++){
+                            checkbox[i]=new JCheckBox();
+
+                    }
 	
 	tabela.addColumn("Seleção");
 	tabela.addColumn("Texto");
