@@ -195,10 +195,13 @@ public class BD extends ActiveRecord {
 		return Lista;
 }
 	
-	public List<Regra> selectRegraExecucao(int idUsuario, int idConjunto, int idElemento){
+	public List<Regra> selectRegras(int idUsuario, int idConjunto, int idElemento, int idExecucao){ // Select das regras para fazer a execução
 		List<Regra> Lista = new ArrayList<Regra>();
 		PreparedStatement ps = null;
 		try{
+                    
+                    //Não entendi o porque do count(*) a e do porque do produto cartesiano com a tabela termosregras **Gabriel
+                    if(idExecucao == 0){
 			if(idConjunto == 0 && idElemento == 0)
 				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+") group by regras.idregra order by a desc;");
 			else if(idConjunto == 0)
@@ -207,6 +210,17 @@ public class BD extends ActiveRecord {
 				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+" AND idConjunto="+idConjunto+") group by regras.idregra order by a desc;");
 			else
 				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regras, termosregras WHERE (regras.idregra=termosregras.idregra and idUsuario="+idUsuario+" AND idElemento="+idElemento+" AND idConjunto="+idConjunto+") group by regras.idregra order by a desc;");
+                    }
+                    else
+                       if(idConjunto == 0 && idElemento == 0)
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regrasexecucao inner join regras on regrasexecucao.idRegra = regras.idRegra where idUsuario = "+idUsuario+" and idExecucao ="+idExecucao+" group by regras.idregra order by a desc;");
+			else if(idConjunto == 0)
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regrasexecucao inner join regras on regrasexecucao.idRegra = regras.idRegra where idUsuario = "+idUsuario+" and idExecucao ="+idExecucao+" and idElemento = "+idElemento+" group by regras.idregra order by a desc;");
+			else if(idElemento == 0)
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regrasexecucao inner join regras on regrasexecucao.idRegra = regras.idRegra where idUsuario = "+idUsuario+" and idExecucao ="+idExecucao+" and idConjunto = "+idConjunto+" group by regras.idregra order by a desc;");
+			else
+				ps = (PreparedStatement) con.prepareStatement("SELECT count(*) a, regras.idRegra,previa,texto,regras.idElemento,idConjunto FROM regrasexecucao inner join regras on regrasexecucao.idRegra = regras.idRegra where idUsuario = "+idUsuario+" and idExecucao ="+idExecucao+" and idConjunto = "+idConjunto+" and idElemento = "+idElemento+"group by regras.idregra order by a desc;");
+                                        
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				Regra r = new Regra();
@@ -807,13 +821,13 @@ public class BD extends ActiveRecord {
         public List<Regra> selectRegrasExecucao(int idExecucao){
                 List<Regra> listaRegras = new ArrayList<Regra>();
 		try{
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT previa, texto FROM regrasexecucao INNER JOIN regras ON regrasexecucao.idRegra = regras. idRegra WHERE idExecucao="+idExecucao+";");
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT previa,texto FROM regrasexecucao INNER JOIN regras ON regrasexecucao.idRegra = regras. idRegra WHERE idExecucao="+idExecucao+";");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
                                 Regra r = new Regra();
-				r.setPrevia(res.getString("previa"));
-                                r.setTexto(res.getString("texto"));
-                                listaRegras.add(r);
+                                r.setPrevia(res.getString("previa"));
+				r.setTexto(res.getString("texto"));
+				listaRegras.add(r);
 			}
 		}
 		

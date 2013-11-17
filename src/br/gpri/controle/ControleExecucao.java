@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 
 import activerecord.Conjunto;
 import activerecord.Elemento;
+import activerecord.Execucao;
 import activerecord.Regra;
 import activerecord.Resultados;
 import activerecord.Subregra;
@@ -25,6 +26,7 @@ public class ControleExecucao extends Variaveis{
 	private JanelaExecucao Janela; 
 	private List<Elemento> elementos = new ArrayList<Elemento>();
 	private List<Conjunto> conjuntos = new ArrayList<Conjunto>();
+        private List<Execucao> execucoes = new ArrayList<Execucao>();
 	private List<Regra> regras;
 	private JCheckBox[] checkbox;
 	
@@ -38,6 +40,7 @@ public class ControleExecucao extends Variaveis{
 		
 		buscaDropDownElementos();
 		buscaDropDownConjuntos();
+                buscaDropDownExecucoes();
 		
 		criaTabela();
 	}
@@ -45,15 +48,19 @@ public class ControleExecucao extends Variaveis{
 	private void criaTabela(){
             	int indexConjunto = Janela.DropDownlistboxConjunto.getSelectedIndex();
 		int indexElemento = Janela.DropDownlistboxElementos.getSelectedIndex();
+                //int indexExecucao = Janela.DropDownlistboxExecucao.getSelectedIndex();
 		
 		int idConjunto = 0;
 		int idElemento = 0;
+                int idExecucao = 0;
 		if(indexConjunto != 0)
 			idConjunto = conjuntos.get(indexConjunto).getId();
 		if(indexElemento != 0)
 			idElemento = elementos.get(indexElemento).getId();
+               // if(indexExecucao != 0)
+                 //       idExecucao = execucoes.get(indexExecucao).getId();
 		
-		regras = BD.selectRegraExecucao(idUsuario,idConjunto,idElemento);
+		regras = BD.selectRegras(idUsuario,idConjunto,idElemento,idExecucao);
 		DefaultTableModel tabela = new DefaultTableModel() {  
                         public boolean isCellEditable(int row, int column) {
                             if(column == 0) 
@@ -140,6 +147,27 @@ public class ControleExecucao extends Variaveis{
 			Janela.DropDownlistboxConjunto.setSelectedIndex(0);
 	}
 	
+        private void buscaDropDownExecucoes(){
+            execucoes = BD.selectExecucoes(idUsuario); //Separar as execuções por arquivo????
+            //execucoes = BD.selectExecucoes(idUsuario, idArquivo);
+            Execucao nenhuma = new Execucao();
+            nenhuma.setId(0);
+            nenhuma.setData("Nenhuma");
+            nenhuma.setDescricao("Nenhuma");
+            nenhuma.setArquivo("Nenhuma");
+            execucoes.add(nenhuma);
+            
+            DefaultComboBoxModel lista = new DefaultComboBoxModel();
+            for(int i=0; i<elementos.size(); i++){
+			lista.addElement(elementos.get(i).getNome());
+		}
+            
+         /*   Janela.DropDownlistboxExecucao.setModel(lista);
+            Janela.DropDownlistboxExecucao.addActionListener(this.DropDownListBoxExec);
+            if(!execucoes.isEmpty())
+                Janela.DropDownlistboxExec.setSelectedIndex(0);*/
+        }
+        
 	public void abreJanela(){
 		Janela.setVisible(true);
 	}
@@ -303,4 +331,15 @@ public class ControleExecucao extends Variaveis{
 				criaTabela();
 			}
 		};
+                
+                ActionListener DropDownListBoxExec = new ActionListener() {
+			public void actionPerformed(ActionEvent DropDownListBox) {
+				/*int item = Janela.DropDownlistboxExecucao.getSelectedIndex();
+				String tooltip = execucoes.get(item).getDescricao();
+				Janela.DropDownlistboxExecucao.setToolTipText(tooltip);*/
+				                                                               
+				criaTabela();
+			}
+		};
+
 }
