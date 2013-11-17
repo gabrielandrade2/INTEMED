@@ -144,7 +144,7 @@ public class ControleIndice extends Variaveis{
 						System.out.println("Regra inserida no Banco de Dados com sucesso");
 				}
 				
-				JanelaCadRegra.geraListaRegras();
+				JanelaCadRegra.geraListaRegras(true);
 				fechaJanela();		
 			}
 		};

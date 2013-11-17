@@ -54,7 +54,7 @@ public class ControleCadastroRegra extends Variaveis{
 		Janela.TextoSumario1.setWrapStyleWord(true);
 		inicializaListas();
 		buscaDropDownElementos();
-		geraListaRegras();
+		geraListaRegras(false);
 		Janela.ListaRegras.setSelectedIndex(0);
 		Janela.ListaTexto.setSelectedIndex(linha);
 		
@@ -108,7 +108,7 @@ public class ControleCadastroRegra extends Variaveis{
 			Janela.DropDownListBox3.setSelectedIndex(0);
 	}
 	
-	protected void geraListaRegras(){
+	protected void geraListaRegras(boolean selecionarUltima){
 		regras = BD.selectRegraCadastro(linha,idArquivo,idUsuario);
 		DefaultListModel lista = new DefaultListModel();
 		if(regras.isEmpty())
@@ -119,8 +119,14 @@ public class ControleCadastroRegra extends Variaveis{
 	
 		Janela.ListaRegras.setModel(lista);
 		Janela.ListaRegras.updateUI();
-		Janela.ListaRegras.setSelectedIndex(0);
-		Janela.ListaRegras.ensureIndexIsVisible(0);
+                if(selecionarUltima){
+                    Janela.ListaRegras.setSelectedIndex(Janela.ListaRegras.getModel().getSize()-1);
+                    Janela.ListaRegras.ensureIndexIsVisible(Janela.ListaRegras.getModel().getSize()-1);
+                }
+                else{
+                    Janela.ListaRegras.setSelectedIndex(0);
+                    Janela.ListaRegras.ensureIndexIsVisible(0);
+                }
 		atualizaSubRegras();
 	}
 	
@@ -239,7 +245,7 @@ public class ControleCadastroRegra extends Variaveis{
 			Integer l = linha+1;
 			Janela.Indice.setText(l.toString());
 			System.out.println(linha);
-			geraListaRegras();
+			geraListaRegras(false);
 
 		}
 			
