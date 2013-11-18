@@ -57,8 +57,8 @@ public class ControleExecucao extends Variaveis{
 			idConjunto = conjuntos.get(indexConjunto).getId();
 		if(indexElemento != 0)
 			idElemento = elementos.get(indexElemento).getId();
-               // if(indexExecucao != 0)
-                 //       idExecucao = execucoes.get(indexExecucao).getId();
+                if(indexExecucao != 0)
+                       idExecucao = execucoes.get(indexExecucao).getId();
 		
 		regras = BD.selectRegras(idUsuario,idConjunto,idElemento,idExecucao);
 		DefaultTableModel tabela = new DefaultTableModel() {  
@@ -155,7 +155,7 @@ public class ControleExecucao extends Variaveis{
             nenhuma.setData("Nenhuma");
             nenhuma.setDescricao("Nenhuma");
             nenhuma.setArquivo("Nenhuma");
-            execucoes.add(nenhuma);
+            execucoes.add(0,nenhuma);
             
             DefaultComboBoxModel lista = new DefaultComboBoxModel();
             for(int i=0; i<execucoes.size(); i++){
@@ -334,9 +334,9 @@ public class ControleExecucao extends Variaveis{
                 
                 ActionListener DropDownListBoxExec = new ActionListener() {
 			public void actionPerformed(ActionEvent DropDownListBox) {
-				/*int item = Janela.DropDownlistboxExecucao.getSelectedIndex();
+				int item = Janela.DropDownlistboxExecucao.getSelectedIndex();
 				String tooltip = execucoes.get(item).getDescricao();
-				Janela.DropDownlistboxExecucao.setToolTipText(tooltip);*/
+				Janela.DropDownlistboxExecucao.setToolTipText(tooltip);
 				                                                               
 				criaTabela();
 			}

@@ -857,7 +857,7 @@ public class BD extends ActiveRecord {
 	public List<Execucao> selectExecucoes(int idUsuario){
 		List<Execucao> execucoes = new ArrayList<Execucao>();
 		try{
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT id,dataExecucao,nomeArquivo,execucoes.idArquivo,execucoes.descricao from execucoes JOIN arquivos ON execucoes.idArquivo = arquivos.idArquivo WHERE execucoes.idUsuario="+idUsuario+";");
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT id,dataExecucao,nomeArquivo,execucoes.idArquivo,execucoes.descricao from execucoes JOIN arquivos ON execucoes.idArquivo = arquivos.idArquivo WHERE execucoes.idUsuario="+idUsuario+" ORDER BY dataExecucao DESC;");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				Execucao e = new Execucao();
@@ -880,7 +880,7 @@ public class BD extends ActiveRecord {
 	public List<Execucao> selectExecucoes(int idUsuario, int idArquivo){
 	List<Execucao> execucoes = new ArrayList<Execucao>();
 		try{
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT id,dataExecucao,nomeArquivo,execucoes.idArquivo,execucoes.descricao from execucoes JOIN arquivos ON execucoes.idArquivo = arquivos.idArquivo WHERE execucoes.idUsuario="+idUsuario+" AND execucoes.idArquivo="+idArquivo+";");
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT id,dataExecucao,nomeArquivo,execucoes.idArquivo,execucoes.descricao from execucoes JOIN arquivos ON execucoes.idArquivo = arquivos.idArquivo WHERE execucoes.idUsuario="+idUsuario+" AND execucoes.idArquivo="+idArquivo+" ORDER BY dataExecucao DESC;");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
 				Execucao e = new Execucao();
