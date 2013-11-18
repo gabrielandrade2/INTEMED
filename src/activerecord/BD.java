@@ -758,9 +758,9 @@ public class BD extends ActiveRecord {
 	}
 	
 	
-	public int insertExecucao(int idUsuario, int idArquivo){
+	public int insertExecucao(int idUsuario, int idArquivo, String descricao){
 		try{
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT into execucoes(idUsuario,idArquivo) values("+idUsuario+","+idArquivo+");");
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT into execucoes(idUsuario,idArquivo,descricao) values("+idUsuario+","+idArquivo+",'"+descricao+"');");
 			ps.execute();
 		}
 		catch(SQLException e){

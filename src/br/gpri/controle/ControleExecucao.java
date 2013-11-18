@@ -229,7 +229,7 @@ public class ControleExecucao extends Variaveis{
 				public void actionPerformed(ActionEvent e) {
 					Tagger Tagger = new Tagger(BD);
 					
-					
+					String descricao = Janela.descricaoExec.getText();
 					List<Integer> indiceRegras = pegaSelecaoRegras(); //Verifica os checkbox
 					List<Regra> regrasSelecionadas = buscaRegrasSelecionadas(indiceRegras); //Busca as regras selecionadas
 					int numTextos = BD.getNumTextos(idUsuario, idArquivo);
@@ -239,7 +239,7 @@ public class ControleExecucao extends Variaveis{
 					List<Resultados> listaResultados = new ArrayList<Resultados>();
 					//List<List<TrechoEncontrado>> listaEncontrados = new ArrayList<List<TrechoEncontrado>>();
 					
-					int idExecucao = BD.insertExecucao(idUsuario,idArquivo); //Cria a instância da Execucao
+					int idExecucao = BD.insertExecucao(idUsuario,idArquivo, descricao); //Cria a instância da Execucao
 					BD.insertRegrasExecucao(idExecucao, regrasSelecionadas); //Armazena regras usadas na execucao
 					
 					for(int i=0; i<numTextos; i++){ //Pra cada texto, executa
