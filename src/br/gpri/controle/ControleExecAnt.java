@@ -11,6 +11,7 @@ import activerecord.Execucao;
 import activerecord.Regra;
 import activerecord.Resultados;
 import activerecord.TrechoEncontrado;
+import static br.gpri.controle.Variaveis.BD;
 import br.gpri.janelas.JanelaExecAnt;
 import br.gpri.janelas.JanelaRegras;
 import java.beans.PropertyChangeListener;
@@ -87,7 +88,7 @@ public class ControleExecAnt extends Variaveis{
 			}
 		else{
 			for(Execucao e:execucoes){
-				Object[] o = {false,e.getData(),e.getArquivo(),e.getDescricao(),"Regras"};
+				Object[] o = {"X",e.getData(),e.getArquivo(),e.getDescricao(),"Regras"};
 				tabela.addRow(o);
 			}
 		}
@@ -95,6 +96,7 @@ public class ControleExecAnt extends Variaveis{
 		Janela.tabelaExec.setModel(tabela);
 		Janela.tabelaExec.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 ButtonColumn buttonColumn = new ButtonColumn(Janela.tabelaExec, Regras, 4);
+                ButtonColumn buttonColumn2 = new ButtonColumn(Janela.tabelaExec, Excluir, 0);
 	}
 	
 	public void abreJanela(){
@@ -133,20 +135,7 @@ public class ControleExecAnt extends Variaveis{
         }
 	};
         
-        ActionListener Excluir = new ActionListener() {
-        public void actionPerformed(ActionEvent Excluir) {
-            
-           for(int i=0; i<Janela.tabelaExec.getModel().getRowCount(); i++){
-               boolean r = (Boolean) Janela.tabelaExec.getModel().getValueAt(i,0);
-               if(r){
-                   int idExecucao = execucoes.get(i).getId();
-                   BD.removeExecucao(idExecucao);
-               }
-           }
-            geraListaExecucoes();
-	}
-    };
-        
+       
   Action Regras = new AbstractAction()
 {
     public void actionPerformed(ActionEvent e)
@@ -177,13 +166,15 @@ public class ControleExecAnt extends Variaveis{
     }
 };
 
-Action delete = new AbstractAction()
-{
+Action Excluir = new AbstractAction(){
     public void actionPerformed(ActionEvent e)
     {
         JTable table = (JTable)e.getSource();
-        int modelRow = Integer.valueOf( e.getActionCommand() );
-        ((DefaultTableModel)table.getModel()).removeRow(modelRow);
+        int linha = Integer.valueOf( e.getActionCommand() );
+        ((DefaultTableModel)table.getModel()).removeRow(linha);
+         int idExecucao = execucoes.get(linha).getId();
+         BD.removeExecucao(idExecucao);
+         geraListaExecucoes();
     }
 };
 	

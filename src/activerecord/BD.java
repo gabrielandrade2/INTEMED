@@ -787,8 +787,10 @@ public class BD extends ActiveRecord {
                         PreparedStatement ps = (PreparedStatement) con.prepareStatement("DELETE from resultados where idExecucao="+idExecucao+";");
                         ps.execute();
                         System.out.println("Resultados removidos com sucesso");
-                        
-                        ps = (PreparedStatement) con.prepareStatement("DELETE from execucoes where idExecucao="+idExecucao+";");
+                        ps = (PreparedStatement) con.prepareStatement("DELETE from regrasexecucao where idExecucao="+idExecucao+";");
+                        ps.execute();
+                        System.out.println("Log regras removido com sucesso");
+                        ps = (PreparedStatement) con.prepareStatement("DELETE from execucoes where id="+idExecucao+";");
 			ps.execute();
                         System.out.println("Execução removida com sucesso");
 		}
