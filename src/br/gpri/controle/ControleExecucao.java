@@ -48,7 +48,7 @@ public class ControleExecucao extends Variaveis{
 	private void criaTabela(){
             	int indexConjunto = Janela.DropDownlistboxConjunto.getSelectedIndex();
 		int indexElemento = Janela.DropDownlistboxElementos.getSelectedIndex();
-                //int indexExecucao = Janela.DropDownlistboxExecucao.getSelectedIndex();
+                int indexExecucao = Janela.DropDownlistboxExecucao.getSelectedIndex();
 		
 		int idConjunto = 0;
 		int idElemento = 0;
@@ -158,14 +158,14 @@ public class ControleExecucao extends Variaveis{
             execucoes.add(nenhuma);
             
             DefaultComboBoxModel lista = new DefaultComboBoxModel();
-            for(int i=0; i<elementos.size(); i++){
-			lista.addElement(elementos.get(i).getNome());
+            for(int i=0; i<execucoes.size(); i++){
+			lista.addElement(execucoes.get(i).getData());
 		}
             
-         /*   Janela.DropDownlistboxExecucao.setModel(lista);
+            Janela.DropDownlistboxExecucao.setModel(lista);
             Janela.DropDownlistboxExecucao.addActionListener(this.DropDownListBoxExec);
             if(!execucoes.isEmpty())
-                Janela.DropDownlistboxExec.setSelectedIndex(0);*/
+                Janela.DropDownlistboxExecucao.setSelectedIndex(0);
         }
         
 	public void abreJanela(){
