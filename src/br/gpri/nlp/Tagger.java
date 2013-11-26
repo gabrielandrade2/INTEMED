@@ -359,6 +359,17 @@ public class Tagger{
 								t.setIsSubregra(false);
 								t.setHasRegra(true);
 								t.setTrechoEncontrado(trecho);
+                                                                if(i>0)
+                                                                {
+                                                                    t.setTermoAnterior(tokens.get(i-1).getMorphologicalTag().toString());
+                                                                    t.setPalavraAnterior(tokens.get(i-1).getLexeme());
+                                                                }
+                                                                if((i+r.getNumTermos())<(tokens.size()))
+                                                                {
+                                                                    t.setTermoPosterior(tokens.get(i+r.getNumTermos()).getMorphologicalTag().toString());
+                                                                    t.setPalavraPosterior(tokens.get(i+r.getNumTermos()).getLexeme());
+                                                                }
+                                                                
 								trechosEncontradosConcatenados = trechosEncontradosConcatenados+trecho+"|";
                                                                 trecho="";
 								encontrados.add(t);

@@ -8,7 +8,11 @@ public class TrechoEncontrado {
 	private boolean isSubregra = false;
 	private boolean hasRegra = false;
 	private int idResultado;
-
+	private String termoAnterior;
+	private String palavraAnterior;
+	private String termoPosterior;
+	private String palavraPosterior;
+        
 	public Subregra getSubregra() {
 		return subregra;
 	}
@@ -32,6 +36,30 @@ public class TrechoEncontrado {
 	}
 	public void setTrechoEncontrado(String trechoEncontrado) {
 		this.trechoEncontrado = trechoEncontrado;
+	}
+	public String getTermoAnterior() {
+		return termoAnterior;
+	}
+	public void setTermoAnterior(String termoAnterior) {
+		this.termoAnterior = termoAnterior;
+	}
+	public String getPalavraAnterior() {
+		return palavraAnterior;
+	}
+	public void setPalavraAnterior(String palavraAnterior) {
+		this.palavraAnterior = palavraAnterior;
+	}
+	public String getTermoPosterior() {
+		return termoPosterior;
+	}
+	public void setTermoPosterior(String termoPosterior) {
+		this.termoPosterior = termoPosterior;
+	}
+	public String getPalavraPosterior() {
+		return palavraAnterior;
+	}
+	public void setPalavraPosterior(String palavraPosterior) {
+		this.palavraPosterior = palavraPosterior;
 	}
 	public Regra getRegra() {
 		return regra;
