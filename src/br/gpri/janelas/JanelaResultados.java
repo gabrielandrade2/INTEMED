@@ -52,7 +52,7 @@ public class JanelaResultados extends javax.swing.JFrame {
         jScrollPane8 = new javax.swing.JScrollPane();
         ListaTextos = new javax.swing.JList();
         jScrollPane9 = new javax.swing.JScrollPane();
-        AreaTexto = new javax.swing.JTextArea();
+        AreaTexto = new javax.swing.JTextPane();
         jLabel10 = new javax.swing.JLabel();
         NumeroTexto = new javax.swing.JTextField();
         BotaoComRegra = new javax.swing.JButton();
@@ -107,8 +107,8 @@ public class JanelaResultados extends javax.swing.JFrame {
 
         jScrollPane8.setViewportView(ListaTextos);
 
-        AreaTexto.setColumns(20);
-        AreaTexto.setRows(5);
+//        AreaTexto.setColumns(20);
+  //      AreaTexto.setRows(5);
         jScrollPane9.setViewportView(AreaTexto);
 
         jLabel10.setText("Lista de Textos:");
@@ -275,7 +275,7 @@ public class JanelaResultados extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify                     
-    public javax.swing.JTextArea AreaTexto;
+    public javax.swing.JTextPane AreaTexto;
     public javax.swing.JButton BotaoOk;
     public javax.swing.JList ListaRegra;
     public javax.swing.JList ListaSubRegra;

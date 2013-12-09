@@ -20,6 +20,7 @@ import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.StyledDocument;
 
 public class ControleResultados extends Variaveis{
 	
@@ -73,8 +74,9 @@ public class ControleResultados extends Variaveis{
 		//Referente aos Textos
 		Janela.NumeroTexto.setText(linha.toString());
 		Janela.AreaTexto.setEditable(false);
-		Janela.AreaTexto.setLineWrap(true);
-		Janela.AreaTexto.setWrapStyleWord(true);
+                Janela.AreaTexto.setContentType("text/html");
+//		Janela.AreaTexto.setLineWrap(true);
+//		Janela.AreaTexto.setWrapStyleWord(true);
 		Janela.NumeroTexto.setEditable(false);
 		
 		//DropDownListBox filtro de textos
@@ -264,11 +266,17 @@ public class ControleResultados extends Variaveis{
 					}
 				};
 				
+                 private void negritaTexto(){
+                     
+                 }
+                         
 		ListSelectionListener Textos = new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent Regras) {
                             
 				limpaCaixasTexto();
-				Janela.AreaTexto.setText((String) Janela.ListaTextos.getSelectedValue());
+                                                    
+                                String texto =  (String) Janela.ListaTextos.getSelectedValue();
+				
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
 				if(textoSelecionado == -1){
 					textoSelecionado = 0;
@@ -286,6 +294,25 @@ public class ControleResultados extends Variaveis{
 				Integer l = linha + 1;
 				Janela.NumeroTexto.setText(l.toString());
 				geraListaRegras();
+                                
+                                for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
+                                    String trecho = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado();
+                                    
+                                    //Isso aqui e para caso no BD não esteja inserido o texto já pre-processado
+                                    String textoComparacao = texto.toLowerCase();
+                                    
+                                    if(textoComparacao.contains(trecho)){
+                                        String[] dividido = textoComparacao.split(trecho);
+                                        texto = new String();
+                                        for(int j=0; j<dividido.length - 1; j++){
+                                            texto += dividido[i] + "<b>";
+                                            texto += trecho + "</b>";
+                                        }
+                                        texto += dividido[dividido.length-1];
+                                    }
+                                    Janela.AreaTexto.setText(texto);
+                                }
+                                
                                 }
 			}	
 		};
