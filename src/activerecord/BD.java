@@ -346,7 +346,7 @@ public class BD extends ActiveRecord {
 		for(int i=0; i<termosregras.size(); i++){
 			try{
 				Termo t = termosregras.get(i);
-				PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT INTO termosregras VALUES ("+t.getIdRegra()+","+t.getIdTermo()+","+t.getOrdem()+",'"+t.getTermo()+"');");		
+				PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT INTO termosregras VALUES ("+t.getIdRegra()+","+t.getIdTermo()+","+t.getOrdem()+",'"+t.getTermo()+"',0);");//0 referente a classificacao morfologica que foi alterada no bd e n aqui, n sei o que colocar		
 				 erro = ps.execute();
 				 if(erro == true)
 					 break;
@@ -396,7 +396,7 @@ public class BD extends ActiveRecord {
 		for(int i=0; i<termossubregras.size(); i++){
 			try{
 				Termo t = termossubregras.get(i);
-				PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT INTO termossubregras VALUES ("+t.getIdRegra()+","+t.getIdSubregra()+","+t.getIdTermo()+","+t.getOrdem()+",'"+t.getTermo()+"');");		
+				PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT INTO termossubregras VALUES ("+t.getIdRegra()+","+t.getIdSubregra()+","+t.getIdTermo()+","+t.getOrdem()+",'"+t.getTermo()+"',0);");//0 referente a classificacao morfologica que foi alterada no bd e n aqui, n sei o que colocar		
 				 erro = ps.execute();
 				 if(erro == true)
 					 break;
