@@ -58,6 +58,8 @@ public class Tagger{
 		text = removeEspacaPontuacao(text);
 		//Retira espaco comeco/final frase
 		text= removeEspacaTexto(text);
+                //Remove espaco inicio texto
+                text= removeEspacoInicio(text);
 		
 		return text;
 	}
@@ -157,8 +159,10 @@ public class Tagger{
 		List <Termo> termosregras = new ArrayList<Termo>();
 		
 		//Executa opera√ß√µes de PR√â-PROCESSAMENTO
-		text_sumario = preProccessText(text_sumario);
-		text_selecionado = preProccessText(text_selecionado);
+                
+                //Acredito que n precisa, porque j· est· tudo sendo pre-processado no inicio
+		//text_sumario = preProccessText(text_sumario);
+		//text_selecionado = preProccessText(text_selecionado);
 		
 		//Separa texto selecionado em palavras
 		SentenceCogroo selecionado = new SentenceCogroo(text_selecionado);
@@ -235,8 +239,10 @@ public class Tagger{
 		List <Termo> termosregras = new ArrayList<Termo>();
 		
 		//Executa opera√ß√µes de PR√â-PROCESSAMENTO
-		text_sumario = preProccessText(text_sumario);
-		text_selecionado = preProccessText(text_selecionado);
+		
+                //Acredito que n precisa, porque j· est· tudo sendo pre-processado no inicio
+                //text_sumario = preProccessText(text_sumario);
+		//text_selecionado = preProccessText(text_selecionado);
 		
 		//Separa texto selecionado em palavras
 		SentenceCogroo selecionado = new SentenceCogroo(text_selecionado);
@@ -304,10 +310,13 @@ public class Tagger{
 		
 		List<TrechoEncontrado> encontrados = new ArrayList<TrechoEncontrado>();
 		String trechosEncontradosConcatenados="";
+
                 //Executa opera√ß√µes de PR√â-PROCESSAMENTO
-		String text_sumario = preProccessText(texto_sumario);
-		//Separa texto em senten√ßas
-		String[] sentencas = cogroo.sentDetect(text_sumario);
+		//Acredito que n precisa, porque j· est· tudo sendo pre-processado no inicio
+                //String text_sumario = preProccessText(texto_sumario);
+		
+                //Separa texto em senten√ßas
+		String[] sentencas = cogroo.sentDetect(texto_sumario);
 		for (String sentenca : sentencas) {
 			List<Token> tokens = processCogroo(sentenca);
 			if (temFraseNegativa(sentenca))
@@ -500,6 +509,13 @@ public class Tagger{
 		
 		return text.substring(1, (text.length()-1));
 	}
+        
+        private String removeEspacoInicio(String text){
+                while(text.startsWith(" "))
+                    text = text.substring(1, text.length());
+                
+                return text;
+        }
 	
 	private String expandirData(String text){
 		

@@ -17,6 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import activerecord.Arquivo;
 import br.gpri.janelas.JanelaArquivo;
 import br.gpri.janelas.JanelaExecAnt;
+import br.gpri.nlp.Tagger;
 
 public class ControleArquivo extends Variaveis {
 
@@ -119,6 +120,10 @@ public class ControleArquivo extends Variaveis {
 			texto=texto.replace("  ", " ");
 			texto=texto.replace("'", "");
 			
+                        //Faz pre-processamento do Tagger
+                        Tagger Tagger = new Tagger(BD);
+                        texto=Tagger.preProccessText(texto);
+                        
 			return texto;
 		}
 
