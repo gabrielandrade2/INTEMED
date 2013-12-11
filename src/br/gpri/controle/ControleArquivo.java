@@ -60,7 +60,7 @@ public class ControleArquivo extends Variaveis {
 		Janela.AList.setModel(Janela.lista);
 		Janela.AList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		Janela.AList.setLayoutOrientation(JList.VERTICAL);
-		Janela.AList.setVisibleRowCount(30);
+		//Janela.AList.setVisibleRowCount(30);
 		Janela.AList.addMouseListener(this.Lista);
 		}
 	
@@ -69,8 +69,8 @@ public class ControleArquivo extends Variaveis {
 			if(existe){
 				Janela.lista.removeElement(a.getNome());
 			}
-			if(arquivosRecentes.size() >= 30)
-				arquivosRecentes.remove(30);
+			//if(arquivosRecentes.size() >= 30)
+				//arquivosRecentes.remove(30);
 			arquivosRecentes.insertElementAt(a, 0);
 			Janela.lista.insertElementAt(a.getNome(), 0);
 			Janela.AList.setSelectedIndex(0);
@@ -96,8 +96,8 @@ public class ControleArquivo extends Variaveis {
         	int selecionado = Janela.AList.getSelectedIndex();
 			Arquivo a = arquivosRecentes.elementAt(selecionado);
            	testaArquivoRecenteExiste(a);
-			if(arquivosRecentes.size() >= 30)
-				arquivosRecentes.remove(30);
+			//if(arquivosRecentes.size() >= 30)
+			//	arquivosRecentes.remove(30);
 			arquivosRecentes.insertElementAt(a, 0);
         	System.out.println("Erro:"+BD.atualizaArquivos(idUsuario, arquivosRecentes));
 		}
@@ -218,13 +218,26 @@ public class ControleArquivo extends Variaveis {
         public void actionPerformed(ActionEvent Importa) {
         		int retorno = Janela.AbreArquivo.showOpenDialog(null);
         		if (retorno == JFileChooser.APPROVE_OPTION){
-        			Arquivo a = new Arquivo();
-        			a.setNome(Janela.AbreArquivo.getSelectedFile().getName());
-        			a.setCaminho(Janela.AbreArquivo.getSelectedFile().getAbsolutePath());
-        			a.setId(BD.selectMaxIdArquivo(idUsuario));
-        			adicionaArquivoRecente(a);
-        			importaArquivo(a);
+        			boolean existe = false;
+        			String caminho = Janela.AbreArquivo.getSelectedFile().getAbsolutePath();
+        			for(Arquivo a:arquivosRecentes){
+        				if(caminho.equals(a.getCaminho())){
+        					existe = true;
+        					break;
+        				}
         			}
+        			if(existe){
+        				System.out.println("Aqruivo já existe");
+        			}
+        			else{
+	        			Arquivo a = new Arquivo();
+	        			a.setNome(Janela.AbreArquivo.getSelectedFile().getName());
+	        			a.setCaminho(caminho);
+	        			a.setId(BD.selectMaxIdArquivo(idUsuario));
+	        			adicionaArquivoRecente(a);
+	        			importaArquivo(a);
+        			}
+        		}
         		else if(retorno == JFileChooser.CANCEL_OPTION)
         			System.out.println("Usuário cancelou a operação");
         		else

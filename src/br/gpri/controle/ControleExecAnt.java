@@ -129,7 +129,7 @@ public class ControleExecAnt extends Variaveis{
     			List<Resultados> listaResultados = BD.selectResultados(idExecucao, idArquivo, idUsuario);
     			
     			fechaJanela();
-    			JanelaResultados = new ControleResultados(listaResultados);
+    			JanelaResultados = new ControleResultados(listaResultados,idExecucao);
     			JanelaResultados.abreJanela();
     		}
         }

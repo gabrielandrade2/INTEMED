@@ -27,6 +27,8 @@ public class ControleResultados extends Variaveis{
 	Integer linha;
 	int idResult;
 	int idResultSR;
+	int idExecucao;
+	int idTexto;
 	private JanelaResultados Janela;
         
 	private List<Resultados> listaResultados;
@@ -38,9 +40,10 @@ public class ControleResultados extends Variaveis{
 	private List<TrechoEncontrado> trechosTextoSelecionadoRegras = new ArrayList<TrechoEncontrado>();
 	private List<TrechoEncontrado> trechosTextoSelecionadoSubregras = new ArrayList<TrechoEncontrado>();
 	
-	public ControleResultados(List<Resultados> listaResultados){
+	public ControleResultados(List<Resultados> listaResultados, int idExecucao){
 		linha = 0;
 		this.listaResultados = listaResultados;
+		this.idExecucao = idExecucao;
 		
                 //Expande preposições para mostrar na janela
                 expandePreposicoes();
@@ -126,6 +129,11 @@ public class ControleResultados extends Variaveis{
 		Janela.RegraTextoTrecho.setText("");
 		Janela.TextoSubRegra.setText("");
 		Janela.SubRegraTextoTrecho.setText("");
+		Janela.AreaTexto.setText("");
+		
+		DefaultListModel listaVazia = new DefaultListModel();
+		Janela.ListaRegra.setModel(listaVazia);
+		Janela.ListaSubRegra.setModel(listaVazia);
 	}
         
         private void expandePreposicoes(){
@@ -172,6 +180,7 @@ public class ControleResultados extends Variaveis{
 		
                             
 		//Atualiza lista na Janela
+	
 		DefaultListModel listaTexto = new DefaultListModel();
 		for(int i=0; i<textos.size(); i++){
 				listaTexto.addElement(textos.get(i));
@@ -180,6 +189,7 @@ public class ControleResultados extends Variaveis{
 		Janela.ListaTextos.setModel(listaTexto);
 		
 		Janela.ListaTextos.updateUI();
+		limpaCaixasTexto();
 		Janela.ListaTextos.setSelectedIndex(0);
 	}
 	
@@ -231,6 +241,46 @@ public class ControleResultados extends Variaveis{
 		Janela.ListaSubRegra.setSelectedIndex(0);
 	}
 	
+	private String marcaFalsosNegativos(String texto){
+		List<String> falsosNegativos = BD.selectFalsoNegativo(idExecucao, idTexto);
+		for(String falsoNegativo:falsosNegativos){
+			if(!(texto == null)){
+				String textoComparacao = texto;
+				if(textoComparacao.contains(falsoNegativo)){
+                    String[] dividido = textoComparacao.split(falsoNegativo);
+                    texto = new String();
+                    for(int j=0; j<dividido.length - 1; j++){
+                        texto += dividido[j] + "<font color=\"red\">";
+                        texto += falsoNegativo + "</font>";
+                    }
+                texto += dividido[dividido.length-1];
+				}
+			}
+		}
+		return texto;
+	}
+	
+	private String negritaTexto(String texto){
+        for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
+                          String trecho = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado();
+                          if(!(texto == null)){
+	                          //Isso aqui e para caso no BD não esteja inserido o texto já pre-processado
+	                          String textoComparacao = texto.toLowerCase();
+	
+	                          if(textoComparacao.contains(trecho)){
+	                              String[] dividido = textoComparacao.split(trecho);
+	                              texto = new String();
+	                              for(int j=0; j<dividido.length - 1; j++){
+	                                  texto += dividido[j] + "<b>";
+	                                  texto += trecho + "</b>";
+	                              }
+	                          texto += dividido[dividido.length-1];
+                          }
+                     }
+        }
+        return texto;
+   }
+	
 	 ActionListener Ok = new ActionListener() {
 			
 			@Override
@@ -268,7 +318,7 @@ public class ControleResultados extends Variaveis{
 					
 				}
 			};
-			 ActionListener CommentSubRegra = new ActionListener() {
+			ActionListener CommentSubRegra = new ActionListener() {
 					
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -278,40 +328,37 @@ public class ControleResultados extends Variaveis{
 					}
 				};
 				
-                 private String negritaTexto(String texto){
-                      for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
-                                        String trecho = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado();
-                                        if(!(texto == null)){
-                                        //Isso aqui e para caso no BD não esteja inserido o texto já pre-processado
-                                        String textoComparacao = texto.toLowerCase();
-
-                                        if(textoComparacao.contains(trecho)){
-                                            String[] dividido = textoComparacao.split(trecho);
-                                            texto = new String();
-                                            for(int j=0; j<dividido.length - 1; j++){
-                                                texto += dividido[j] + "<b>";
-                                                texto += trecho + "</b>";
-                                            }
-                                            texto += dividido[dividido.length-1];
-                                        }
-                                   }
-                      }
-                      return texto;
-                 }
+			ActionListener FalsoNegativo = new ActionListener() {
+					public void actionPerformed(ActionEvent FalsoNegativo) {
+						String trechoSelecionado = Janela.AreaTexto.getSelectedText();
+						int idTexto = 0; 
+						int idExecucao = 0;
+						BD.insertFalsoNegativo(idTexto, idExecucao, trechoSelecionado);
+					}
+				};
+				
+                 
                          
 		ListSelectionListener Textos = new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent Regras) {
                             
 				limpaCaixasTexto();
-                                                    
-                                String texto =  (String) Janela.ListaTextos.getSelectedValue();
+                
+				int index = Janela.ListaTextos.getSelectedIndex();
+				if(index > 0)
+					idTexto = listaResultadosSelecionados.get(index).getIdTexto();
+				
+                String texto =  (String) Janela.ListaTextos.getSelectedValue();
 	                                
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
 				if(textoSelecionado == -1){
 					textoSelecionado = 0;
 				}	
 				if(listaResultadosSelecionados.isEmpty()){
-                                 //Provisório
+                                 DefaultListModel listaVazia = new DefaultListModel();
+                                 listaVazia.addElement("Nenhuma entrada");
+                                 Janela.ListaTextos.setModel(listaVazia);
+                                 limpaCaixasTexto();
                                 }
                                 
                                 else{
@@ -326,6 +373,8 @@ public class ControleResultados extends Variaveis{
                                 
                                 if(trechosTextoSelecionadoRegras.get(0).hasRegra())
                                     texto = negritaTexto(texto);
+                                
+                                texto = marcaFalsosNegativos(texto);
                                 
                                 Janela.AreaTexto.setText(texto);
                                 

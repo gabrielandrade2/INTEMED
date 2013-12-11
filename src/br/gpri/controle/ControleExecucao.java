@@ -284,7 +284,7 @@ public class ControleExecucao extends Variaveis{
 							ResultadoTexto.setIsEncontrado(true);
 						}
 						
-						
+						ResultadoTexto.setIdTexto(i);
 						ResultadoTexto.setTexto(texto);
 																		
 						listaResultados.add(ResultadoTexto);
@@ -298,7 +298,7 @@ public class ControleExecucao extends Variaveis{
 					
 					
 					fechaJanela();
-					JanelaResultados = new ControleResultados(listaResultados);
+					JanelaResultados = new ControleResultados(listaResultados,idExecucao);
 					JanelaResultados.abreJanela();
 					
 				}

@@ -8,11 +8,20 @@ public class Resultados {
 	private List<TrechoEncontrado> trechos = new ArrayList<TrechoEncontrado>();
 	private boolean isEncontrado;
 	private String texto;
+	private int idTexto;
 	
 	public void setTexto(String texto){
 		this.texto = texto;
 	}
 	
+	public int getIdTexto() {
+		return idTexto;
+	}
+
+	public void setIdTexto(int idTexto) {
+		this.idTexto = idTexto;
+	}
+
 	public String getTexto(){
 		return this.texto;
 	}

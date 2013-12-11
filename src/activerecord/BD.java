@@ -590,7 +590,7 @@ public class BD extends ActiveRecord {
 						ResultadoTexto = new Resultados();
 						idTexto = res.getInt("res.idTexto");
 					}
-					
+					ResultadoTexto.setIdTexto(res.getInt("res.idTexto"));
 					ResultadoTexto.setTexto(res.getString("txt.texto")); //Adiciona texto no objeto resultado
 					ResultadoTexto.setIsEncontrado(res.getBoolean("res.isEncontrado")); //Verifica se é resultado encontrado ou não
 					
@@ -716,6 +716,35 @@ public class BD extends ActiveRecord {
 		return true;
 	}
 
+	public boolean insertFalsoNegativo(int idTexto, int idExecucao, String trechoSelecionado){
+		boolean erro = false;
+		try {
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto,idExecucao,trechoEncontrado,isEncontrado,isFalsoNegativo) VALUES("+idTexto+","+idExecucao+",'"+trechoSelecionado+"',0,1);");
+			erro = ps.execute();
+		}
+		catch (SQLException e) {
+			System.out.println("Falha ao inserir falso negativo");
+			e.printStackTrace();
+		}
+		return erro;
+	}
+	
+	public List<String> selectFalsoNegativo(int idExecucao, int idTexto){
+		List<String> falsosNegativos = new ArrayList<String>();
+		try {
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT trechoEncontrado from resultados WHERE (idExecucao="+idExecucao+" AND idTexto="+idTexto+" AND isEncontrado=0 AND isFalsoNegativo=1);");
+			ResultSet res = ps.executeQuery();
+			while(res.next()){
+				falsosNegativos.add(res.getString("trechoEncontrado"));
+			}
+		} 
+		catch (SQLException e) {
+			System.out.println("Falha ao buscar os falsos negativos");
+			e.printStackTrace();
+		}
+		return falsosNegativos;
+	}
+	
 	public boolean insertResultados(Resultados ResultadoTexto, int idTexto, int idExecucao){
 		
 		List<TrechoEncontrado> encontrados = ResultadoTexto.getTrechos();
