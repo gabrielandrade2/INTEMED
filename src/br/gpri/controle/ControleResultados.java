@@ -289,7 +289,7 @@ public class ControleResultados extends Variaveis{
                                             String[] dividido = textoComparacao.split(trecho);
                                             texto = new String();
                                             for(int j=0; j<dividido.length - 1; j++){
-                                                texto += dividido[i] + "<b>";
+                                                texto += dividido[j] + "<b>";
                                                 texto += trecho + "</b>";
                                             }
                                             texto += dividido[dividido.length-1];
