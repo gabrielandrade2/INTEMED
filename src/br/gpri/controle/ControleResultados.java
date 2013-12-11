@@ -42,6 +42,9 @@ public class ControleResultados extends Variaveis{
 		linha = 0;
 		this.listaResultados = listaResultados;
 		
+                //Expande preposições para mostrar na janela
+                expandePreposicoes();
+                
 		Janela = new JanelaResultados();
 		Janela.setLocationRelativeTo(null);
 		
@@ -49,8 +52,7 @@ public class ControleResultados extends Variaveis{
 		Janela.BotaoOk.addActionListener(this.Ok);
 		Janela.BotaoRegra.addActionListener(this.Cadastra);
 		
-	
-		
+			
 		//Caixa de Texto Regra
 		Janela.TextoRegra.setEditable(false);
 		Janela.TextoRegra.setLineWrap(true);
@@ -125,6 +127,15 @@ public class ControleResultados extends Variaveis{
 		Janela.TextoSubRegra.setText("");
 		Janela.SubRegraTextoTrecho.setText("");
 	}
+        
+        private void expandePreposicoes(){
+            Tagger Tagger = new Tagger(BD);
+            for(int i=0; i<listaResultados.size(); i++){
+                String texto = listaResultados.get(i).getTexto();
+                texto = Tagger.expandePreposicoes(texto);
+                listaResultados.get(i).setTexto(texto);
+            }
+        }
 	
 	private void geraListaResultados(){
 		int filtro = Janela.DropDownTexto.getSelectedIndex(); //Pega a seleção do DropDown
@@ -159,6 +170,7 @@ public class ControleResultados extends Variaveis{
 		else
 			System.out.println("Problema com o DropDownListBox do filtro de textos");
 		
+                            
 		//Atualiza lista na Janela
 		DefaultListModel listaTexto = new DefaultListModel();
 		for(int i=0; i<textos.size(); i++){
@@ -266,8 +278,25 @@ public class ControleResultados extends Variaveis{
 					}
 				};
 				
-                 private void negritaTexto(){
-                     
+                 private String negritaTexto(String texto){
+                      for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
+                                        String trecho = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado();
+                                        if(!(texto == null)){
+                                        //Isso aqui e para caso no BD não esteja inserido o texto já pre-processado
+                                        String textoComparacao = texto.toLowerCase();
+
+                                        if(textoComparacao.contains(trecho)){
+                                            String[] dividido = textoComparacao.split(trecho);
+                                            texto = new String();
+                                            for(int j=0; j<dividido.length - 1; j++){
+                                                texto += dividido[i] + "<b>";
+                                                texto += trecho + "</b>";
+                                            }
+                                            texto += dividido[dividido.length-1];
+                                        }
+                                   }
+                      }
+                      return texto;
                  }
                          
 		ListSelectionListener Textos = new ListSelectionListener() {
@@ -276,7 +305,7 @@ public class ControleResultados extends Variaveis{
 				limpaCaixasTexto();
                                                     
                                 String texto =  (String) Janela.ListaTextos.getSelectedValue();
-				
+	                                
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
 				if(textoSelecionado == -1){
 					textoSelecionado = 0;
@@ -295,23 +324,10 @@ public class ControleResultados extends Variaveis{
 				Janela.NumeroTexto.setText(l.toString());
 				geraListaRegras();
                                 
-                                for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
-                                    String trecho = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado();
-                                    
-                                    //Isso aqui e para caso no BD não esteja inserido o texto já pre-processado
-                                    String textoComparacao = texto.toLowerCase();
-                                    
-                                    if(textoComparacao.contains(trecho)){
-                                        String[] dividido = textoComparacao.split(trecho);
-                                        texto = new String();
-                                        for(int j=0; j<dividido.length - 1; j++){
-                                            texto += dividido[i] + "<b>";
-                                            texto += trecho + "</b>";
-                                        }
-                                        texto += dividido[dividido.length-1];
-                                    }
-                                    Janela.AreaTexto.setText(texto);
-                                }
+                                if(trechosTextoSelecionadoRegras.get(0).hasRegra())
+                                    texto = negritaTexto(texto);
+                                
+                                Janela.AreaTexto.setText(texto);
                                 
                                 }
 			}	

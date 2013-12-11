@@ -34,7 +34,8 @@ public class Tagger{
 		frasesNegativas = BD.selectFrasesNegativas();
                 tabelamt=BD.selectTabelaMT();
 	}
-	
+
+
 	public String preProccessText(String text){
             //coloca um espaço entre um ponto seguido de letra
                 text = retiraPontoLetra(text);
@@ -64,6 +65,29 @@ public class Tagger{
 		return text;
 	}
 
+        public String expandePreposicoes(String texto){
+                String[] sentencas = cogroo.sentDetect(texto);
+                String textoExpandido = new String();
+		for (String sentenca : sentencas) {
+                    SentenceCogroo sc = new SentenceCogroo(sentenca);
+                    List<Token> tokens = null;
+                    cogroo.tokenizer(sc);
+
+                    //Aplica o NAMEFINDER
+                    // retirado porque estava tirando a "base" do trecho "núcleos da base"		
+                    //cogroo.nameFinder(sc);
+
+                    //Expansão de Preposições
+                    cogroo.preTagger(sc);
+                    tokens = sc.getTokens();
+                    for(Token token: tokens){
+                        textoExpandido += token.getLexeme() + " ";
+                    }
+                }
+                
+                return textoExpandido;
+        }
+        
 	public String sentencaRapidMiner (String sentencaEntrada)
 	{
 		String[] sentencas = cogroo.sentDetect(sentencaEntrada);
@@ -106,7 +130,7 @@ public class Tagger{
 		
 		//ExpansÃ£o de preposiÃ§Ãµes
 		cogroo.preTagger(sc);
-		
+	
 		
 		//Realiza POS_tagging
 		cogroo.tagger(sc);

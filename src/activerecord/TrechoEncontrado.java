@@ -25,9 +25,6 @@ public class TrechoEncontrado {
 	public void setIsSubregra(boolean isSubregra) {
 		this.isSubregra = isSubregra;
 	}
-	public boolean isHasRegra() {
-		return hasRegra;
-	}
 	public void setHasRegra(boolean hasRegra) {
 		this.hasRegra = hasRegra;
 	}
