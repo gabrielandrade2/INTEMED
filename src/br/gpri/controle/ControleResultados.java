@@ -54,7 +54,7 @@ public class ControleResultados extends Variaveis{
 		//ActionListener dos Botões
 		Janela.BotaoOk.addActionListener(this.Ok);
 		Janela.BotaoRegra.addActionListener(this.Cadastra);
-		
+		Janela.BotaoFalsoNegativo.addActionListener(this.FalsoNegativo);
 			
 		//Caixa de Texto Regra
 		Janela.TextoRegra.setEditable(false);
@@ -247,13 +247,13 @@ public class ControleResultados extends Variaveis{
 			if(!(texto == null)){
 				String textoComparacao = texto;
 				if(textoComparacao.contains(falsoNegativo)){
-                    String[] dividido = textoComparacao.split(falsoNegativo);
-                    texto = new String();
-                    for(int j=0; j<dividido.length - 1; j++){
-                        texto += dividido[j] + "<font color=\"red\">";
-                        texto += falsoNegativo + "</font>";
-                    }
-                texto += dividido[dividido.length-1];
+                                    String[] dividido = textoComparacao.split(falsoNegativo);
+                                    texto = new String();
+                                    for(int j=0; j<dividido.length - 1; j++){
+                                        texto += dividido[j] + "<font color=\"red\">";
+                                        texto += falsoNegativo + "</font>";
+                                    }
+                                    texto += dividido[dividido.length-1];
 				}
 			}
 		}
@@ -311,7 +311,7 @@ public class ControleResultados extends Variaveis{
 		
 		 ActionListener Comment = new ActionListener() {
 				
-				@Override
+                            	@Override
 				public void actionPerformed(ActionEvent e) {
 					JanelaComentario = new ControleComentario(idResult);
 					JanelaComentario.abreJanela();
@@ -331,10 +331,13 @@ public class ControleResultados extends Variaveis{
 			ActionListener FalsoNegativo = new ActionListener() {
 					public void actionPerformed(ActionEvent FalsoNegativo) {
 						String trechoSelecionado = Janela.AreaTexto.getSelectedText();
-						int idTexto = 0; 
-						int idExecucao = 0;
 						BD.insertFalsoNegativo(idTexto, idExecucao, trechoSelecionado);
-					}
+                                      
+                                                //Identifica logo apos marcar
+                                                String texto = Janela.AreaTexto.getText();
+                                                texto = marcaFalsosNegativos(texto);
+                                                Janela.AreaTexto.setText(texto);
+                            		}
 				};
 				
                  
@@ -344,13 +347,13 @@ public class ControleResultados extends Variaveis{
                             
 				limpaCaixasTexto();
                 
-				int index = Janela.ListaTextos.getSelectedIndex();
-				if(index > 0)
-					idTexto = listaResultadosSelecionados.get(index).getIdTexto();
-				
-                String texto =  (String) Janela.ListaTextos.getSelectedValue();
-	                                
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
+				if(textoSelecionado >= 0)
+					idTexto = listaResultadosSelecionados.get(textoSelecionado).getIdTexto();
+				
+                                String texto =  (String) Janela.ListaTextos.getSelectedValue();
+	                                
+				
 				if(textoSelecionado == -1){
 					textoSelecionado = 0;
 				}	
@@ -375,6 +378,7 @@ public class ControleResultados extends Variaveis{
                                     texto = negritaTexto(texto);
                                 
                                 texto = marcaFalsosNegativos(texto);
+                                
                                 
                                 Janela.AreaTexto.setText(texto);
                                 

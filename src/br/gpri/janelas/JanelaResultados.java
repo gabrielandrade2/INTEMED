@@ -127,6 +127,7 @@ public class JanelaResultados extends javax.swing.JFrame {
 
         BotaoFalsoNegativo.setText("Marcar Falso Negativo");
 
+        AreaTexto.setFont(AreaTexto.getFont());
         jScrollPane4.setViewportView(AreaTexto);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
