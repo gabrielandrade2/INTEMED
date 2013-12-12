@@ -335,6 +335,7 @@ public class ControleResultados extends Variaveis{
                                                 String texto = Janela.AreaTexto.getText();
                                                 texto = marcaFalsosNegativos(texto);
                                                 Janela.AreaTexto.setText(texto);
+                                                Janela.AreaTexto.updateUI();
                             		}
 				};
 				
@@ -346,7 +347,7 @@ public class ControleResultados extends Variaveis{
 				limpaCaixasTexto();
                 
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
-				if(textoSelecionado > 0)
+				if(textoSelecionado >= 0)
 					idTexto = listaResultadosSelecionados.get(textoSelecionado).getIdTexto();
 				
                                 String texto =  (String) Janela.ListaTextos.getSelectedValue();
