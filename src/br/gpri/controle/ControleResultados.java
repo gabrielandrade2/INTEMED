@@ -131,9 +131,7 @@ public class ControleResultados extends Variaveis{
 		Janela.SubRegraTextoTrecho.setText("");
 		Janela.AreaTexto.setText("");
 		
-		DefaultListModel listaVazia = new DefaultListModel();
-		Janela.ListaRegra.setModel(listaVazia);
-		Janela.ListaSubRegra.setModel(listaVazia);
+		
 	}
         
         private void expandePreposicoes(){
@@ -348,7 +346,7 @@ public class ControleResultados extends Variaveis{
 				limpaCaixasTexto();
                 
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
-				if(textoSelecionado >= 0)
+				if(textoSelecionado > 0)
 					idTexto = listaResultadosSelecionados.get(textoSelecionado).getIdTexto();
 				
                                 String texto =  (String) Janela.ListaTextos.getSelectedValue();
@@ -358,10 +356,13 @@ public class ControleResultados extends Variaveis{
 					textoSelecionado = 0;
 				}	
 				if(listaResultadosSelecionados.isEmpty()){
-                                 DefaultListModel listaVazia = new DefaultListModel();
-                                 listaVazia.addElement("Nenhuma entrada");
-                                 Janela.ListaTextos.setModel(listaVazia);
-                                 limpaCaixasTexto();
+                                    DefaultListModel nenhumaEntrada = new DefaultListModel();
+                                    nenhumaEntrada.addElement("Nenhuma entrada");
+                                    Janela.ListaTextos.setModel(nenhumaEntrada);
+                                    limpaCaixasTexto();
+                                    DefaultListModel listaVazia = new DefaultListModel();
+                                    Janela.ListaRegra.setModel(listaVazia);
+                                    Janela.ListaSubRegra.setModel(listaVazia);
                                 }
                                 
                                 else{
