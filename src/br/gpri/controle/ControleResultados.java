@@ -244,8 +244,10 @@ public class ControleResultados extends Variaveis{
 		for(String falsoNegativo:falsosNegativos){
 			if(!(texto == null)){
 				String textoComparacao = texto;
-				if(textoComparacao.contains(falsoNegativo)){
-                                    String[] dividido = textoComparacao.split(falsoNegativo);
+                                
+                          	if(textoComparacao.contains(falsoNegativo)){
+                                    String falsoNegativoREGEX = corrigeREGEX(falsoNegativo);
+                                    String[] dividido = textoComparacao.split(falsoNegativoREGEX);
                                     texto = new String();
                                     for(int j=0; j<dividido.length - 1; j++){
                                         texto += dividido[j] + "<font color=\"red\">";
@@ -264,9 +266,9 @@ public class ControleResultados extends Variaveis{
                           if(!(texto == null)){
 	                          //Isso aqui e para caso no BD não esteja inserido o texto já pre-processado
 	                          String textoComparacao = texto.toLowerCase();
-	
-	                          if(textoComparacao.contains(trecho)){
-	                              String[] dividido = textoComparacao.split(trecho);
+                                  if(textoComparacao.contains(trecho)){
+                                      String trechoREGEX = corrigeREGEX(trecho);
+	                              String[] dividido = textoComparacao.split(trechoREGEX);
 	                              texto = new String();
 	                              for(int j=0; j<dividido.length - 1; j++){
 	                                  texto += dividido[j] + "<b>";
@@ -278,7 +280,16 @@ public class ControleResultados extends Variaveis{
         }
         return texto;
    }
-	
+
+        private String corrigeREGEX(String trecho){
+       
+            if(trecho.contains("("))
+                trecho = trecho.replaceAll("\\(", "\\\\(");
+            if(trecho.contains(")"))
+                trecho = trecho.replaceAll("\\)", "\\\\)");
+            return trecho;
+        }
+        
 	 ActionListener Ok = new ActionListener() {
 			
 			@Override
@@ -332,10 +343,13 @@ public class ControleResultados extends Variaveis{
 						BD.insertFalsoNegativo(idTexto, idExecucao, trechoSelecionado);
                                       
                                                 //Identifica logo apos marcar
-                                                String texto = Janela.AreaTexto.getText();
+                                                
+                                                //Pegar texto daqui, se pegar da área texto vem com html e os acentos zuados
+                                                String texto =  (String) Janela.ListaTextos.getSelectedValue();
+                                                texto = negritaTexto(texto);
                                                 texto = marcaFalsosNegativos(texto);
                                                 Janela.AreaTexto.setText(texto);
-                                                Janela.AreaTexto.updateUI();
+                                                
                             		}
 				};
 				
@@ -350,6 +364,7 @@ public class ControleResultados extends Variaveis{
 				if(textoSelecionado >= 0)
 					idTexto = listaResultadosSelecionados.get(textoSelecionado).getIdTexto();
 				
+                                //Pegar texto daqui, se pegar da área texto vem com html e os acentos zuados
                                 String texto =  (String) Janela.ListaTextos.getSelectedValue();
 	                                
 				
