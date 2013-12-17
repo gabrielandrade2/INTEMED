@@ -362,6 +362,7 @@ public class ControleResultados extends Variaveis{
                 
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
 				if(textoSelecionado >= 0)
+                                    if(!listaResultadosSelecionados.isEmpty())
 					idTexto = listaResultadosSelecionados.get(textoSelecionado).getIdTexto();
 				
                                 //Pegar texto daqui, se pegar da área texto vem com html e os acentos zuados

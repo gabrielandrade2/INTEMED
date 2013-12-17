@@ -120,10 +120,6 @@ public class ControleArquivo extends Variaveis {
 			texto=texto.replace("  ", " ");
 			texto=texto.replace("'", "");
 			
-                        //Faz pre-processamento do Tagger
-                        Tagger Tagger = new Tagger(BD);
-                        texto=Tagger.preProccessText(texto);
-                        
 			return texto;
 		}
 

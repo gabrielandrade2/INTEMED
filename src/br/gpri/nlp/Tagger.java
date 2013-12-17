@@ -184,9 +184,9 @@ public class Tagger{
 		
 		//Executa opera√ß√µes de PR√â-PROCESSAMENTO
                 
-                //Acredito que n precisa, porque j· est· tudo sendo pre-processado no inicio
-		//text_sumario = preProccessText(text_sumario);
-		//text_selecionado = preProccessText(text_selecionado);
+                
+		text_sumario = preProccessText(text_sumario);
+		text_selecionado = preProccessText(text_selecionado);
 		
 		//Separa texto selecionado em palavras
 		SentenceCogroo selecionado = new SentenceCogroo(text_selecionado);
@@ -264,9 +264,9 @@ public class Tagger{
 		
 		//Executa opera√ß√µes de PR√â-PROCESSAMENTO
 		
-                //Acredito que n precisa, porque j· est· tudo sendo pre-processado no inicio
-                //text_sumario = preProccessText(text_sumario);
-		//text_selecionado = preProccessText(text_selecionado);
+                
+                text_sumario = preProccessText(text_sumario);
+		text_selecionado = preProccessText(text_selecionado);
 		
 		//Separa texto selecionado em palavras
 		SentenceCogroo selecionado = new SentenceCogroo(text_selecionado);
@@ -336,8 +336,7 @@ public class Tagger{
 		String trechosEncontradosConcatenados="";
 
                 //Executa opera√ß√µes de PR√â-PROCESSAMENTO
-		//Acredito que n precisa, porque j· est· tudo sendo pre-processado no inicio
-                //String text_sumario = preProccessText(texto_sumario);
+		String text_sumario = preProccessText(texto_sumario);
 		
                 //Separa texto em senten√ßas
 		String[] sentencas = cogroo.sentDetect(texto_sumario);
