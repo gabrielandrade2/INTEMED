@@ -45,8 +45,8 @@ public class ControleResultados extends Variaveis{
 		this.listaResultados = listaResultados;
 		this.idExecucao = idExecucao;
 		
-                //Expande preposições para mostrar na janela
-                expandePreposicoes();
+                //Pre-Processa o texto para mostrar na janela
+                preProcessaTexto();
                 
 		Janela = new JanelaResultados();
 		Janela.setLocationRelativeTo(null);
@@ -134,10 +134,11 @@ public class ControleResultados extends Variaveis{
 		
 	}
         
-        private void expandePreposicoes(){
+        private void preProcessaTexto(){
             Tagger Tagger = new Tagger(BD);
             for(int i=0; i<listaResultados.size(); i++){
                 String texto = listaResultados.get(i).getTexto();
+                texto = Tagger.preProccessText(texto);
                 texto = Tagger.expandePreposicoes(texto);
                 listaResultados.get(i).setTexto(texto);
             }
@@ -244,7 +245,7 @@ public class ControleResultados extends Variaveis{
 		for(String falsoNegativo:falsosNegativos){
 			if(!(texto == null)){
 				String textoComparacao = texto;
-                                
+                                falsoNegativo = falsoNegativo.toLowerCase();
                           	if(textoComparacao.contains(falsoNegativo)){
                                     String falsoNegativoREGEX = corrigeREGEX(falsoNegativo);
                                     String[] dividido = textoComparacao.split(falsoNegativoREGEX);
@@ -263,6 +264,7 @@ public class ControleResultados extends Variaveis{
 	private String negritaTexto(String texto){
         for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
                           String trecho = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado();
+                          trecho = trecho.toLowerCase();
                           if(!(texto == null)){
 	                          //Isso aqui e para caso no BD não esteja inserido o texto já pre-processado
 	                          String textoComparacao = texto.toLowerCase();
