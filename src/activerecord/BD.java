@@ -573,9 +573,10 @@ public class BD extends ActiveRecord {
  + "res.idtexto,res.idexecucao,res.id,res.trechoencontrado,res.idregra,res.idsubregra, res.issubregra, "
  + "res.comentario, res.isEncontrado, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento,reg.dataregra,reg.previa,reg.texto,"
  + "reg.idtexto,reg.idarquivo,sub.idregra,sub.idsubregra,sub.dataregra,sub.previa,sub.texto, txt.texto "
- + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra and res.idregra=sub.idregra,"
-     + " intemed.regras reg, intemed.textos txt, intemed.execucoes exe "
-     + "where res.idregra=reg.idregra and res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
+ + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra and res.idregra=sub.idregra"
+                                + " left outer join intemed.regras reg on res.idregra=reg.idregra,"
+     + " intemed.textos txt, intemed.execucoes exe "
+     + "where res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
      + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and exe.id="+idExecucao
      + " order by res.id;");
 		ResultSet res = ps.executeQuery();

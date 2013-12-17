@@ -258,25 +258,32 @@ public class ControleResultados extends Variaveis{
 				}
 			}
 		}
+              
 		return texto;
 	}
 	
 	private String negritaTexto(String texto){
+        String textoComparacao = texto.toLowerCase();
         for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
                           String trecho = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado();
                           trecho = trecho.toLowerCase();
                           if(!(texto == null)){
 	                          //Isso aqui e para caso no BD não esteja inserido o texto já pre-processado
-	                          String textoComparacao = texto.toLowerCase();
+	                          
                                   if(textoComparacao.contains(trecho)){
-                                      String trechoREGEX = corrigeREGEX(trecho);
-	                              String[] dividido = textoComparacao.split(trechoREGEX);
-	                              texto = new String();
-	                              for(int j=0; j<dividido.length - 1; j++){
-	                                  texto += dividido[j] + "<b>";
-	                                  texto += trecho + "</b>";
-	                              }
-	                          texto += dividido[dividido.length-1];
+                                      if(texto.contains(trecho)){
+                                         String trechoREGEX = corrigeREGEX(trecho);
+                                         String[] dividido = textoComparacao.split(trechoREGEX);
+                                         texto = new String();
+                                         for(int j=0; j<dividido.length - 1; j++){
+                                            texto += dividido[j] + "<b>";
+                                           texto += trecho + "</b>";
+                                          }
+                                         texto += dividido[dividido.length-1];
+                                     }
+                                      else{
+                                          texto += " Texto \""+trecho+"\" não foi marcado.";
+                                      }
                           }
                      }
         }
