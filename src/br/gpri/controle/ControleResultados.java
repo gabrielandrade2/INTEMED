@@ -263,15 +263,16 @@ public class ControleResultados extends Variaveis{
 	}
 	
 	private String negritaTexto(String texto){
-        String textoComparacao = texto.toLowerCase();
+            String original = texto.toLowerCase();
         for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
                           String trecho = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado();
                           trecho = trecho.toLowerCase();
                           if(!(texto == null)){
 	                          //Isso aqui e para caso no BD não esteja inserido o texto já pre-processado
-	                          
-                                  if(textoComparacao.contains(trecho)){
-                                      if(texto.contains(trecho)){
+	                          String textoComparacao = texto.toLowerCase();
+                                  if(original.contains(trecho)){
+                                      if(textoComparacao.contains(trecho)){
+                                          
                                          String trechoREGEX = corrigeREGEX(trecho);
                                          String[] dividido = textoComparacao.split(trechoREGEX);
                                          texto = new String();
@@ -371,7 +372,7 @@ public class ControleResultados extends Variaveis{
                 
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
 				if(textoSelecionado >= 0)
-                                    if(!listaResultadosSelecionados.isEmpty())
+                                    
 					idTexto = listaResultadosSelecionados.get(textoSelecionado).getIdTexto();
 				
                                 //Pegar texto daqui, se pegar da área texto vem com html e os acentos zuados
