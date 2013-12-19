@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -29,6 +31,7 @@ public class ControleResultados extends Variaveis{
 	int idResultSR;
 	int idExecucao;
 	int idTexto;
+        String original;
 	private JanelaResultados Janela;
         
 	private List<Resultados> listaResultados;
@@ -129,10 +132,11 @@ public class ControleResultados extends Variaveis{
 		Janela.RegraTextoTrecho.setText("");
 		Janela.TextoSubRegra.setText("");
 		Janela.SubRegraTextoTrecho.setText("");
-		Janela.AreaTexto.setText("");
-		
-		
-	}
+        }
+        
+        private void limpaAreaTexto(){
+            	Janela.AreaTexto.setText("");
+        }
         
         private void preProcessaTexto(){
             Tagger Tagger = new Tagger(BD);
@@ -241,20 +245,32 @@ public class ControleResultados extends Variaveis{
 	}
 	
 	private String marcaFalsosNegativos(String texto){
+            if(!(texto == null)){
 		List<String> falsosNegativos = BD.selectFalsoNegativo(idExecucao, idTexto);
 		for(String falsoNegativo:falsosNegativos){
-			if(!(texto == null)){
-				String textoComparacao = texto;
+                                String textoComparacao = texto;
                                 falsoNegativo = falsoNegativo.toLowerCase();
-                          	if(textoComparacao.contains(falsoNegativo)){
+                          	if(original.contains(falsoNegativo)){
                                     String falsoNegativoREGEX = corrigeREGEX(falsoNegativo);
+                                    
+                                    Pattern pattern = Pattern.compile(falsoNegativoREGEX);
+                                    Matcher matcher = pattern.matcher(textoComparacao);
+                                    matcher.find();
+                                    
                                     String[] dividido = textoComparacao.split(falsoNegativoREGEX);
                                     texto = new String();
-                                    for(int j=0; j<dividido.length - 1; j++){
-                                        texto += dividido[j] + "<font color=\"red\">";
-                                        texto += falsoNegativo + "</font>";
-                                    }
-                                    texto += dividido[dividido.length-1];
+                                    
+                                     if(dividido.length == 1){
+                                             texto += dividido[0] + "<font color=\"red\">";
+                                             texto += matcher.group(0) + " </font>";
+                                         }
+                                         else{
+                                            for(int j=0; j<dividido.length - 1; j++){
+                                                texto += dividido[j] + "<font color=\"red\">";
+                                                texto += matcher.group(j) + " </font>";
+                                            }
+                                            texto += dividido[dividido.length-1];
+                                         }   
 				}
 			}
 		}
@@ -264,7 +280,7 @@ public class ControleResultados extends Variaveis{
 	
 	private String negritaTexto(String texto){
            if(!(texto == null)){
-               String original = texto;     
+               original = texto;     
                for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
                           String trecho = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado();
                           trecho = trecho.toLowerCase();
@@ -274,17 +290,22 @@ public class ControleResultados extends Variaveis{
                                   if(original.contains(trecho)){
                                           
                                          String trechoREGEX = corrigeREGEX(trecho);
+                   
+                                         Pattern pattern = Pattern.compile(trechoREGEX);
+                                         Matcher matcher = pattern.matcher(textoComparacao);
+                                         matcher.find();
+                                                 
                                          String[] dividido = textoComparacao.split(trechoREGEX);
                                          texto = new String();
                                          
                                          if(dividido.length == 1){
                                              texto += dividido[0] + "<b>";
-                                             texto += trecho + "</b>";
+                                             texto += matcher.group(0) + "</b>";
                                          }
                                          else{
                                             for(int j=0; j<dividido.length - 1; j++){
                                                 texto += dividido[j] + "<b>";
-                                                texto += trecho + "</b>";
+                                                texto += matcher.group(j) + "</b>";
                                             }
                                             texto += dividido[dividido.length-1];
                                          }                             
@@ -301,8 +322,8 @@ public class ControleResultados extends Variaveis{
             if(trecho.contains(")"))
                 trecho = trecho.replaceAll("\\)", "\\\\)");
             if(trecho.contains(" "))
-                trecho = trecho.replaceAll(" ", " ( |<b>|</b>|)*");
-            //trecho = "(|<b>|</b>)*" + trecho;
+                trecho = trecho.replaceAll(" ", " ( |<b>|</b>|<font color=\"red\">|</font>|)*");
+
                 
             return trecho;
         }
@@ -376,6 +397,7 @@ public class ControleResultados extends Variaveis{
 			public void valueChanged(ListSelectionEvent Regras) {
                             
 				limpaCaixasTexto();
+                                limpaAreaTexto();
                 
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
 				if(textoSelecionado >= 0)
@@ -394,6 +416,7 @@ public class ControleResultados extends Variaveis{
                                     nenhumaEntrada.addElement("Nenhuma entrada");
                                     Janela.ListaTextos.setModel(nenhumaEntrada);
                                     limpaCaixasTexto();
+                                    limpaAreaTexto();
                                     DefaultListModel listaVazia = new DefaultListModel();
                                     Janela.ListaRegra.setModel(listaVazia);
                                     Janela.ListaSubRegra.setModel(listaVazia);
