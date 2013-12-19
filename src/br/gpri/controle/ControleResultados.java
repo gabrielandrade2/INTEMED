@@ -263,28 +263,31 @@ public class ControleResultados extends Variaveis{
 	}
 	
 	private String negritaTexto(String texto){
-            String original = texto.toLowerCase();
-        for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
+           if(!(texto == null)){
+               String original = texto;     
+               for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
                           String trecho = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado();
                           trecho = trecho.toLowerCase();
-                          if(!(texto == null)){
+                          
 	                          //Isso aqui e para caso no BD não esteja inserido o texto já pre-processado
 	                          String textoComparacao = texto.toLowerCase();
                                   if(original.contains(trecho)){
-                                      if(textoComparacao.contains(trecho)){
                                           
                                          String trechoREGEX = corrigeREGEX(trecho);
                                          String[] dividido = textoComparacao.split(trechoREGEX);
                                          texto = new String();
-                                         for(int j=0; j<dividido.length - 1; j++){
-                                            texto += dividido[j] + "<b>";
-                                           texto += trecho + "</b>";
-                                          }
-                                         texto += dividido[dividido.length-1];
-                                     }
-                                      else{
-                                          texto += " Texto \""+trecho+"\" não foi marcado.";
-                                      }
+                                         
+                                         if(dividido.length == 1){
+                                             texto += dividido[0] + "<b>";
+                                             texto += trecho + "</b>";
+                                         }
+                                         else{
+                                            for(int j=0; j<dividido.length - 1; j++){
+                                                texto += dividido[j] + "<b>";
+                                                texto += trecho + "</b>";
+                                            }
+                                            texto += dividido[dividido.length-1];
+                                         }                             
                           }
                      }
         }
@@ -297,6 +300,10 @@ public class ControleResultados extends Variaveis{
                 trecho = trecho.replaceAll("\\(", "\\\\(");
             if(trecho.contains(")"))
                 trecho = trecho.replaceAll("\\)", "\\\\)");
+            if(trecho.contains(" "))
+                trecho = trecho.replaceAll(" ", " ( |<b>|</b>|)*");
+            //trecho = "(|<b>|</b>)*" + trecho;
+                
             return trecho;
         }
         
