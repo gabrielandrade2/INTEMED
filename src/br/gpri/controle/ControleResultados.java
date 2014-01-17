@@ -307,8 +307,8 @@ public class ControleResultados extends Variaveis{
                                                 if (j==0){
                                                     texto += dividido[j];
                                                 }
-//                                                texto += "<b>" + matcher.group(j) + "</b>";
-                                                texto += "<b>" + trecho + "</b>";
+                                                texto += "<b>" + matcher.group(0) + "</b>";
+//                                                texto += "<b>" + trecho + "</b>";
                                                 texto += dividido[j+1];
                                                 }
                                             }                             
