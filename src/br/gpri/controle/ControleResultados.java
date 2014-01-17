@@ -293,12 +293,12 @@ public class ControleResultados extends Variaveis{
                    
                                          Pattern pattern = Pattern.compile(trechoREGEX);
                                          Matcher matcher = pattern.matcher(textoComparacao);
-                                         matcher.find();
+                                         boolean encontrou=matcher.find();
                                                  
                                          String[] dividido = textoComparacao.split(trechoREGEX);
                                          texto = new String();
                                          
-                                         if(dividido.length == 1){
+                                         if(dividido.length == 1&&encontrou){
                                              texto += dividido[0] + "<b>";
                                              texto += matcher.group(0) + "</b>";
                                          }

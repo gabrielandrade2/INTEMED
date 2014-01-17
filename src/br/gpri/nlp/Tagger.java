@@ -330,13 +330,13 @@ public class Tagger{
 		return s; 
 	}
 	
-	public List<TrechoEncontrado> executaRegra(String texto_sumario, List<Regra> regras){
+        	public List<TrechoEncontrado> executaRegra(String texto_sumario, List<Regra> regras){
 		
 		List<TrechoEncontrado> encontrados = new ArrayList<TrechoEncontrado>();
 		String trechosEncontradosConcatenados="";
 
                 //Executa operações de PRÉ-PROCESSAMENTO
-		String text_sumario = preProccessText(texto_sumario);
+		texto_sumario = preProccessText(texto_sumario);
 		
                 //Separa texto em sentenças
 		String[] sentencas = cogroo.sentDetect(texto_sumario);
@@ -509,7 +509,8 @@ public class Tagger{
 	}
 	private String retiraPontuacao(String text){
 		
-		return text.replaceAll("[-!?><=%;/#,@*]", " ");
+//		return text.replaceAll("[-!?><=%;/#,@*]", " ");
+		return text.replaceAll("[-!?><=%;/#@*]", " ");
 		
 	}
 	
