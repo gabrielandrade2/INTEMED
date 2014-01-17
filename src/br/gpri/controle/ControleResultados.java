@@ -303,12 +303,15 @@ public class ControleResultados extends Variaveis{
                                              texto += matcher.group(0) + "</b>";
                                          }
                                          else{
-                                            for(int j=0; j<dividido.length - 1; j++){
-                                                texto += dividido[j] + "<b>";
-                                                texto += matcher.group(j) + "</b>";
-                                            }
-                                            texto += dividido[dividido.length-1];
-                                         }                             
+                                            for(int j=0; j<dividido.length-1; j++){
+                                                if (j==0){
+                                                    texto += dividido[j];
+                                                }
+//                                                texto += "<b>" + matcher.group(j) + "</b>";
+                                                texto += "<b>" + trecho + "</b>";
+                                                texto += dividido[j+1];
+                                                }
+                                            }                             
                           }
                      }
         }
