@@ -581,7 +581,7 @@ public class BD extends ActiveRecord {
      + " order by res.id;");
 		ResultSet res = ps.executeQuery();
 		Resultados ResultadoTexto = new Resultados();
-				while(res.next()){
+				while(res.next()){  
 					if(once){
 						idTexto = res.getInt("res.idTexto");
 						once = false;
@@ -622,7 +622,8 @@ public class BD extends ActiveRecord {
 					}
 					ResultadoTexto.addTrecho(t);
 				}
-				
+						lista.add(ResultadoTexto);
+
 			}
 			
 			catch(SQLException e){

@@ -308,6 +308,11 @@ public class ControleResultados extends Variaveis{
                                                     texto += dividido[j];
                                                 }
                                                 String st0 = matcher.group(0);
+                                                String st1 = matcher.group(1);//devia dar para usar este, mas está vazio, então tem que ter o if abaixo e usar o trecho.
+//                                                if (j>0&&!trecho.contentEquals(st0))
+//                                                {
+//                                                   st0=trecho; 
+//                                                }
                                                 int posInicio=st0.indexOf("<b>");
                                                 int posFim=st0.indexOf("</b>");
                                                 if (posInicio > -1 && posFim>posInicio)
@@ -319,7 +324,7 @@ public class ControleResultados extends Variaveis{
                                                 if (posFim > -1 && posInicio>posFim)
                                                 {
                                                     st0=st0.replace("<b>", "");
-                                                    st0=st0.replace("</b>", "");
+                                                    st0=st0.replace("</b>", "");                                                    
                                                 }
                                                 if (posInicio > -1 && posFim==-1)
                                                 {
