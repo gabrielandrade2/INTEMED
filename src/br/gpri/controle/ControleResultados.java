@@ -298,9 +298,12 @@ public class ControleResultados extends Variaveis{
                                          String[] dividido = textoComparacao.split(trechoREGEX);
                                          texto = new String();
                                          
-                                         if(dividido.length == 1&&encontrou){
-                                             texto += dividido[0] + "<b>";
-                                             texto += matcher.group(0) + "</b>";
+                                         if(dividido.length == 1){
+                                             texto += dividido[0];
+                                             if(encontrou)
+                                             {
+                                                texto += "<b>" + matcher.group(0) + "</b>";
+                                             }
                                          }
                                          else{
                                             for(int j=0; j<dividido.length-1; j++){
@@ -309,10 +312,10 @@ public class ControleResultados extends Variaveis{
                                                 }
                                                 String st0 = matcher.group(0);
                                                 String st1 = matcher.group(1);//devia dar para usar este, mas está vazio, então tem que ter o if abaixo e usar o trecho.
-//                                                if (j>0&&!trecho.contentEquals(st0))
-//                                                {
-//                                                   st0=trecho; 
-//                                                }
+                                                if (j>0&&!trecho.contentEquals(st0))
+                                                {
+                                                   st0=trecho; 
+                                                }
                                                 int posInicio=st0.indexOf("<b>");
                                                 int posFim=st0.indexOf("</b>");
                                                 if (posInicio > -1 && posFim>posInicio)
