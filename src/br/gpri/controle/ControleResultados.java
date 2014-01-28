@@ -311,7 +311,6 @@ public class ControleResultados extends Variaveis{
                                                     texto += dividido[j];
                                                 }
                                                 String st0 = matcher.group(0);
-                                                String st1 = matcher.group(1);//devia dar para usar este, mas está vazio, então tem que ter o if abaixo e usar o trecho.
                                                 if (j>0&&!trecho.contentEquals(st0))
                                                 {
                                                    st0=trecho; 
