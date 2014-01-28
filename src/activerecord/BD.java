@@ -578,7 +578,7 @@ public class BD extends ActiveRecord {
      + " intemed.textos txt, intemed.execucoes exe "
      + "where res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
      + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and exe.id="+idExecucao
-     + " order by res.id;");
+     + " order by res.idtexto, res.id;");
 		ResultSet res = ps.executeQuery();
 		Resultados ResultadoTexto = new Resultados();
 				while(res.next()){  
