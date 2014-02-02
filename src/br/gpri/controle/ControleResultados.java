@@ -255,19 +255,30 @@ public class ControleResultados extends Variaveis{
                                     
                                     Pattern pattern = Pattern.compile(falsoNegativoREGEX);
                                     Matcher matcher = pattern.matcher(textoComparacao);
-                                    matcher.find();
+                                    boolean encontrou=matcher.find();
                                     
                                     String[] dividido = textoComparacao.split(falsoNegativoREGEX);
                                     texto = new String();
                                     
                                      if(dividido.length == 1){
-                                             texto += dividido[0] + "<font color=\"red\">";
-                                             texto += matcher.group(0) + " </font>";
+                                             texto += dividido[0];
+                                             if(encontrou)
+                                             {
+                                                texto += "<font color=\"red\">" + matcher.group(0) + " </font>";
+                                             }
+
                                          }
                                          else{
                                             for(int j=0; j<dividido.length - 1; j++){
                                                 texto += dividido[j] + "<font color=\"red\">";
-                                                texto += matcher.group(j) + " </font>";
+                                                if (j<matcher.groupCount())
+                                                {        
+                                                    texto += matcher.group(j) + " </font>";
+                                                }
+                                                else 
+                                                {
+                                                    texto += falsoNegativo + " </font>";
+                                                }
                                             }
                                             texto += dividido[dividido.length-1];
                                          }   
