@@ -770,7 +770,7 @@ public class BD extends ActiveRecord {
 				if(t.hasRegra()){
 					Regra r = t.getRegra();
 					int idRegra = r.getId();
-					ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto, idExecucao, trechoEncontrado, idRegra,isSubregra, isEncontrado,termoAnterior,palavraAnterior,termoPosterior,palavraPosterior) values ("+idTexto+","+idExecucao+",'"+trecho+"',"+idRegra+",0,1,'"+t.getTermoAnterior()+"','"+t.getPalavraAnterior()+"','"+t.getTermoPosterior()+"','"+t.getPalavraPosterior()+"');");
+					ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto, idExecucao, trechoEncontrado, idRegra,isSubregra, isEncontrado,termoAnterior,palavraAnterior,termoPosterior,palavraPosterior,indSentenca,indToken) values ("+idTexto+","+idExecucao+",'"+trecho+"',"+idRegra+",0,1,'"+t.getTermoAnterior()+"','"+t.getPalavraAnterior()+"','"+t.getTermoPosterior()+"','"+t.getPalavraPosterior()+"',"+t.getIndSentenca()+","+t.getIndToken()+");");
 				}
 				
 				else

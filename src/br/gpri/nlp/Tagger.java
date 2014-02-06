@@ -330,17 +330,18 @@ public class Tagger{
 		return s; 
 	}
 	
-        	public List<TrechoEncontrado> executaRegra(String texto_sumario, List<Regra> regras){
+        	public List<TrechoEncontrado> executaRegra(String texto_medico, List<Regra> regras){
 		
 		List<TrechoEncontrado> encontrados = new ArrayList<TrechoEncontrado>();
 		String trechosEncontradosConcatenados="";
-
+                int indSentenca=0;
                 //Executa operações de PRÉ-PROCESSAMENTO
-		texto_sumario = preProccessText(texto_sumario);
+		texto_medico = preProccessText(texto_medico);
 		
                 //Separa texto em sentenças
-		String[] sentencas = cogroo.sentDetect(texto_sumario);
+		String[] sentencas = cogroo.sentDetect(texto_medico);
 		for (String sentenca : sentencas) {
+                    indSentenca++;
 			List<Token> tokens = processCogroo(sentenca);
 			if (temFraseNegativa(sentenca))
 				continue;
@@ -404,6 +405,8 @@ public class Tagger{
                                                                 
 								trechosEncontradosConcatenados = trechosEncontradosConcatenados+trecho+"|";
                                                                 trecho="";
+                                                                t.setIndSentenca (indSentenca);
+                                                                t.setIndToken(i);
 								encontrados.add(t);
 								igual = false;
 								
