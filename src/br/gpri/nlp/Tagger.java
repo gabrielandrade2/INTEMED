@@ -375,8 +375,22 @@ public class Tagger{
 						//
 						//Se toda a comparaÃ§Ã£o for igual, se tiver subregras testa
 						//Se tudo der certo, adiona na lista de encontrados e limpa a string trecho
-						if (trechosEncontradosConcatenados.contains(trecho))
-                                                        {igual=false;}      
+
+//este teste foi tirado para que todas as ocorrências de um termo possam fazer parte do laudo estruturado, senão o laudo estruturado
+//ficava com "lacunas"                                       
+//						if (trechosEncontradosConcatenados.contains(trecho))
+//                                                        {igual=false;}      
+
+//O teste abaixo foi colocado para identificar termos de negação, por enquando somente com "sem"
+
+                                        if (i>0)
+                                                {
+                                                    String lexemeMenosUm=tokens.get(i-1).getLexeme();
+                                                    if(lexemeMenosUm.contentEquals("sem"))
+                                                    {
+                                                        igual=false;
+                                                    }
+                                                }
                                                 if(igual){
                                                                
 //							boolean testeSubregra = true;
