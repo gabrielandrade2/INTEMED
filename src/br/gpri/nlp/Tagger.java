@@ -53,8 +53,9 @@ public class Tagger{
 		text = expandirAcronimos(text);
 		//Coloca em minÃºsculas
 		text = text.toLowerCase();
-		//Retira Stopwords
-		text = retiraStopWords(text);
+		//Retira Stopwords - método retirado para identificar melhor a diferença entre
+                //achado radiológico e termo morfológico, pois os termos morfológicos em algumas regras, são precedidos por artigos
+//		text = retiraStopWords(text);
 		//Remove espaco ponto
 		text = removeEspacaPontuacao(text);
 		//Retira espaco comeco/final frase
