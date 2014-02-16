@@ -357,11 +357,11 @@ public class Tagger{
 				
 				boolean igual = false;
 				
-				
 				//Procura por incidencia da regra
 				for(int i=0; i < tokens.size(); i++){
 					String trecho = "";
-					for(int j=0; j < r.getNumTermos(); j++){
+                            		for(int j=0; j < r.getNumTermos(); j++){
+                                   
 						String c;
 						try{
 							c = tokens.get(i+j).getMorphologicalTag().toString();
@@ -399,7 +399,7 @@ public class Tagger{
                                                     }
                                                 }
                                                 if(igual){
-                                                               
+                                                       
 //							boolean testeSubregra = true;
 							List<TrechoEncontrado> subregrasEncontrados = new ArrayList<TrechoEncontrado>();
                                                         if(r.hasSubregra())
@@ -413,6 +413,8 @@ public class Tagger{
 								t.setIsSubregra(false);
 								t.setHasRegra(true);
 								t.setTrechoEncontrado(trecho);
+                                                                t.setPosInicial(i);
+                                                                t.setPosFinal(i+r.getNumTermos());
                                                                 if(i>0)
                                                                 {
                                                                     t.setTermoAnterior(tokens.get(i-1).getMorphologicalTag().toString());

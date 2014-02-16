@@ -12,8 +12,26 @@ public class TrechoEncontrado {
 	private String palavraAnterior;
 	private String termoPosterior;
 	private String palavraPosterior;
+        private int posInicial = -1;
+        private int posFinal = -1;
         private int indSentenca;
         private int indToken;
+
+    public int getPosInicial() {
+        return posInicial;
+    }
+
+    public void setPosInicial(int posInicial) {
+        this.posInicial = posInicial;
+    }
+
+    public int getPosFinal() {
+        return posFinal;
+    }
+
+    public void setPosFinal(int posFinal) {
+        this.posFinal = posFinal;
+    }
         
         public void setIndSentenca(int indSentenca) {
             this.indSentenca = indSentenca;

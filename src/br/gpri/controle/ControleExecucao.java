@@ -254,6 +254,8 @@ public class ControleExecucao extends Variaveis{
 						System.out.println();
 						for(int j=0; j<encontrados.size(); j++){
 							System.out.println("Trecho Encontrado: "+encontrados.get(j).getTrechoEncontrado());
+                                                        System.out.println("PosInicial= "+ encontrados.get(j).getPosInicial());
+                                                        System.out.println("PosFinal= "+encontrados.get(j).getPosFinal());
 							if(encontrados.get(j).isSubregra()){
 								System.out.println("subRegra: "+encontrados.get(j).getSubregra().getPrevia());
 							}
