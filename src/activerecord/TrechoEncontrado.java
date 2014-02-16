@@ -12,7 +12,23 @@ public class TrechoEncontrado {
 	private String palavraAnterior;
 	private String termoPosterior;
 	private String palavraPosterior;
+        private int indSentenca;
+        private int indToken;
         
+        public void setIndSentenca(int indSentenca) {
+            this.indSentenca = indSentenca;
+           
+        }
+        public void setIndToken(int indToken) {
+            this.indToken = indToken;
+           
+        }
+        public int getIndSentenca(){
+            return indSentenca;
+        }
+        public int getIndToken(){
+            return indToken;
+        }
 	public Subregra getSubregra() {
 		return subregra;
 	}

@@ -53,8 +53,9 @@ public class Tagger{
 		text = expandirAcronimos(text);
 		//Coloca em minÃºsculas
 		text = text.toLowerCase();
-		//Retira Stopwords
-		text = retiraStopWords(text);
+		//Retira Stopwords - método retirado para identificar melhor a diferença entre
+                //achado radiológico e termo morfológico, pois os termos morfológicos em algumas regras, são precedidos por artigos
+//		text = retiraStopWords(text);
 		//Remove espaco ponto
 		text = removeEspacaPontuacao(text);
 		//Retira espaco comeco/final frase
@@ -330,17 +331,18 @@ public class Tagger{
 		return s; 
 	}
 	
-	public List<TrechoEncontrado> executaRegra(String texto_sumario, List<Regra> regras){
+        	public List<TrechoEncontrado> executaRegra(String texto_medico, List<Regra> regras){
 		
 		List<TrechoEncontrado> encontrados = new ArrayList<TrechoEncontrado>();
 		String trechosEncontradosConcatenados="";
-
+                int indSentenca=0;
                 //Executa operaÃ§Ãµes de PRÃ‰-PROCESSAMENTO
-		String text_sumario = preProccessText(texto_sumario);
+		texto_medico = preProccessText(texto_medico);
 		
                 //Separa texto em sentenÃ§as
-		String[] sentencas = cogroo.sentDetect(texto_sumario);
+		String[] sentencas = cogroo.sentDetect(texto_medico);
 		for (String sentenca : sentencas) {
+                    indSentenca++;
 			List<Token> tokens = processCogroo(sentenca);
 			if (temFraseNegativa(sentenca))
 				continue;
@@ -374,8 +376,22 @@ public class Tagger{
 						//
 						//Se toda a comparaÃ§Ã£o for igual, se tiver subregras testa
 						//Se tudo der certo, adiona na lista de encontrados e limpa a string trecho
-						if (trechosEncontradosConcatenados.contains(trecho))
-                                                        {igual=false;}      
+
+//este teste foi tirado para que todas as ocorrências de um termo possam fazer parte do laudo estruturado, senão o laudo estruturado
+//ficava com "lacunas"                                       
+//						if (trechosEncontradosConcatenados.contains(trecho))
+//                                                        {igual=false;}      
+
+//O teste abaixo foi colocado para identificar termos de negação, por enquando somente com "sem"
+
+                                        if (i>0)
+                                                {
+                                                    String lexemeMenosUm=tokens.get(i-1).getLexeme();
+                                                    if(lexemeMenosUm.contentEquals("sem"))
+                                                    {
+                                                        igual=false;
+                                                    }
+                                                }
                                                 if(igual){
                                                                
 //							boolean testeSubregra = true;
@@ -404,6 +420,8 @@ public class Tagger{
                                                                 
 								trechosEncontradosConcatenados = trechosEncontradosConcatenados+trecho+"|";
                                                                 trecho="";
+                                                                t.setIndSentenca (indSentenca);
+                                                                t.setIndToken(i);
 								encontrados.add(t);
 								igual = false;
 								
@@ -509,7 +527,8 @@ public class Tagger{
 	}
 	private String retiraPontuacao(String text){
 		
-		return text.replaceAll("[-!?><=%;/#,@*]", " ");
+//		return text.replaceAll("[-!?><=%;/#,@*]", " ");
+		return text.replaceAll("[-!?><=%;/#@*]", " ");
 		
 	}
 	

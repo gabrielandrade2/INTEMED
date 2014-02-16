@@ -255,19 +255,30 @@ public class ControleResultados extends Variaveis{
                                     
                                     Pattern pattern = Pattern.compile(falsoNegativoREGEX);
                                     Matcher matcher = pattern.matcher(textoComparacao);
-                                    matcher.find();
+                                    boolean encontrou=matcher.find();
                                     
                                     String[] dividido = textoComparacao.split(falsoNegativoREGEX);
                                     texto = new String();
                                     
                                      if(dividido.length == 1){
-                                             texto += dividido[0] + "<font color=\"red\">";
-                                             texto += matcher.group(0) + " </font>";
+                                             texto += dividido[0];
+                                             if(encontrou)
+                                             {
+                                                texto += "<font color=\"red\">" + matcher.group(0) + " </font>";
+                                             }
+
                                          }
                                          else{
                                             for(int j=0; j<dividido.length - 1; j++){
                                                 texto += dividido[j] + "<font color=\"red\">";
-                                                texto += matcher.group(j) + " </font>";
+                                                if (j<matcher.groupCount())
+                                                {        
+                                                    texto += matcher.group(j) + " </font>";
+                                                }
+                                                else 
+                                                {
+                                                    texto += falsoNegativo + " </font>";
+                                                }
                                             }
                                             texto += dividido[dividido.length-1];
                                          }   
@@ -293,22 +304,60 @@ public class ControleResultados extends Variaveis{
                    
                                          Pattern pattern = Pattern.compile(trechoREGEX);
                                          Matcher matcher = pattern.matcher(textoComparacao);
-                                         matcher.find();
+                                         boolean encontrou=matcher.find();
                                                  
                                          String[] dividido = textoComparacao.split(trechoREGEX);
                                          texto = new String();
                                          
                                          if(dividido.length == 1){
-                                             texto += dividido[0] + "<b>";
-                                             texto += matcher.group(0) + "</b>";
+                                             texto += dividido[0];
+                                             if(encontrou)
+                                             {
+                                                texto += "<b>" + matcher.group(0) + "</b>";
+                                             }
                                          }
                                          else{
-                                            for(int j=0; j<dividido.length - 1; j++){
-                                                texto += dividido[j] + "<b>";
-                                                texto += matcher.group(j) + "</b>";
-                                            }
-                                            texto += dividido[dividido.length-1];
-                                         }                             
+                                            for(int j=0; j<dividido.length-1; j++){
+                                                if (j==0){
+                                                    texto += dividido[j];
+                                                }
+                                                String st0 = matcher.group(0);
+                                                if (j>0&&!trecho.contentEquals(st0))
+                                                {
+                                                   st0=trecho; 
+                                                }
+                                                int posInicio=st0.indexOf("<b>");
+                                                int posFim=st0.indexOf("</b>");
+                                                if (posInicio > -1 && posFim>posInicio)
+                                                {
+                                                    st0=st0.replace("<b>", "");
+                                                    st0=st0.replace("</b>", "");
+                                                    st0="<b>"+st0+"</b>";
+                                                }
+                                                if (posFim > -1 && posInicio>posFim)
+                                                {
+                                                    st0=st0.replace("<b>", "");
+                                                    st0=st0.replace("</b>", "");                                                    
+                                                }
+                                                if (posInicio > -1 && posFim==-1)
+                                                {
+                                                    st0=st0.replace("<b>", "");
+                                                    st0="<b>"+st0;
+                                                }
+                                                if (posFim > -1 && posInicio==-1)
+                                                {
+                                                    st0=st0.replace("</b>", "");
+                                                    st0=st0+"</b>";
+                                                }
+                                                if (posFim == -1 && posInicio==-1)
+                                                {
+                                                    st0="<b>"+st0+"</b>";
+                                                }
+                                                texto +=  st0;
+//                                                texto += "<b>" + trecho + "</b>";
+                                                texto += dividido[j+1];
+                                                }
+                                            }                             
                           }
                      }
         }

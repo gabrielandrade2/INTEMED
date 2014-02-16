@@ -578,10 +578,10 @@ public class BD extends ActiveRecord {
      + " intemed.textos txt, intemed.execucoes exe "
      + "where res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
      + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and exe.id="+idExecucao
-     + " order by res.id;");
+     + " order by res.idtexto, res.id;");
 		ResultSet res = ps.executeQuery();
 		Resultados ResultadoTexto = new Resultados();
-				while(res.next()){
+				while(res.next()){  
 					if(once){
 						idTexto = res.getInt("res.idTexto");
 						once = false;
@@ -622,7 +622,8 @@ public class BD extends ActiveRecord {
 					}
 					ResultadoTexto.addTrecho(t);
 				}
-				
+						lista.add(ResultadoTexto);
+
 			}
 			
 			catch(SQLException e){
@@ -769,7 +770,7 @@ public class BD extends ActiveRecord {
 				if(t.hasRegra()){
 					Regra r = t.getRegra();
 					int idRegra = r.getId();
-					ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto, idExecucao, trechoEncontrado, idRegra,isSubregra, isEncontrado,termoAnterior,palavraAnterior,termoPosterior,palavraPosterior) values ("+idTexto+","+idExecucao+",'"+trecho+"',"+idRegra+",0,1,'"+t.getTermoAnterior()+"','"+t.getPalavraAnterior()+"','"+t.getTermoPosterior()+"','"+t.getPalavraPosterior()+"');");
+					ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto, idExecucao, trechoEncontrado, idRegra,isSubregra, isEncontrado,termoAnterior,palavraAnterior,termoPosterior,palavraPosterior,indSentenca,indToken) values ("+idTexto+","+idExecucao+",'"+trecho+"',"+idRegra+",0,1,'"+t.getTermoAnterior()+"','"+t.getPalavraAnterior()+"','"+t.getTermoPosterior()+"','"+t.getPalavraPosterior()+"',"+t.getIndSentenca()+","+t.getIndToken()+");");
 				}
 				
 				else
