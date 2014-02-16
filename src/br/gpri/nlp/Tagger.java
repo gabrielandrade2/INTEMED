@@ -194,24 +194,25 @@ public class Tagger{
 		cogroo.tokenizer(selecionado);
 // retirado porque estava tirando a "base" do trecho "n�cleos da base"		cogroo.nameFinder(selecionado);
 		cogroo.preTagger(selecionado);
-		List<Token> text_separado = selecionado.getTokens();
+		List<Token> text_selecionado_separado = selecionado.getTokens();
 						
 		String previa = "";
+                String texto_expandido = "";
 		
 		//Separa texto em sentenças
 		String[] sentencas = cogroo.sentDetect(text_sumario);
 		for (String sentenca : sentencas) {
 			List<Token> tokens = processCogroo(sentenca);
 
-			//Procura onde estão os termos selecionados
+			//Procura onde estão os termos seleciontexto_expandido = text_selecionado_separado.get(k).getLexeme();ados
 			//Compara um termo com o primeiro do vetor separado, caso encontre, ve se os termos
 			//seguintes também são os esperados
 			boolean igual = false;
 			
 			for(int i=0; i < tokens.size(); i++){
-				for(int j=0; j < text_separado.size(); j++){
+				for(int j=0; j < text_selecionado_separado.size(); j++){
 					try{
-					if(text_separado.get(j).getLexeme().equals(tokens.get(i+j).getLexeme()))
+					if(text_selecionado_separado.get(j).getLexeme().equals(tokens.get(i+j).getLexeme()))
 						igual = true;
 					else{
 						igual = false;
@@ -229,8 +230,9 @@ public class Tagger{
 				//Cria a string a ser retornada,
 				//a partir do indice do primeiro termo esperado encontrado. 
 				if(igual){
-					for(int k=0; k < text_separado.size(); k++){
-						Token token = tokens.get(k+i);
+					for(int k=0; k < text_selecionado_separado.size(); k++){
+						texto_expandido += text_selecionado_separado.get(k).getLexeme() + " "; //Para deixar o texto da regra expandido quando guardar no bd, ao inv�s do selecionado.
+                                                Token token = tokens.get(k+i);
 						if(token.getLexeme().toString().equals("."));
 						else{
 							previa += "[" + token.getMorphologicalTag() + "]";
@@ -247,11 +249,12 @@ public class Tagger{
 			}
                         if (igual) break;
 		}
-		
+                texto_expandido = texto_expandido.substring(0, texto_expandido.length()-1);
+                
 		Regra r = new Regra();
 		r.setId(idRegra);
 		r.setPrevia(previa);
-		r.setTexto(text_selecionado);
+		r.setTexto(texto_expandido);
 		r.setConjunto(conjuntoTeste);
 		r.setElemento(idElemento);
 		r.setTermos(termosregras);
@@ -274,9 +277,10 @@ public class Tagger{
 		cogroo.tokenizer(selecionado);
 // retirado porque estava tirando a "base" do trecho "n�cleos da base"		cogroo.nameFinder(selecionado);
 		cogroo.preTagger(selecionado);
-		List<Token> text_separado = selecionado.getTokens();
+		List<Token> text_selecionado_separado = selecionado.getTokens();
 						
 		String previa = "";
+                String texto_expandido = "";
 		
 		//Separa texto em sentenças
 		String[] sentencas = cogroo.sentDetect(text_sumario);
@@ -289,8 +293,8 @@ public class Tagger{
 			boolean igual = false;
 			
 			for(int i=0; i < tokens.size(); i++){
-				for(int j=0; j < text_separado.size(); j++){
-					if(text_separado.get(j).getLexeme().equals(tokens.get(i+j).getLexeme()))
+				for(int j=0; j < text_selecionado_separado.size(); j++){
+					if(text_selecionado_separado.get(j).getLexeme().equals(tokens.get(i+j).getLexeme()))
 						igual = true;
 					else{
 						igual = false;
@@ -301,8 +305,9 @@ public class Tagger{
 				//Cria a string a ser retornada,
 				//a partir do indice do primeiro termo esperado encontrado. 
 				if(igual){
-					for(int k=0; k < text_separado.size(); k++){
-						Token token = tokens.get(k+i);
+					for(int k=0; k < text_selecionado_separado.size(); k++){
+						texto_expandido += text_selecionado_separado.get(k).getLexeme() + " ";
+                                                Token token = tokens.get(k+i);
 						if(token.getLexeme().toString().equals("."));
 						else{
 							previa += "[" + token.getMorphologicalTag() + "]";
@@ -320,12 +325,13 @@ public class Tagger{
                         }
                         if (igual) break;
 		}
-		
+		texto_expandido = texto_expandido.substring(0, texto_expandido.length()-1);
+                
 		Subregra s = new Subregra();
 		s.setId(idSubRegra);
 		s.setIdRegra(idRegra);
 		s.setPrevia(previa);
-		s.setTexto(text_selecionado);
+		s.setTexto(texto_expandido);
 		s.setTermos(termosregras);
 		
 		return s; 
