@@ -289,7 +289,31 @@ public class ControleResultados extends Variaveis{
 		return texto;
 	}
 	
-	private String negritaTexto(String texto){
+        private String negritaTexto(String texto){
+           if(!(texto == null)){
+                              
+               original = texto;     
+               String[] texto_separado = texto.split(" ");
+               
+               for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
+                   int posInicial = trechosTextoSelecionadoRegras.get(i).getPosInicial();
+                   int posFinal = trechosTextoSelecionadoRegras.get(i).getPosFinal();
+                   
+                   texto_separado[posInicial] = "<b>" + texto_separado[posInicial];
+                   texto_separado[posFinal] = texto_separado[posFinal] + "</b>";
+                   
+               }
+             
+               texto = new String();
+               for (String token : texto_separado) 
+                   texto += " " + token;
+               
+               texto = texto.substring(1, texto.length());
+        }
+        return texto;
+   }
+        
+	/*private String negritaTextoold(String texto){
            if(!(texto == null)){
                original = texto;     
                for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
@@ -362,7 +386,7 @@ public class ControleResultados extends Variaveis{
                      }
         }
         return texto;
-   }
+   }*/
 
         private String corrigeREGEX(String trecho){
        

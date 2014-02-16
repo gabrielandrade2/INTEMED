@@ -414,7 +414,7 @@ public class Tagger{
 								t.setHasRegra(true);
 								t.setTrechoEncontrado(trecho);
                                                                 t.setPosInicial(i);
-                                                                t.setPosFinal(i+r.getNumTermos());
+                                                                t.setPosFinal(i+r.getNumTermos()-1);
                                                                 if(i>0)
                                                                 {
                                                                     t.setTermoAnterior(tokens.get(i-1).getMorphologicalTag().toString());
