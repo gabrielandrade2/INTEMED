@@ -577,7 +577,7 @@ public class BD extends ActiveRecord {
                                 + " left outer join intemed.regras reg on res.idregra=reg.idregra,"
      + " intemed.textos txt, intemed.execucoes exe "
      + "where res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
-     + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and exe.id="+idExecucao
+     + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and res.isFalsoNegativo=0 and exe.id="+idExecucao
      + " order by res.idtexto, res.id;");
 		ResultSet res = ps.executeQuery();
 		Resultados ResultadoTexto = new Resultados();
@@ -720,10 +720,10 @@ public class BD extends ActiveRecord {
 		return true;
 	}
 
-	public boolean insertFalsoNegativo(int idTexto, int idExecucao, String trechoSelecionado){
+	public boolean insertFalsoNegativo(int idTexto, int idExecucao, FalsoNegativo fn){
 		boolean erro = false;
 		try {
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto,idExecucao,trechoEncontrado,isEncontrado,isFalsoNegativo) VALUES("+idTexto+","+idExecucao+",'"+trechoSelecionado+"',0,1);");
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("INSERT into resultados(idTexto,idExecucao,trechoEncontrado,isEncontrado,isFalsoNegativo,posInicial,posFinal) VALUES("+idTexto+","+idExecucao+",'"+fn.getTrechoSelecionado()+"',0,1,"+fn.getPosIncial()+","+fn.getPosFinal()+");");
 			erro = ps.execute();
 		}
 		catch (SQLException e) {
@@ -733,13 +733,16 @@ public class BD extends ActiveRecord {
 		return erro;
 	}
 	
-	public List<String> selectFalsoNegativo(int idExecucao, int idTexto){
-		List<String> falsosNegativos = new ArrayList<String>();
+	public List<FalsoNegativo> selectFalsoNegativo(int idExecucao, int idTexto){
+		List<FalsoNegativo> falsosNegativos = new ArrayList<FalsoNegativo>();
 		try {
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT trechoEncontrado from resultados WHERE (idExecucao="+idExecucao+" AND idTexto="+idTexto+" AND isEncontrado=0 AND isFalsoNegativo=1);");
+			
+                    //Dá pra tirar o trechoEncontrado do Select, só precisa das posícões pra marcar. Deixar só por que ainda não terminei a parte da marcacao pelas posicoes.
+                    PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT trechoEncontrado,posInicial,posFinal from resultados WHERE (idExecucao="+idExecucao+" AND idTexto="+idTexto+" AND isEncontrado=0 AND isFalsoNegativo=1);");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
-				falsosNegativos.add(res.getString("trechoEncontrado"));
+                                FalsoNegativo fn = new FalsoNegativo(res.getString("trechoEncontrado"), res.getInt("posInicial"), res.getInt("posFinal"));
+				falsosNegativos.add(fn);
 			}
 		} 
 		catch (SQLException e) {

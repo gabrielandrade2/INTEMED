@@ -1,6 +1,7 @@
 package br.gpri.controle;
 
 import activerecord.Elemento;
+import activerecord.FalsoNegativo;
 import activerecord.Regra;
 import activerecord.Resultados;
 import activerecord.Subregra;
@@ -244,10 +245,34 @@ public class ControleResultados extends Variaveis{
 		Janela.ListaSubRegra.setSelectedIndex(0);
 	}
 	
-	private String marcaFalsosNegativos(String texto){
+        private String marcaFalsosNegativos(String texto){
             if(!(texto == null)){
-		List<String> falsosNegativos = BD.selectFalsoNegativo(idExecucao, idTexto);
-		for(String falsoNegativo:falsosNegativos){
+                String[] texto_separado = texto.split(" ");
+		List<FalsoNegativo> falsosNegativos = BD.selectFalsoNegativo(idExecucao, idTexto);
+		
+                for(FalsoNegativo fn:falsosNegativos){
+                   int posInicial = fn.getPosIncial();
+                   int posFinal = fn.getPosFinal();
+                   texto_separado[posInicial] = "<font color=\"red\">" + texto_separado[posInicial];
+                   texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"red\">";
+               }
+               texto = new String();
+               for (String token : texto_separado) 
+                   texto += " " + token;
+               
+               texto = texto.substring(1, texto.length());
+             }
+	    
+            System.out.println(texto);
+            return texto;
+	}
+        
+        
+	/*private String marcaFalsosNegativosold(String texto){
+            if(!(texto == null)){
+		List<FalsoNegativo> falsosNegativos = BD.selectFalsoNegativo(idExecucao, idTexto);
+		for(FalsoNegativo fn:falsosNegativos){
+                                String falsoNegativo = fn.getTrechoSelecionado();
                                 String textoComparacao = texto;
                                 falsoNegativo = falsoNegativo.toLowerCase();
                           	if(original.contains(falsoNegativo)){
@@ -287,7 +312,7 @@ public class ControleResultados extends Variaveis{
 		}
               
 		return texto;
-	}
+	}*/
 	
         private String negritaTexto(String texto){
            if(!(texto == null)){
@@ -451,16 +476,46 @@ public class ControleResultados extends Variaveis{
 			ActionListener FalsoNegativo = new ActionListener() {
 					public void actionPerformed(ActionEvent FalsoNegativo) {
 						String trechoSelecionado = Janela.AreaTexto.getSelectedText();
-						BD.insertFalsoNegativo(idTexto, idExecucao, trechoSelecionado);
+                                                
+                                                //Identifica a posição no padrão utilizado, por número de palavra
+                                                int charInicial = Janela.AreaTexto.getSelectionStart();
+                                                int charFinal = Janela.AreaTexto.getSelectionEnd();
+                                                
+                                                
+                                                
+                                                String texto =  (String) Janela.ListaTextos.getSelectedValue();
+                                                        
+                                                //Conta o número de palavras até a palavra de início
+                                                int posInicial = 0;
+                                                for(int i=0; i<charInicial; i++)
+                                                    if(texto.charAt(i) == ' ')
+                                                        posInicial++;
+                                                                                                
+                                                //Conta o número de palvras entre o início e o fim do trecho marcado
+                                                int posFinal = posInicial;
+                                                for(int i=charInicial; i<charFinal; i++)
+                                                    if(texto.charAt(i) == ' ')
+                                                        posFinal++;
+                                                posFinal--; //Pegava sempre uma palavra a mais
+                                                
+                                                //Para garantir que não foi selecionado só parte de uma palavra e ele marque de vermelho até o final
+                                                if(posInicial > posFinal)                                                
+                                                    posFinal = posInicial;
+                                                
+                                                
+                                                //Cria objeto Falson Negativo
+                                                FalsoNegativo fn = new FalsoNegativo(trechoSelecionado, posInicial, posFinal);
+                                                
+						BD.insertFalsoNegativo(idTexto, idExecucao, fn);
                                       
                                                 //Identifica logo apos marcar
                                                 
                                                 //Pegar texto daqui, se pegar da área texto vem com html e os acentos zuados
-                                                String texto =  (String) Janela.ListaTextos.getSelectedValue();
+//                                                String texto =  (String) Janela.ListaTextos.getSelectedValue();
                                                 texto = negritaTexto(texto);
                                                 texto = marcaFalsosNegativos(texto);
                                                 Janela.AreaTexto.setText(texto);
-                                                
+                                                Janela.AreaTexto.updateUI();
                             		}
 				};
 				
