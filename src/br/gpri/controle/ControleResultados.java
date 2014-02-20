@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +44,10 @@ public class ControleResultados extends Variaveis{
         
 	private List<TrechoEncontrado> trechosTextoSelecionadoRegras = new ArrayList<TrechoEncontrado>();
 	private List<TrechoEncontrado> trechosTextoSelecionadoSubregras = new ArrayList<TrechoEncontrado>();
+        
+        List<Integer> colorsId = new ArrayList<Integer>();
+        List<String> colors = Arrays.asList("red","green","blue","yellow","brown","purple","orange","salmon","sandybrown","cyan","violet","dimgray","forestgreen","darkcyan","darkgoldenrod","yellowgreen, crismon");
+
 	
 	public ControleResultados(List<Resultados> listaResultados, int idExecucao){
 		linha = 0;
@@ -253,8 +258,10 @@ public class ControleResultados extends Variaveis{
                 for(FalsoNegativo fn:falsosNegativos){
                    int posInicial = fn.getPosIncial();
                    int posFinal = fn.getPosFinal();
-                   texto_separado[posInicial] = "<font color=\"red\">" + texto_separado[posInicial];
-                   texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"red\">";
+                   //texto_separado[posInicial] = "<font color=\"red\">" + texto_separado[posInicial];
+                   //texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"red\">";
+                   texto_separado[posInicial] = "<mark style=\"background-color:DarkSalmon ;\">" + texto_separado[posInicial];
+                   texto_separado[posFinal] = texto_separado[posFinal] + "</mark>";
                }
                texto = new String();
                for (String token : texto_separado) 
@@ -324,8 +331,21 @@ public class ControleResultados extends Variaveis{
                    int posInicial = trechosTextoSelecionadoRegras.get(i).getPosInicial();
                    int posFinal = trechosTextoSelecionadoRegras.get(i).getPosFinal();
                    
-                   texto_separado[posInicial] = "<b>" + texto_separado[posInicial];
-                   texto_separado[posFinal] = texto_separado[posFinal] + "</b>";
+                   int elemento = trechosTextoSelecionadoRegras.get(i).getRegra().getElemento();
+                   if(!colorsId.contains(elemento))
+                       colorsId.add(elemento);
+                   
+                   int colorId = colorsId.indexOf(elemento);
+                   String color = new String();
+                   try{
+                       color = colors.get(colorId);
+                   }
+                   catch(ArrayIndexOutOfBoundsException e){
+                       color = colors.get(colorId - colors.size());
+                   }
+                   
+                   texto_separado[posInicial] = "<font color=\""+color+"\"><b>" + texto_separado[posInicial];
+                   texto_separado[posFinal] = texto_separado[posFinal] + "</b></font color=\""+color+"\">";
                    
                }
              
@@ -338,7 +358,9 @@ public class ControleResultados extends Variaveis{
         return texto;
    }
         
-	/*private String negritaTextoold(String texto){
+
+        
+        /*private String negritaTextoold(String texto){
            if(!(texto == null)){
                original = texto;     
                for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){

@@ -606,9 +606,10 @@ public class BD extends ActiveRecord {
                                                 t.setIsSubregra(true);
                                             }
                                         Regra r = new Regra();
-                                    r.setId(res.getInt("res.idRegra"));
-                                    r.setPrevia(res.getString("reg.previa"));
-                                    r.setTexto(res.getString("reg.texto"));
+                                        r.setId(res.getInt("res.idRegra"));
+                                        r.setPrevia(res.getString("reg.previa"));
+                                        r.setTexto(res.getString("reg.texto"));
+                                        r.setElemento(res.getInt("reg.idelemento"));
 		
 					t.setRegra(r);
 					t.setTrechoEncontrado(res.getString("res.trechoEncontrado"));
