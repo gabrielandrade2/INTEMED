@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Stack;
 import activerecord.Dicionario;
 import com.mysql.jdbc.PreparedStatement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BD extends ActiveRecord {
 	
@@ -556,6 +558,21 @@ public class BD extends ActiveRecord {
 		return countTextos;
 	}
 	
+        public String selectCorElemento(int idElemento){
+            try {
+                PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT corElemento from intemed.elementos where idElemento="+idElemento+";");
+                ResultSet res = ps.executeQuery();
+		Resultados ResultadoTexto = new Resultados();
+                
+                while(res.next()){
+                    return res.getString("corElemento");
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            return null;
+            
+        }
 
 	
 	public List<Resultados> selectResultados(int idExecucao, int idArquivo, int idUsuario){
@@ -571,10 +588,10 @@ public class BD extends ActiveRecord {
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(
  "select exe.id, exe.idusuario,exe.idarquivo,exe.idarquivo,"
  + "res.idtexto,res.idexecucao,res.id,res.trechoencontrado,res.idregra,res.idsubregra, res.issubregra, "
- + "res.comentario, res.isEncontrado, res.posInicial, res.posFinal, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento,reg.dataregra,reg.previa,reg.texto,"
+ + "res.comentario, res.isEncontrado, res.posInicial, res.posFinal, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento, ele.corelemento, reg.dataregra,reg.previa,reg.texto,"
  + "reg.idtexto,reg.idarquivo,sub.idregra,sub.idsubregra,sub.dataregra,sub.previa,sub.texto, txt.texto "
  + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra and res.idregra=sub.idregra"
-                                + " left outer join intemed.regras reg on res.idregra=reg.idregra,"
+                                + " left outer join intemed.regras reg on res.idregra=reg.idregra left outer join intemed.elementos ele on ele.idelemento=reg.idelemento,"
      + " intemed.textos txt, intemed.execucoes exe "
      + "where res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
      + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and res.isFalsoNegativo=0 and exe.id="+idExecucao
@@ -610,6 +627,7 @@ public class BD extends ActiveRecord {
                                         r.setPrevia(res.getString("reg.previa"));
                                         r.setTexto(res.getString("reg.texto"));
                                         r.setElemento(res.getInt("reg.idelemento"));
+                                        r.setCorElemento(res.getString("corelemento"));
 		
 					t.setRegra(r);
 					t.setTrechoEncontrado(res.getString("res.trechoEncontrado"));

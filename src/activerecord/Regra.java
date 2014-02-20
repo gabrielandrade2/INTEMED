@@ -7,6 +7,19 @@ public class Regra{
 	private int id;
 	private int conjunto;
 	private int elemento;
+        private String corElemento;
+
+    public boolean corElementoIsNull(){
+            return corElemento == null;
+    }    
+        
+    public String getCorElemento() {
+        return corElemento;
+    }
+
+    public void setCorElemento(String corElemento) {
+        this.corElemento = corElemento;
+    }
 	private String previa;
 	private String texto;
 	private List<Termo> termos;

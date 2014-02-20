@@ -45,11 +45,7 @@ public class ControleResultados extends Variaveis{
 	private List<TrechoEncontrado> trechosTextoSelecionadoRegras = new ArrayList<TrechoEncontrado>();
 	private List<TrechoEncontrado> trechosTextoSelecionadoSubregras = new ArrayList<TrechoEncontrado>();
         
-        List<Integer> colorsId = new ArrayList<Integer>();
-        List<String> colors = Arrays.asList("red","green","blue","yellow","brown","purple","orange","salmon","sandybrown","cyan","violet","dimgray","forestgreen","darkcyan","darkgoldenrod","yellowgreen, crismon");
-
-	
-	public ControleResultados(List<Resultados> listaResultados, int idExecucao){
+        public ControleResultados(List<Resultados> listaResultados, int idExecucao){
 		linha = 0;
 		this.listaResultados = listaResultados;
 		this.idExecucao = idExecucao;
@@ -331,18 +327,11 @@ public class ControleResultados extends Variaveis{
                    int posInicial = trechosTextoSelecionadoRegras.get(i).getPosInicial();
                    int posFinal = trechosTextoSelecionadoRegras.get(i).getPosFinal();
                    
-                   int elemento = trechosTextoSelecionadoRegras.get(i).getRegra().getElemento();
-                   if(!colorsId.contains(elemento))
-                       colorsId.add(elemento);
-                   
-                   int colorId = colorsId.indexOf(elemento);
                    String color = new String();
-                   try{
-                       color = colors.get(colorId);
-                   }
-                   catch(ArrayIndexOutOfBoundsException e){
-                       color = colors.get(colorId - colors.size());
-                   }
+                   if(trechosTextoSelecionadoRegras.get(i).getRegra().corElementoIsNull())
+                       color = BD.selectCorElemento(trechosTextoSelecionadoRegras.get(i).getRegra().getElemento());
+                   else
+                    color = trechosTextoSelecionadoRegras.get(i).getRegra().getCorElemento();
                    
                    texto_separado[posInicial] = "<font color=\""+color+"\"><b>" + texto_separado[posInicial];
                    texto_separado[posFinal] = texto_separado[posFinal] + "</b></font color=\""+color+"\">";

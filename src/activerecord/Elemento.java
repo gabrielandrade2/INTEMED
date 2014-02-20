@@ -5,6 +5,15 @@ public class Elemento extends ActiveRecord {
 	private int id;
 	private String nome;
 	private String descricao;
+        private String cor;
+
+    public String getCor() {
+        return cor;
+    }
+
+    public void setCor(String cor) {
+        this.cor = cor;
+    }
 	
 	public int getId() {
 		return id;
