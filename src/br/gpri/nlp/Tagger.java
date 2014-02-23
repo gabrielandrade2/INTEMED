@@ -448,6 +448,7 @@ public class Tagger{
 			}
                         contadorPosiçõesPassadas += tokens.size();
 		}
+                contadorPosiçõesPassadas = 0;
 		return encontrados;	
 	}
 	

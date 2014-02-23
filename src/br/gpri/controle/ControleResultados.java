@@ -331,6 +331,9 @@ public class ControleResultados extends Variaveis{
                    
                    //Pega todos os outros, um por um, pra ver se tem algum que começa (e termina ou não) dentro de outro
                    for(int j=0; j<trechosTextoSelecionadoRegras.size(); j++){
+                       //Não compara iguais
+                       if(i==j)
+                           break;
                        int posInicial2 = trechosTextoSelecionadoRegras.get(j).getPosInicial();
                        int posFinal2 = trechosTextoSelecionadoRegras.get(j).getPosFinal();
                        
