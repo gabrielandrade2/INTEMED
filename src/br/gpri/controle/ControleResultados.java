@@ -323,6 +323,35 @@ public class ControleResultados extends Variaveis{
                original = texto;     
                String[] texto_separado = texto.split(" ");
                
+               //Marca trechos sobrepostos
+               for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
+                   //Pega o primero trecho para comparar
+                   int posInicial = trechosTextoSelecionadoRegras.get(i).getPosInicial();
+                   int posFinal = trechosTextoSelecionadoRegras.get(i).getPosFinal();
+                   
+                   //Pega todos os outros, um por um, pra ver se tem algum que começa (e termina ou não) dentro de outro
+                   for(int j=0; j<trechosTextoSelecionadoRegras.size(); j++){
+                       int posInicial2 = trechosTextoSelecionadoRegras.get(j).getPosInicial();
+                       int posFinal2 = trechosTextoSelecionadoRegras.get(j).getPosFinal();
+                       
+                       //Pega um trecho e compara se outro abre dentro
+                       if(posInicial2 > posInicial && posInicial2 < posFinal){
+                           //Coloca a tag de cor de sobreposicão no lugar onde começa o trecho dentro do outro
+                           texto_separado[posInicial2] = "<font color=\"blue\">" + texto_separado[posInicial2];
+                           
+                           //Vê se esse trecho também, termina dentro do outro
+                           if(posFinal2 > posInicial && posFinal2 < posFinal)
+                               //Se sim coloca o fehcamento de tag no trecho de dentro
+                               texto_separado[posFinal2] = texto_separado[posFinal2] + "</font color=\"blue\">";
+                           else
+                               //Se não coloca o fechamento no trecho que contém o outro
+                               texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"blue\">";
+                       }
+                   }
+               }
+               
+               
+               //Marca trechos encontrados
                for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
                    int posInicial = trechosTextoSelecionadoRegras.get(i).getPosInicial();
                    int posFinal = trechosTextoSelecionadoRegras.get(i).getPosFinal();
