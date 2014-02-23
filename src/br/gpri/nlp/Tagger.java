@@ -25,6 +25,9 @@ public class Tagger{
         private Dicionario tabelamt;
 	public List <String> frasesNegativas;
         public static MorphologicalTag mtADJ_F_S=null;
+        
+        private int contadorPosiçõesPassadas = 0; //Para manter registro de quantos tokens já passaram nas frases anteriores, já que ele só manda frase por frase e o i pra localizar a posição começa de novo.
+                                                  //Por isso deu problema e ele localizava só na primeira frase.
 	
 	public Tagger(BD BD){
 
@@ -349,11 +352,11 @@ public class Tagger{
 		String[] sentencas = cogroo.sentDetect(texto_medico);
 		for (String sentenca : sentencas) {
                     indSentenca++;
-			List<Token> tokens = processCogroo(sentenca);
-			if (temFraseNegativa(sentenca))
+                    List<Token> tokens = processCogroo(sentenca);
+                    if (temFraseNegativa(sentenca))
 				continue;
 			//Executa cada uma das regras
-			for (Regra r : regras){
+                    for (Regra r : regras){
 				
 				boolean igual = false;
 				
@@ -413,8 +416,8 @@ public class Tagger{
 								t.setIsSubregra(false);
 								t.setHasRegra(true);
 								t.setTrechoEncontrado(trecho);
-                                                                t.setPosInicial(i);
-                                                                t.setPosFinal(i+r.getNumTermos()-1);
+                                                                t.setPosInicial(i+contadorPosiçõesPassadas);
+                                                                t.setPosFinal(i+contadorPosiçõesPassadas+r.getNumTermos()-1);
                                                                 if(i>0)
                                                                 {
                                                                     t.setTermoAnterior(tokens.get(i-1).getMorphologicalTag().toString());
@@ -439,9 +442,11 @@ public class Tagger{
 										encontrados.add(subregrasEncontrados.get(k));
 							
 					}
+                                        
 				}		
 				
 			}
+                        contadorPosiçõesPassadas += tokens.size();
 		}
 		return encontrados;	
 	}
