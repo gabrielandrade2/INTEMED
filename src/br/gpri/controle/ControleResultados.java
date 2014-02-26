@@ -254,11 +254,20 @@ public class ControleResultados extends Variaveis{
                 for(FalsoNegativo fn:falsosNegativos){
                    int posInicial = fn.getPosIncial();
                    int posFinal = fn.getPosFinal();
+                   
                    //texto_separado[posInicial] = "<font color=\"red\">" + texto_separado[posInicial];
-                   //texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"red\">";
-                   texto_separado[posInicial] = "<mark style=\"background-color:DarkSalmon\">" + texto_separado[posInicial];
-                   texto_separado[posFinal] = texto_separado[posFinal] + "</mark>";
+                  // texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"red\">";
+                   //texto_separado[posInicial] = "<mark style=\"background-color:DarkSalmon\">" + texto_separado[posInicial];
+                  // texto_separado[posFinal] = texto_separado[posFinal] + "</mark>";
+                  //texto_separado[posInicial] = "<span style=\"background-color:DarkSalmon\">" + texto_separado[posInicial];
+                  // texto_separado[posFinal] = texto_separado[posFinal] + "</span>";
+                   
+                   texto_separado[posInicial] = "<font style=\"background-color:#ffc0a0 \">" + texto_separado[posInicial];
+                   texto_separado[posFinal] = texto_separado[posFinal] + "</font>";
                }
+                //texto_separado[0] = "<html>" + texto_separado[0];
+               //texto_separado[texto_separado.length-1] +=  "</html>";
+                
                texto = new String();
                for (String token : texto_separado) 
                    texto += " " + token;
@@ -346,15 +355,15 @@ public class ControleResultados extends Variaveis{
                        //Pega um trecho e compara se outro abre dentro
                        if(posInicial2 > posInicial && posInicial2 < posFinal){
                            //Coloca a tag de cor de sobreposicão no lugar onde começa o trecho dentro do outro
-                           texto_separado[posInicial2] = "<font color=\"red\">" + texto_separado[posInicial2];
+                           texto_separado[posInicial2] = "<font color=\"yellow\">" + texto_separado[posInicial2];
                            
                            //Vê se esse trecho também, termina dentro do outro
                            if(posFinal2 > posInicial && posFinal2 < posFinal)
                                //Se sim coloca o fehcamento de tag no trecho de dentro
-                               texto_separado[posFinal2] = texto_separado[posFinal2] + "</font color=\"red\">";
+                               texto_separado[posFinal2] = texto_separado[posFinal2] + "</font color=\"yellow\">";
                            else
                                //Se não coloca o fechamento no trecho que contém o outro
-                               texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"red\">";
+                               texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"yellow\">";
                        }
                    }
                }
