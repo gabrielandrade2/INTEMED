@@ -256,7 +256,7 @@ public class ControleResultados extends Variaveis{
                    int posFinal = fn.getPosFinal();
                    //texto_separado[posInicial] = "<font color=\"red\">" + texto_separado[posInicial];
                    //texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"red\">";
-                   texto_separado[posInicial] = "<mark style=\"background-color:DarkSalmon ;\">" + texto_separado[posInicial];
+                   texto_separado[posInicial] = "<mark style=\"background-color:DarkSalmon\">" + texto_separado[posInicial];
                    texto_separado[posFinal] = texto_separado[posFinal] + "</mark>";
                }
                texto = new String();
@@ -326,29 +326,35 @@ public class ControleResultados extends Variaveis{
                //Marca trechos sobrepostos
                for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
                    //Pega o primero trecho para comparar
+                   String a = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado(); //Para debug
                    int posInicial = trechosTextoSelecionadoRegras.get(i).getPosInicial();
                    int posFinal = trechosTextoSelecionadoRegras.get(i).getPosFinal();
                    
+                   //Para caso seja Nada Encontrado ou tenha tido algum problema com a posição, ele fica com -1 e não marca
+                   if(posInicial < 0 || posFinal < 0)
+                       break;
+                                      
                    //Pega todos os outros, um por um, pra ver se tem algum que começa (e termina ou não) dentro de outro
                    for(int j=0; j<trechosTextoSelecionadoRegras.size(); j++){
                        //Não compara iguais
                        if(i==j)
                            break;
+                       String b = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado(); //Para debug
                        int posInicial2 = trechosTextoSelecionadoRegras.get(j).getPosInicial();
                        int posFinal2 = trechosTextoSelecionadoRegras.get(j).getPosFinal();
                        
                        //Pega um trecho e compara se outro abre dentro
                        if(posInicial2 > posInicial && posInicial2 < posFinal){
                            //Coloca a tag de cor de sobreposicão no lugar onde começa o trecho dentro do outro
-                           texto_separado[posInicial2] = "<font color=\"blue\">" + texto_separado[posInicial2];
+                           texto_separado[posInicial2] = "<font color=\"red\">" + texto_separado[posInicial2];
                            
                            //Vê se esse trecho também, termina dentro do outro
                            if(posFinal2 > posInicial && posFinal2 < posFinal)
                                //Se sim coloca o fehcamento de tag no trecho de dentro
-                               texto_separado[posFinal2] = texto_separado[posFinal2] + "</font color=\"blue\">";
+                               texto_separado[posFinal2] = texto_separado[posFinal2] + "</font color=\"red\">";
                            else
                                //Se não coloca o fechamento no trecho que contém o outro
-                               texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"blue\">";
+                               texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"red\">";
                        }
                    }
                }
@@ -358,6 +364,10 @@ public class ControleResultados extends Variaveis{
                for(int i=0; i<trechosTextoSelecionadoRegras.size(); i++){
                    int posInicial = trechosTextoSelecionadoRegras.get(i).getPosInicial();
                    int posFinal = trechosTextoSelecionadoRegras.get(i).getPosFinal();
+                   
+                   //Para caso seja Nada Encontrado ou tenha tido algum problema com a posição, ele fica com -1 e não marca
+                   if(posInicial < 0 || posFinal < 0)
+                       break;
                    
                    String color = new String();
                    if(trechosTextoSelecionadoRegras.get(i).getRegra().corElementoIsNull())
