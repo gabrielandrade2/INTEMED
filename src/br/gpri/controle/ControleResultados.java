@@ -535,18 +535,23 @@ public class ControleResultados extends Variaveis{
 					}
 				};
 				
-			ActionListener FalsoNegativo = new ActionListener() {
+                        
+                        ActionListener FalsoNegativo = new ActionListener() {
 					public void actionPerformed(ActionEvent FalsoNegativo) {
-						String trechoSelecionado = Janela.AreaTexto.getSelectedText();
+						//String trechoSelecionado = Janela.AreaTexto.getSelectedText();
                                                 
                                                 //Identifica a posição no padrão utilizado, por número de palavra
                                                 int charInicial = Janela.AreaTexto.getSelectionStart();
                                                 int charFinal = Janela.AreaTexto.getSelectionEnd();
                                                 
-                                                
-                                                
                                                 String texto =  (String) Janela.ListaTextos.getSelectedValue();
-                                                        
+                                                
+                                                //Para guardar a palavra toda e não só o techo selecionado
+                                                String trechoSelecionado = new String();
+                                                for(int i=charInicial; i<charFinal; i++){
+                                                    trechoSelecionado += texto.charAt(i);
+                                                }
+                                                
                                                 //Conta o número de palavras até a palavra de início
                                                 int posInicial = 0;
                                                 for(int i=0; i<charInicial; i++)
@@ -560,7 +565,7 @@ public class ControleResultados extends Variaveis{
                                                         posFinal++;
                                                 posFinal--; //Pegava sempre uma palavra a mais
                                                 
-                                                //Para garantir que não foi selecionado só parte de uma palavra e ele marque de vermelho até o final
+                                                //Para garantir que não foi selecionado só parte de uma palavra e ele marque até o final
                                                 if(posInicial > posFinal)                                                
                                                     posFinal = posInicial;
                                                 
