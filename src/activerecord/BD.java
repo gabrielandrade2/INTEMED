@@ -595,7 +595,8 @@ public class BD extends ActiveRecord {
      + " intemed.textos txt, intemed.execucoes exe "
      + "where res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
      + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and res.isFalsoNegativo=0 and exe.id="+idExecucao
-     + " order by res.idtexto, res.id;");
+//     + " order by res.idtexto, res.id;");
+     + " order by res.idtexto, res.indsentenca,posinicial,posfinal;");
 		ResultSet res = ps.executeQuery();
 		Resultados ResultadoTexto = new Resultados();
 				while(res.next()){  
@@ -757,7 +758,7 @@ public class BD extends ActiveRecord {
 		try {
 			
                     //Dá pra tirar o trechoEncontrado do Select, só precisa das posícões pra marcar. Deixar só por que ainda não terminei a parte da marcacao pelas posicoes.
-                    PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT trechoEncontrado,posInicial,posFinal from resultados WHERE (idExecucao="+idExecucao+" AND idTexto="+idTexto+" AND isEncontrado=0 AND isFalsoNegativo=1);");
+                    PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT trechoEncontrado,posInicial,posFinal from resultados WHERE (idExecucao="+idExecucao+" AND idTexto="+idTexto+" AND isEncontrado=0 AND isFalsoNegativo=1) ORDER BY posInicial,posFinal;");
 			ResultSet res = ps.executeQuery();
 			while(res.next()){
                                 FalsoNegativo fn = new FalsoNegativo(res.getString("trechoEncontrado"), res.getInt("posInicial"), res.getInt("posFinal"));

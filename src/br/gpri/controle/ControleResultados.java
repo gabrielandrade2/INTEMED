@@ -246,10 +246,8 @@ public class ControleResultados extends Variaveis{
 		Janela.ListaSubRegra.setSelectedIndex(0);
 	}
 	
-        private String marcaFalsosNegativos(String texto){
-            if(!(texto == null)){
-                String[] texto_separado = texto.split(" ");
-		List<FalsoNegativo> falsosNegativos = BD.selectFalsoNegativo(idExecucao, idTexto);
+        private String[] marcaFalsosNegativos(String[] texto_separado){
+           	List<FalsoNegativo> falsosNegativos = BD.selectFalsoNegativo(idExecucao, idTexto);
 		
                 for(FalsoNegativo fn:falsosNegativos){
                    int posInicial = fn.getPosIncial();
@@ -263,20 +261,12 @@ public class ControleResultados extends Variaveis{
                   // texto_separado[posFinal] = texto_separado[posFinal] + "</span>";
                    
                    texto_separado[posInicial] = "<font style=\"background-color:#ffc0a0 \">" + texto_separado[posInicial];
-                   texto_separado[posFinal] = texto_separado[posFinal] + "</font>";
+                   texto_separado[posFinal] = texto_separado[posFinal] + "</font style=\"background-color:#ffc0a0 \">";
                }
                 //texto_separado[0] = "<html>" + texto_separado[0];
                //texto_separado[texto_separado.length-1] +=  "</html>";
                 
-               texto = new String();
-               for (String token : texto_separado) 
-                   texto += " " + token;
-               
-               texto = texto.substring(1, texto.length());
-             }
-	    
-            System.out.println(texto);
-            return texto;
+            return texto_separado;
 	}
         
         
@@ -388,12 +378,19 @@ public class ControleResultados extends Variaveis{
                    texto_separado[posFinal] = texto_separado[posFinal] + "</b></font color=\""+color+"\">";
                    
                }
+                texto = new String();
+               for (String token : texto_separado) 
+                   texto += " " + token;
+               
+               
+               texto_separado = marcaFalsosNegativos(texto_separado);
              
                texto = new String();
                for (String token : texto_separado) 
                    texto += " " + token;
                
                texto = texto.substring(1, texto.length());
+               System.out.println(texto);
         }
         return texto;
    }
@@ -580,7 +577,6 @@ public class ControleResultados extends Variaveis{
                                                 //Pegar texto daqui, se pegar da área texto vem com html e os acentos zuados
 //                                                String texto =  (String) Janela.ListaTextos.getSelectedValue();
                                                 texto = negritaTexto(texto);
-                                                texto = marcaFalsosNegativos(texto);
                                                 Janela.AreaTexto.setText(texto);
                                                 Janela.AreaTexto.updateUI();
                             		}
@@ -627,10 +623,8 @@ public class ControleResultados extends Variaveis{
 				Janela.NumeroTexto.setText(l.toString());
 				geraListaRegras();
                                 
-                                if(trechosTextoSelecionadoRegras.get(0).hasRegra())
-                                    texto = negritaTexto(texto);
+                                texto = negritaTexto(texto);
                                 
-                                texto = marcaFalsosNegativos(texto);
                                 
                                 
                                 Janela.AreaTexto.setText(texto);

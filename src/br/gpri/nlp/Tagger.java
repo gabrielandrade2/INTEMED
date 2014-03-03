@@ -353,8 +353,11 @@ public class Tagger{
 		for (String sentenca : sentencas) {
                     indSentenca++;
                     List<Token> tokens = processCogroo(sentenca);
-                    if (temFraseNegativa(sentenca))
-				continue;
+                    if (temFraseNegativa(sentenca)){
+			//Aqui ele passava pra próxima sentença sem incrementar o contador de posições das frases anteriores, por isos não marcava as frases de baixo.
+                        contadorPosiçõesPassadas += tokens.size();
+                        continue;
+                    }
 			//Executa cada uma das regras
                     for (Regra r : regras){
 				
@@ -415,9 +418,15 @@ public class Tagger{
 								t.setRegra(r);
 								t.setIsSubregra(false);
 								t.setHasRegra(true);
+                                                                
+                                                                //Texto do trecho encontrado
 								t.setTrechoEncontrado(trecho);
+                                                                
+                                                                //Posição dos termos
                                                                 t.setPosInicial(i+contadorPosiçõesPassadas);
                                                                 t.setPosFinal(i+contadorPosiçõesPassadas+r.getNumTermos()-1);
+                                                                
+                                                                
                                                                 if(i>0)
                                                                 {
                                                                     t.setTermoAnterior(tokens.get(i-1).getMorphologicalTag().toString());
@@ -446,8 +455,12 @@ public class Tagger{
 				}		
 				
 			}
+                    
+                        //Incrementa contador das posições das frases passadas
                         contadorPosiçõesPassadas += tokens.size();
 		}
+                
+                //Reinicia o contador para o próximo texto
                 contadorPosiçõesPassadas = 0;
 		return encontrados;	
 	}
