@@ -212,6 +212,58 @@ public class ControleExecucao extends Variaveis{
 		}
 		return regrasSelecionadas;		
 	}
+        
+        //Organiza os resultados para deixar na ordem da posição, igual quando é buscado no BD;
+ /*       private List<Resultados> organizaResultados(List<Resultados> listaDesordenada){
+            List<Resultados> listaOrdenada = new ArrayList<Resultados>();
+            List<TrechoEncontrado> listaTrechoOrdenada = new ArrayList<TrechoEncontrado>();
+            
+            //Para cada um dos conjuntos de resultados (cada texto)
+            for(Resultados r : listaDesordenada){
+               List<TrechoEncontrado> listaTrechoDesordenada = r.getTrechos();
+               
+               for(TrechoEncontrado t : listaTrechoDesordenada){
+                   //Como a lista de trechos ordenada está vazia, insere o primeiro item para poder comparar
+                   if(listaTrechoOrdenada.isEmpty()){
+                       listaTrechoOrdenada.add(t);
+                       continue;
+                   }
+                   
+                   //Compara os elementos, se for menor insere na posição imediatamente interior, se for maior vai comparando até o final
+                   //Compara a posição incial, se for igual compara pela final
+                   for(int i=0; i<listaTrechoOrdenada.size(); i++){
+                       //Se for menor insere na posição e sai do loop
+                       //Se for maior continua comparando    
+                       if(t.getPosInicial() < listaTrechoOrdenada.get(i).getPosInicial()){
+                           listaTrechoOrdenada.add(i, t);
+                           break;
+                       }
+                       
+                       //Se for igual compara pela posição final
+                       else if(t.getPosInicial() == listaTrechoOrdenada.get(i).getPosInicial()){
+                           for(int j=i; j<listaTrechoOrdenada.size(); j++){
+                               //Se for menor ou igual insere na posição
+                               if(t.getPosFinal() <= listaTrechoOrdenada.get(i).getPosFinal()){
+                                 listaTrechoOrdenada.add(j, t);
+                                 break;
+                               }
+                              //Senão contiuna comparando
+                           } 
+                       }
+                       //Se estiver comparando com o último item e for maior insere no final da lista
+                       else if(i == listaTrechoOrdenada.size()-1){
+                           listaTrechoOrdenada.add(t);
+                           break;
+                       }
+                   }
+               }
+              r.setTrechos(listaTrechoOrdenada);
+              listaOrdenada.add(r);
+              listaTrechoOrdenada = new ArrayList<TrechoEncontrado>();
+            }
+            
+            return listaOrdenada;
+        }*/
 	
 	 ActionListener Voltar = new ActionListener() {
 			
@@ -300,6 +352,7 @@ public class ControleExecucao extends Variaveis{
 					
 					
 					fechaJanela();
+                                       // listaResultados = organizaResultados(listaResultados);
 					JanelaResultados = new ControleResultados(listaResultados,idExecucao);
 					JanelaResultados.abreJanela();
 					
