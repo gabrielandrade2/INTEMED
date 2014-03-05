@@ -336,24 +336,43 @@ public class ControleResultados extends Variaveis{
                    //Pega todos os outros, um por um, pra ver se tem algum que começa (e termina ou não) dentro de outro
                    for(int j=0; j<trechosTextoSelecionadoRegras.size(); j++){
                        //Não compara iguais
-                       if(i==j)
-                           break;
-                       String b = trechosTextoSelecionadoRegras.get(i).getTrechoEncontrado(); //Para debug
-                       int posInicial2 = trechosTextoSelecionadoRegras.get(j).getPosInicial();
-                       int posFinal2 = trechosTextoSelecionadoRegras.get(j).getPosFinal();
-                       
-                       //Pega um trecho e compara se outro abre dentro
-                       if(posInicial2 > posInicial && posInicial2 < posFinal){
-                           //Coloca a tag de cor de sobreposicão no lugar onde começa o trecho dentro do outro
-                           texto_separado[posInicial2] = "<font color=\"yellow\">" + texto_separado[posInicial2];
-                           
-                           //Vê se esse trecho também, termina dentro do outro
-                           if(posFinal2 > posInicial && posFinal2 < posFinal)
-                               //Se sim coloca o fehcamento de tag no trecho de dentro
-                               texto_separado[posFinal2] = texto_separado[posFinal2] + "</font color=\"yellow\">";
-                           else
-                               //Se não coloca o fechamento no trecho que contém o outro
-                               texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"yellow\">";
+                       if(i!=j){
+                            String b = trechosTextoSelecionadoRegras.get(j).getTrechoEncontrado(); //Para debug
+                            int posInicial2 = trechosTextoSelecionadoRegras.get(j).getPosInicial();
+                            int posFinal2 = trechosTextoSelecionadoRegras.get(j).getPosFinal();
+
+                            //Não marca se o trecho encontrado for o mesmo
+                            if(posInicial2 != posInicial || posFinal2 != posFinal){  //Se a posição incial e a final não forem iguais
+                                
+                                //Identifica as posições onde há o trecho com sobreposição de regras e coloca a tag de coloração abrindo e fechando em cada uma das palavras
+                                //Fiz isso para dar preferência à tag de sobreposição, porque colocando somente no inicio e fim do trecho, caso outra regra se inicie dentro desse, a cor mudaria para a dessa regra, por ser a tag mais interna.
+                               
+                                int posSobreposicaoI = -1;
+                                int posSobreposicaoF = -1;
+                                
+                                //Pega um trecho e compara se outro abre dentro
+                                if(posInicial2 >= posInicial && posInicial2 <= posFinal){
+                                    //Coloca a tag de cor de sobreposicão no lugar onde começa o trecho dentro do outro
+                                    //texto_separado[posInicial2] = "<font color=\"yellow\">" + texto_separado[posInicial2];
+                                    posSobreposicaoI = posInicial2;
+                                    
+                                    //Vê se esse trecho também, termina dentro do outro
+                                    if(posFinal2 >= posInicial && posFinal2 <= posFinal)
+                                        //Se sim coloca o fehcamento de tag no trecho de dentro
+                                       // texto_separado[posFinal2] = texto_separado[posFinal2] + "</font color=\"yellow\">";
+                                        posSobreposicaoF = posFinal2;
+                                    else
+                                        //Se não coloca o fechamento no trecho que contém o outro
+                                       // texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"yellow\">";
+                                        posSobreposicaoF = posFinal;
+                                    
+                                    //Depois de identificar o trecho coloca a tag em todas as palavras
+                                    for(int k=posSobreposicaoI; k<=posSobreposicaoF; k++){
+                                        texto_separado[k] = "<font color=\"red\">" + texto_separado[k] + "</font color=\"red\">";
+                                    }
+                                    
+                                }
+                           }
                        }
                    }
                }
