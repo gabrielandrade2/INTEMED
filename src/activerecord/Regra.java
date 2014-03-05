@@ -8,6 +8,12 @@ public class Regra{
 	private int conjunto;
 	private int elemento;
         private String corElemento;
+        private String previa;
+	private String texto;
+	private List<Termo> termos;
+	private List<Subregra> subregras;
+	private int idTexto;
+	private int idArquivo;
 
     public boolean corElementoIsNull(){
             return corElemento == null;
@@ -20,12 +26,7 @@ public class Regra{
     public void setCorElemento(String corElemento) {
         this.corElemento = corElemento;
     }
-	private String previa;
-	private String texto;
-	private List<Termo> termos;
-	private List<Subregra> subregras;
-	private int idTexto;
-	private int idArquivo;
+
 	
 	public int getIdTexto() {
 		return idTexto;

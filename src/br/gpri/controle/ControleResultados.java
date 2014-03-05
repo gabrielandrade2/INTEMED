@@ -228,7 +228,10 @@ public class ControleResultados extends Variaveis{
 	protected void geraListaRegras(){
 		DefaultListModel listaRegrasEncontrados = new DefaultListModel();
 		for(int i=0;i<trechosTextoSelecionadoRegras.size();i++){
-			listaRegrasEncontrados.addElement(trechosTextoSelecionadoRegras.get(i).getRegra().getPrevia());				
+                    String s = trechosTextoSelecionadoRegras.get(i).getRegra().getPrevia();
+                    if(s == null)
+                        s = "Nada Encontrado";
+                    listaRegrasEncontrados.addElement(s);				
 		}
 		Janela.ListaRegra.setModel(listaRegrasEncontrados);
 		Janela.ListaRegra.updateUI();
@@ -368,7 +371,7 @@ public class ControleResultados extends Variaveis{
                                     
                                     //Depois de identificar o trecho coloca a tag em todas as palavras
                                     for(int k=posSobreposicaoI; k<=posSobreposicaoF; k++){
-                                        texto_separado[k] = "<font color=\"red\">" + texto_separado[k] + "</font color=\"red\">";
+                                        texto_separado[k] = "<font color=\"red\">" + texto_separado[k] + "</font color=\"   red\">";
                                     }
                                     
                                 }
