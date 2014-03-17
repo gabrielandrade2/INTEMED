@@ -48,6 +48,8 @@ public class ControleResultados extends Variaveis{
         
 	private List<TrechoEncontrado> trechosTextoSelecionadoRegras = new ArrayList<TrechoEncontrado>();
 	private List<TrechoEncontrado> trechosTextoSelecionadoSubregras = new ArrayList<TrechoEncontrado>();
+        //Tabela
+        DefaultTableModel tabelaoriginal;
         
         public ControleResultados(List<Resultados> listaResultados, int idExecucao){
 		linha = 0;
@@ -101,8 +103,8 @@ public class ControleResultados extends Variaveis{
 		//Janela.BotaoComRegra.addActionListener(this.Comment);
 		//Janela.BotaoComSubRegra.addActionListener(this.CommentSubRegra);
 	
-                //Tabela
-               
+                tabelaoriginal = (DefaultTableModel)Janela.TabelaResultados.getModel();
+ 
                
 		//Gera Lista dos textos
 		inicializaListas();
@@ -239,8 +241,7 @@ public class ControleResultados extends Variaveis{
                     listaRegrasEncontrados.addElement(s);				
 		}
                 
-                DefaultTableModel tabela;
-                tabela = (DefaultTableModel)Janela.TabelaResultados.getModel();
+              DefaultTableModel tabela = tabelaoriginal;
                 for(TrechoEncontrado t : trechosTextoSelecionadoRegras){
                     String nomeElemento;
                     if(t.getRegra().getNomeElemento() == null)
