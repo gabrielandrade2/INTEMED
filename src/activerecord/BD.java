@@ -607,7 +607,7 @@ public class BD extends ActiveRecord {
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(
  "select exe.id, exe.idusuario,exe.idarquivo,exe.idarquivo,"
  + "res.idtexto,res.idexecucao,res.id,res.trechoencontrado,res.idregra,res.idsubregra, res.issubregra, "
- + "res.comentario, res.isEncontrado, res.posInicial, res.posFinal, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento, ele.corelemento, ele.nomeElemento, reg.dataregra,reg.previa,reg.texto,"
+ + "res.comentario, res.isEncontrado, res.posInicial, res.posFinal, res.indsentenca, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento, ele.corelemento, ele.nomeElemento, reg.dataregra,reg.previa,reg.texto,"
  + "reg.idtexto,reg.idarquivo,sub.idregra,sub.idsubregra,sub.dataregra,sub.previa,sub.texto, txt.texto "
  + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra and res.idregra=sub.idregra"
                                 + " left outer join intemed.regras reg on res.idregra=reg.idregra left outer join intemed.elementos ele on ele.idelemento=reg.idelemento,"
@@ -655,7 +655,8 @@ public class BD extends ActiveRecord {
 					t.setidResultado(res.getInt("res.id"));
                                         t.setPosInicial(res.getInt("res.posInicial"));
                                         t.setPosFinal(res.getInt("res.posFinal"));
-                                        t.setComentario("res.comentario");
+                                        t.setComentario(res.getString("res.comentario"));
+                                        t.setIndSentenca(res.getInt("res.indsentenca"));
     //executar médoto passando a lista e o idtexto para que este método faça os edits e inserts
 					int idTexto2=res.getInt("res.idTexto");
 					if(idTextoAnt!=idTexto2)
