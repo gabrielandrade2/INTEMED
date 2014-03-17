@@ -242,6 +242,8 @@ public class ControleResultados extends Variaveis{
 		}
                 
               DefaultTableModel tabela = tabelaoriginal;
+              for(int i=0; i<tabela.getRowCount(); i++)
+                  tabela.removeRow(0);
                 for(TrechoEncontrado t : trechosTextoSelecionadoRegras){
                     String nomeElemento;
                     if(t.getRegra().getNomeElemento() == null)
