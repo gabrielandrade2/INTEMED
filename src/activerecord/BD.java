@@ -12,6 +12,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BD extends ActiveRecord {
+
+        public String selectNomeElemento(int elemento) {
+		String s = null;
+                try{
+                    PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT nomeElemento from elementos where idElemento="+elemento+";");
+                    ResultSet res = ps.executeQuery();
+		    while(res.next()){
+		    	s=res.getString("nomeElemento");
+                    }
+		    
+
+		    
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+            return s;
+		
+    }
 	
 	public Login selectLogin(String usuario){
 		Login Login = new Login();
@@ -588,7 +607,7 @@ public class BD extends ActiveRecord {
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(
  "select exe.id, exe.idusuario,exe.idarquivo,exe.idarquivo,"
  + "res.idtexto,res.idexecucao,res.id,res.trechoencontrado,res.idregra,res.idsubregra, res.issubregra, "
- + "res.comentario, res.isEncontrado, res.posInicial, res.posFinal, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento, ele.corelemento, reg.dataregra,reg.previa,reg.texto,"
+ + "res.comentario, res.isEncontrado, res.posInicial, res.posFinal, reg.idusuario,reg.idregra,reg.idconjunto,reg.idelemento, ele.corelemento, ele.nomeElemento, reg.dataregra,reg.previa,reg.texto,"
  + "reg.idtexto,reg.idarquivo,sub.idregra,sub.idsubregra,sub.dataregra,sub.previa,sub.texto, txt.texto "
  + "from intemed.resultados res left outer join intemed.subregras sub on res.idsubregra=sub.idsubregra and res.idregra=sub.idregra"
                                 + " left outer join intemed.regras reg on res.idregra=reg.idregra left outer join intemed.elementos ele on ele.idelemento=reg.idelemento,"

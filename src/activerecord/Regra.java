@@ -9,9 +9,7 @@ public class Regra{
 	private int elemento;
         private String nomeElemento;
 
-    public String getNomeElemento() {
-        return nomeElemento;
-    }
+
 
     public void setNomeElemento(String nomeElemento) {
         this.nomeElemento = nomeElemento;
@@ -23,6 +21,11 @@ public class Regra{
 	private List<Subregra> subregras;
 	private int idTexto;
 	private int idArquivo;
+        
+   public String getNomeElemento() {
+
+        return nomeElemento;
+    }
 
     public boolean corElementoIsNull(){
             return corElemento == null;

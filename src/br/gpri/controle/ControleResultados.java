@@ -1,5 +1,6 @@
 package br.gpri.controle;
 
+import activerecord.BD;
 import activerecord.Elemento;
 import activerecord.FalsoNegativo;
 import activerecord.Regra;
@@ -241,7 +242,10 @@ public class ControleResultados extends Variaveis{
                 DefaultTableModel tabela;
                 tabela = (DefaultTableModel)Janela.TabelaResultados.getModel();
                 for(TrechoEncontrado t : trechosTextoSelecionadoRegras){
-                    Object[] o = {t.getRegra().getId(),t.getRegra().getPrevia(),t.getTrechoEncontrado(),t.getRegra().getElemento(),t.getIndSentenca(),t.getPosInicial(),t.getPosFinal(),t.getComentario()};
+                    String nomeElemento;
+                    if(t.getRegra().getNomeElemento() == null)
+                         nomeElemento = BD.selectNomeElemento(t.getRegra().getElemento());
+                    Object[] o = {t.getRegra().getId(),t.getRegra().getPrevia(),t.getTrechoEncontrado(),t.getRegra().getNomeElemento(),t.getIndSentenca(),t.getPosInicial(),t.getPosFinal(),t.getComentario()};
                     tabela.addRow(o);
                 }
 //		Janela.ListaRegra.setModel(listaRegrasEncontrados);
