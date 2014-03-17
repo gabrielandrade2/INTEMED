@@ -21,9 +21,12 @@ import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.text.StyledDocument;
 
 public class ControleResultados extends Variaveis{
@@ -62,9 +65,9 @@ public class ControleResultados extends Variaveis{
 		Janela.BotaoFalsoNegativo.addActionListener(this.FalsoNegativo);
 			
 		//Caixa de Texto Regra
-		Janela.TextoRegra.setEditable(false);
-		Janela.TextoRegra.setLineWrap(true);
-		Janela.TextoRegra.setWrapStyleWord(true);
+		//Janela.TextoRegra.setEditable(false);
+		//Janela.TextoRegra.setLineWrap(true);
+		//Janela.TextoRegra.setWrapStyleWord(true);
 		
 		//Caixa de Texto Trecho Regra
 		Janela.RegraTextoTrecho.setEditable(false);
@@ -72,14 +75,14 @@ public class ControleResultados extends Variaveis{
 		Janela.RegraTextoTrecho.setWrapStyleWord(true);
 		
 		//Caixa de Texto Subregra
-		Janela.TextoSubRegra.setEditable(false);
-		Janela.TextoSubRegra.setLineWrap(false);
-		Janela.TextoSubRegra.setWrapStyleWord(true);
+		//Janela.TextoSubRegra.setEditable(false);
+		//Janela.TextoSubRegra.setLineWrap(false);
+		//Janela.TextoSubRegra.setWrapStyleWord(true);
 		
 		//Caixa de Texto Trecho Subregra
-		Janela.SubRegraTextoTrecho.setEditable(false);
-		Janela.SubRegraTextoTrecho.setLineWrap(true);
-		Janela.SubRegraTextoTrecho.setWrapStyleWord(true);
+		//Janela.SubRegraTextoTrecho.setEditable(false);
+		//Janela.SubRegraTextoTrecho.setLineWrap(true);
+		//Janela.SubRegraTextoTrecho.setWrapStyleWord(true);
 		
 		//Referente aos Textos
 		Janela.NumeroTexto.setText(linha.toString());
@@ -94,9 +97,12 @@ public class ControleResultados extends Variaveis{
 		Janela.DropDownTexto.addActionListener(this.DropDownListBox);
 
 		//Botões de Comentário
-		Janela.BotaoComRegra.addActionListener(this.Comment);
-		Janela.BotaoComSubRegra.addActionListener(this.CommentSubRegra);
-		
+		//Janela.BotaoComRegra.addActionListener(this.Comment);
+		//Janela.BotaoComSubRegra.addActionListener(this.CommentSubRegra);
+	
+                //Tabela
+               
+               
 		//Gera Lista dos textos
 		inicializaListas();
 		
@@ -109,13 +115,14 @@ public class ControleResultados extends Variaveis{
 		Janela.ListaTextos.setLayoutOrientation(JList.VERTICAL);
 		Janela.ListaTextos.addListSelectionListener(this.Textos);
 	
-		Janela.ListaRegra.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		Janela.ListaRegra.setLayoutOrientation(JList.VERTICAL);
-		Janela.ListaRegra.addListSelectionListener(this.Regras);
-		
-		Janela.ListaSubRegra.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		Janela.ListaSubRegra.setLayoutOrientation(JList.VERTICAL);
-		Janela.ListaSubRegra.addListSelectionListener(this.Subregras);
+//		Janela.ListaRegra.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//		Janela.ListaRegra.setLayoutOrientation(JList.VERTICAL);
+//		Janela.ListaRegra.addListSelectionListener(this.Regras);
+//		
+//		Janela.ListaSubRegra.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//		Janela.ListaSubRegra.setLayoutOrientation(JList.VERTICAL);
+//		Janela.ListaSubRegra.addListSelectionListener(this.Subregras);
+                
                 
                 geraListaResultados();
 	}
@@ -130,10 +137,7 @@ public class ControleResultados extends Variaveis{
 	}
 	
 	private void limpaCaixasTexto(){
-		Janela.TextoRegra.setText("");
 		Janela.RegraTextoTrecho.setText("");
-		Janela.TextoSubRegra.setText("");
-		Janela.SubRegraTextoTrecho.setText("");
         }
         
         private void limpaAreaTexto(){
@@ -233,9 +237,16 @@ public class ControleResultados extends Variaveis{
                         s = "Nada Encontrado";
                     listaRegrasEncontrados.addElement(s);				
 		}
-		Janela.ListaRegra.setModel(listaRegrasEncontrados);
-		Janela.ListaRegra.updateUI();
-		Janela.ListaRegra.setSelectedIndex(0);
+                
+                DefaultTableModel tabela;
+                tabela = (DefaultTableModel)Janela.TabelaResultados.getModel();
+                for(TrechoEncontrado t : trechosTextoSelecionadoRegras){
+                    Object[] o = {t.getRegra().getId(),t.getRegra().getPrevia(),t.getTrechoEncontrado(),t.getRegra().getElemento(),t.getIndSentenca(),t.getPosInicial(),t.getPosFinal(),t.getComentario()};
+                    tabela.addRow(o);
+                }
+//		Janela.ListaRegra.setModel(listaRegrasEncontrados);
+//		Janela.ListaRegra.updateUI();
+//		Janela.ListaRegra.setSelectedIndex(0);
 	}
 	
 	private void geraListaSubregras(int idRegra){
@@ -244,9 +255,9 @@ public class ControleResultados extends Variaveis{
 			if(trechosTextoSelecionadoSubregras.get(i).getSubregra().getIdRegra() == idRegra)
 				listaSubregrasEncontrados.addElement(trechosTextoSelecionadoSubregras.get(i).getSubregra().getPrevia());				
 		}
-		Janela.ListaSubRegra.setModel(listaSubregrasEncontrados);
-		Janela.ListaSubRegra.updateUI();
-		Janela.ListaSubRegra.setSelectedIndex(0);
+//		Janela.ListaSubRegra.setModel(listaSubregrasEncontrados);
+//		Janela.ListaSubRegra.updateUI();
+//		Janela.ListaSubRegra.setSelectedIndex(0);
 	}
 	
         private String[] marcaFalsosNegativos(String[] texto_separado){
@@ -631,8 +642,8 @@ public class ControleResultados extends Variaveis{
                                     limpaCaixasTexto();
                                     limpaAreaTexto();
                                     DefaultListModel listaVazia = new DefaultListModel();
-                                    Janela.ListaRegra.setModel(listaVazia);
-                                    Janela.ListaSubRegra.setModel(listaVazia);
+//                                    Janela.ListaRegra.setModel(listaVazia);
+//                                    Janela.ListaSubRegra.setModel(listaVazia);
                                 }
                                 
                                 else{
@@ -655,42 +666,42 @@ public class ControleResultados extends Variaveis{
 			}	
 		};
 		
-		ListSelectionListener Regras = new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent Regras) {
-                    int regraSelecionada=Janela.ListaRegra.getSelectedIndex();      
-                    if(regraSelecionada>=0){
-                            limpaCaixasTexto();
-                            TrechoEncontrado t = trechosTextoSelecionadoRegras.get(regraSelecionada);
-                            idResult=t.getidResultado();
-                            int idRegra = t.getRegra().getId();
-                            String textoTrecho = t.getRegra().getTexto();
-                            String textoRegra = t.getTrechoEncontrado();
-                            Janela.TextoRegra.setText(textoRegra);
-                            Janela.RegraTextoTrecho.setText(textoTrecho);
-                            
-                            geraListaSubregras(idRegra);
-                    }
-            }
-    };
-    
-    ListSelectionListener Subregras = new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent Subregras) {
-                    int subregraSelecionada=Janela.ListaSubRegra.getSelectedIndex();        
-                    if(subregraSelecionada>=0){
-                    		
-                    		TrechoEncontrado t = trechosTextoSelecionadoSubregras.get(subregraSelecionada);
-                            String textoTrecho= t.getSubregra().getTexto();
-                            String textoSubregra = t.getTrechoEncontrado();
-                            idResultSR=t.getidResultado();
-                            Janela.TextoSubRegra.setText(textoSubregra);
-                            Janela.SubRegraTextoTrecho.setText(textoTrecho);
-                    }
-
-                    
-                    	
-            }
-    };
-		
+//		ListSelectionListener Regras = new ListSelectionListener() {
+//            public void valueChanged(ListSelectionEvent Regras) {
+//                    int regraSelecionada=Janela.ListaRegra.getSelectedIndex();      
+//                    if(regraSelecionada>=0){
+//                            limpaCaixasTexto();
+//                            TrechoEncontrado t = trechosTextoSelecionadoRegras.get(regraSelecionada);
+//                            idResult=t.getidResultado();
+//                            int idRegra = t.getRegra().getId();
+//                            String textoTrecho = t.getRegra().getTexto();
+//                            String textoRegra = t.getTrechoEncontrado();
+//                            Janela.TextoRegra.setText(textoRegra);
+//                            Janela.RegraTextoTrecho.setText(textoTrecho);
+//                            
+//                            geraListaSubregras(idRegra);
+//                    }
+//            }
+//    };
+//    
+//    ListSelectionListener Subregras = new ListSelectionListener() {
+//            public void valueChanged(ListSelectionEvent Subregras) {
+//                    int subregraSelecionada=Janela.ListaSubRegra.getSelectedIndex();        
+//                    if(subregraSelecionada>=0){
+//                    		
+//                    		TrechoEncontrado t = trechosTextoSelecionadoSubregras.get(subregraSelecionada);
+//                            String textoTrecho= t.getSubregra().getTexto();
+//                            String textoSubregra = t.getTrechoEncontrado();
+//                            idResultSR=t.getidResultado();
+//                            Janela.TextoSubRegra.setText(textoSubregra);
+//                            Janela.SubRegraTextoTrecho.setText(textoTrecho);
+//                    }
+//
+//                    
+//                    	
+//            }
+//    };
+//		
 	
 
 }

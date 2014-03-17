@@ -7,6 +7,15 @@ public class Regra{
 	private int id;
 	private int conjunto;
 	private int elemento;
+        private String nomeElemento;
+
+    public String getNomeElemento() {
+        return nomeElemento;
+    }
+
+    public void setNomeElemento(String nomeElemento) {
+        this.nomeElemento = nomeElemento;
+    }
         private String corElemento;
         private String previa;
 	private String texto;
@@ -92,4 +101,6 @@ public class Regra{
 	public boolean hasSubregra(){
 		return !(this.subregras.isEmpty());
 	}
+
+        
 }

@@ -16,7 +16,8 @@ public class TrechoEncontrado {
         private int posFinal = -1;
         private int indSentenca;
         private int indToken;
-
+        private String comentario;
+        
     public int getPosInicial() {
         return posInicial;
     }
@@ -113,5 +114,15 @@ public class TrechoEncontrado {
 		this.idResultado = idResultado;
 		
 	}
-	
+
+        public String getComentario() {
+            return comentario;
+        }
+
+        public void setComentario(String comentario) {
+            this.comentario = comentario;
+        }
+
+
+        
 }

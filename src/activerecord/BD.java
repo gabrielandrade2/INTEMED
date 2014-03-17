@@ -628,6 +628,7 @@ public class BD extends ActiveRecord {
                                         r.setPrevia(res.getString("reg.previa"));
                                         r.setTexto(res.getString("reg.texto"));
                                         r.setElemento(res.getInt("reg.idelemento"));
+                                        r.setNomeElemento(res.getString("ele.nomeElemento"));
                                         r.setCorElemento(res.getString("corelemento"));
 		
 					t.setRegra(r);
@@ -635,6 +636,7 @@ public class BD extends ActiveRecord {
 					t.setidResultado(res.getInt("res.id"));
                                         t.setPosInicial(res.getInt("res.posInicial"));
                                         t.setPosFinal(res.getInt("res.posFinal"));
+                                        t.setComentario("res.comentario");
     //executar médoto passando a lista e o idtexto para que este método faça os edits e inserts
 					int idTexto2=res.getInt("res.idTexto");
 					if(idTextoAnt!=idTexto2)
