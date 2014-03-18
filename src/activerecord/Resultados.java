@@ -9,7 +9,16 @@ public class Resultados {
 	private boolean isEncontrado;
 	private String texto;
 	private int idTexto;
-	
+	private int numResultado;
+
+    public int getNumResultado() {
+        return numResultado;
+    }
+
+    public void setNumResultado(int numResultado) {
+        this.numResultado = numResultado;
+    }
+        
 	public void setTexto(String texto){
 		this.texto = texto;
 	}

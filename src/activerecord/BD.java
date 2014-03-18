@@ -595,7 +595,9 @@ public class BD extends ActiveRecord {
 
 	
 	public List<Resultados> selectResultados(int idExecucao, int idArquivo, int idUsuario){
-		List<String> trechosDistintos = selectDistinctTrechoEncontrado(idExecucao, idArquivo, idUsuario);
+		
+                int numResultado = 0;
+                List<String> trechosDistintos = selectDistinctTrechoEncontrado(idExecucao, idArquivo, idUsuario);
 		List<Resultados> lista = new ArrayList<Resultados>();
 		
 		List<String> textos = selectTextos(idUsuario, idArquivo);
@@ -666,6 +668,8 @@ public class BD extends ActiveRecord {
 					}
 					ResultadoTexto.addTrecho(t);
 				}
+                                                ResultadoTexto.setNumResultado(numResultado);
+                                                numResultado++;
 						lista.add(ResultadoTexto);
 
 			}

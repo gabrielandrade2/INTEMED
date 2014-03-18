@@ -281,6 +281,8 @@ public class ControleExecucao extends Variaveis{
 				public void actionPerformed(ActionEvent e) {
 					Tagger Tagger = new Tagger(BD);
 					
+                                        //Número para controle da classe ControleResultados
+                                        int numResultado = 0;
 					String descricao = Janela.descricaoExec.getText();
 					List<Integer> indiceRegras = pegaSelecaoRegras(); //Verifica os checkbox
 					List<Regra> regrasSelecionadas = buscaRegrasSelecionadas(indiceRegras); //Busca as regras selecionadas
@@ -340,7 +342,9 @@ public class ControleExecucao extends Variaveis{
 						
 						ResultadoTexto.setIdTexto(i);
 						ResultadoTexto.setTexto(texto);
-																		
+                                                ResultadoTexto.setNumResultado(numResultado);
+                                                numResultado++;
+                                                        
 						listaResultados.add(ResultadoTexto);
 						
 						//textos.add(texto);

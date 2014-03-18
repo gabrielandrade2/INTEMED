@@ -7,6 +7,7 @@ import activerecord.Regra;
 import activerecord.Resultados;
 import activerecord.Subregra;
 import activerecord.TrechoEncontrado;
+import static br.gpri.controle.Variaveis.BD;
 import br.gpri.janelas.JanelaCadastroRegra;
 import br.gpri.janelas.JanelaResultados;
 import br.gpri.nlp.Tagger;
@@ -26,6 +27,8 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.StyledDocument;
@@ -33,23 +36,24 @@ import javax.swing.text.StyledDocument;
 public class ControleResultados extends Variaveis{
 	
 	Integer linha;
-	int idResult;
-	int idResultSR;
 	int idExecucao;
 	int idTexto;
+        int numResultado;
         String original;
 	private JanelaResultados Janela;
         
-	private List<Resultados> listaResultados;
-	private List<Resultados> listaResultadosSelecionados;
+	private List<Resultados> listaResultados; //Todos os resultados da execucao
+	private List<Resultados> listaResultadosSelecionados; //Somente os resultados não decartados pelo dropdownlistbox
 	private List<Elemento> elementos;
 	private List<Regra> regras;
 	List<Subregra> subregras;
         
-	private List<TrechoEncontrado> trechosTextoSelecionadoRegras = new ArrayList<TrechoEncontrado>();
+	private List<TrechoEncontrado> trechosTextoSelecionadoRegras = new ArrayList<TrechoEncontrado>(); //Somente os resultados do texto selecionado
 	private List<TrechoEncontrado> trechosTextoSelecionadoSubregras = new ArrayList<TrechoEncontrado>();
-        //Tabela
-        DefaultTableModel tabelaoriginal;
+        
+        //Número da coluna de comentário na tabela
+        private static final int COLCOMENTARIO = 7;
+        
         
         public ControleResultados(List<Resultados> listaResultados, int idExecucao){
 		linha = 0;
@@ -233,24 +237,27 @@ public class ControleResultados extends Variaveis{
 	}*/
 	
 	protected void geraTabelaResultados(){
-	              
-             // DefaultTableModel tabela = criaTableModel();
-            
-              DefaultTableModel tabela = (DefaultTableModel)Janela.TabelaResultados.getModel();
-              tabela.setRowCount(0);
+	      DefaultTableModel tabela = (DefaultTableModel)Janela.TabelaResultados.getModel();
               
+              //Destiva o Listener para não habilitar ao mexer na tabela
+              tabela.removeTableModelListener(Comentario);
+              
+              tabela.setRowCount(0);
               for(int i=0; i<tabela.getRowCount(); i++)
                   tabela.removeRow(0);
                 for(TrechoEncontrado t : trechosTextoSelecionadoRegras){
                     String nomeElemento;
-                    if(t.getRegra().getNomeElemento() == null)
+                    if(t.getRegra().getNomeElemento() == null){
                          nomeElemento = BD.selectNomeElemento(t.getRegra().getElemento());
+                         t.getRegra().setNomeElemento(nomeElemento);
+                    }
                     Object[] o = {t.getRegra().getId(),t.getRegra().getPrevia(),t.getTrechoEncontrado(),t.getRegra().getNomeElemento(),t.getIndSentenca(),t.getPosInicial(),t.getPosFinal(),t.getComentario()};
                     tabela.addRow(o);
                 }
 
+                //Reativa o Listener dos comentários
+                tabela.addTableModelListener(Comentario);
 		Janela.TabelaResultados.updateUI();
-
 	}
 	
 	private void geraListaSubregras(int idRegra){
@@ -508,7 +515,7 @@ public class ControleResultados extends Variaveis{
         return texto;
    }*/
 
-        private String corrigeREGEX(String trecho){
+    /*    private String corrigeREGEX(String trecho){
        
             if(trecho.contains("("))
                 trecho = trecho.replaceAll("\\(", "\\\\(");
@@ -519,7 +526,7 @@ public class ControleResultados extends Variaveis{
 
                 
             return trecho;
-        }
+        }*/
         
 	 ActionListener Ok = new ActionListener() {
 			
@@ -609,10 +616,11 @@ public class ControleResultados extends Variaveis{
                                 limpaAreaTexto();
                 
 				int textoSelecionado=Janela.ListaTextos.getSelectedIndex();
-				if(textoSelecionado >= 0)
+				if(textoSelecionado >= 0){
                                     
 					idTexto = listaResultadosSelecionados.get(textoSelecionado).getIdTexto();
-				
+                                        numResultado = listaResultadosSelecionados.get(textoSelecionado).getNumResultado();
+                                }
                                 //Pegar texto daqui, se pegar da área texto vem com html e os acentos zuados
                                 String texto =  (String) Janela.ListaTextos.getSelectedValue();
 	                                
@@ -649,6 +657,24 @@ public class ControleResultados extends Variaveis{
                                 }
 			}	
 		};
+                
+                TableModelListener Comentario = new TableModelListener() {
+        		public void tableChanged(TableModelEvent e) {
+                            DefaultTableModel tabela = (DefaultTableModel)Janela.TabelaResultados.getModel();
+                            int linha = Janela.TabelaResultados.getEditingRow();
+                            if(linha >= 0){
+                                String comentario = (String) tabela.getValueAt(linha,COLCOMENTARIO);
+                                int idResult = trechosTextoSelecionadoRegras.get(linha).getidResultado();
+                                //Guarda no BD
+                                BD.insertComentario(idResult, comentario);
+                                //Atualiza a tabela que já foi lida do BD
+                                listaResultados.get(numResultado).getTrecho(linha).setComentario(comentario);
+                                listaResultadosSelecionados.get(numResultado).getTrecho(linha).setComentario(comentario);
+                                trechosTextoSelecionadoRegras.get(linha).setComentario(comentario);
+
+                            }
+                        }
+	        };	
 
       
 }
