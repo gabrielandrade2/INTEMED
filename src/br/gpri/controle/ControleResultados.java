@@ -103,7 +103,7 @@ public class ControleResultados extends Variaveis{
 		//Janela.BotaoComRegra.addActionListener(this.Comment);
 		//Janela.BotaoComSubRegra.addActionListener(this.CommentSubRegra);
 	
-                tabelaoriginal = (DefaultTableModel)Janela.TabelaResultados.getModel();
+                 
  
                
 		//Gera Lista dos textos
@@ -232,9 +232,13 @@ public class ControleResultados extends Variaveis{
 		Janela.ListaTextos.setSelectedIndex(0);
 	}*/
 	
-	protected void geraListaRegras(){
+	protected void geraTabelaResultados(){
 	              
-              DefaultTableModel tabela = criaTableModel();
+             // DefaultTableModel tabela = criaTableModel();
+            
+              DefaultTableModel tabela = (DefaultTableModel)Janela.TabelaResultados.getModel();
+              tabela.setRowCount(0);
+              
               for(int i=0; i<tabela.getRowCount(); i++)
                   tabela.removeRow(0);
                 for(TrechoEncontrado t : trechosTextoSelecionadoRegras){
@@ -244,8 +248,7 @@ public class ControleResultados extends Variaveis{
                     Object[] o = {t.getRegra().getId(),t.getRegra().getPrevia(),t.getTrechoEncontrado(),t.getRegra().getNomeElemento(),t.getIndSentenca(),t.getPosInicial(),t.getPosFinal(),t.getComentario()};
                     tabela.addRow(o);
                 }
-		Janela.TabelaResultados.setModel(tabela);
-                ajustaTamanhoColunas();
+
 		Janela.TabelaResultados.updateUI();
 
 	}
@@ -278,8 +281,7 @@ public class ControleResultados extends Variaveis{
                    texto_separado[posInicial] = "<font style=\"background-color:#ffc0a0 \">" + texto_separado[posInicial];
                    texto_separado[posFinal] = texto_separado[posFinal] + "</font style=\"background-color:#ffc0a0 \">";
                }
-                //texto_separado[0] = "<html>" + texto_separado[0];
-               //texto_separado[texto_separado.length-1] +=  "</html>";
+
                 
             return texto_separado;
 	}
@@ -547,24 +549,6 @@ public class ControleResultados extends Variaveis{
 			}
 		};
 		
-		 ActionListener Comment = new ActionListener() {
-				
-                            	@Override
-				public void actionPerformed(ActionEvent e) {
-					JanelaComentario = new ControleComentario(idResult);
-					JanelaComentario.abreJanela();
-					
-				}
-			};
-			ActionListener CommentSubRegra = new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						JanelaComentario = new ControleComentario(idResultSR);
-						JanelaComentario.abreJanela();
-						
-					}
-				};
 				
                         
                         ActionListener FalsoNegativo = new ActionListener() {
@@ -636,15 +620,14 @@ public class ControleResultados extends Variaveis{
 				if(textoSelecionado == -1){
 					textoSelecionado = 0;
 				}	
+                                
+                                //Ver isso aqui!!!!
 				if(listaResultadosSelecionados.isEmpty()){
                                     DefaultListModel nenhumaEntrada = new DefaultListModel();
                                     nenhumaEntrada.addElement("Nenhuma entrada");
                                     Janela.ListaTextos.setModel(nenhumaEntrada);
                                     limpaCaixasTexto();
                                     limpaAreaTexto();
-                                    DefaultListModel listaVazia = new DefaultListModel();
-//                                    Janela.ListaRegra.setModel(listaVazia);
-//                                    Janela.ListaSubRegra.setModel(listaVazia);
                                 }
                                 
                                 else{
@@ -655,7 +638,7 @@ public class ControleResultados extends Variaveis{
                                 linha = Janela.ListaTextos.getSelectedIndex();
 				Integer l = linha + 1;
 				Janela.NumeroTexto.setText(l.toString());
-				geraListaRegras();
+				geraTabelaResultados();
                                 
                                 texto = negritaTexto(texto);
                                 
@@ -666,84 +649,6 @@ public class ControleResultados extends Variaveis{
                                 }
 			}	
 		};
-		
-//		ListSelectionListener Regras = new ListSelectionListener() {
-//            public void valueChanged(ListSelectionEvent Regras) {
-//                    int regraSelecionada=Janela.ListaRegra.getSelectedIndex();      
-//                    if(regraSelecionada>=0){
-//                            limpaCaixasTexto();
-//                            TrechoEncontrado t = trechosTextoSelecionadoRegras.get(regraSelecionada);
-//                            idResult=t.getidResultado();
-//                            int idRegra = t.getRegra().getId();
-//                            String textoTrecho = t.getRegra().getTexto();
-//                            String textoRegra = t.getTrechoEncontrado();
-//                            Janela.TextoRegra.setText(textoRegra);
-//                            Janela.RegraTextoTrecho.setText(textoTrecho);
-//                            
-//                            geraListaSubregras(idRegra);
-//                    }
-//            }
-//    };
-//    
-//    ListSelectionListener Subregras = new ListSelectionListener() {
-//            public void valueChanged(ListSelectionEvent Subregras) {
-//                    int subregraSelecionada=Janela.ListaSubRegra.getSelectedIndex();        
-//                    if(subregraSelecionada>=0){
-//                    		
-//                    		TrechoEncontrado t = trechosTextoSelecionadoSubregras.get(subregraSelecionada);
-//                            String textoTrecho= t.getSubregra().getTexto();
-//                            String textoSubregra = t.getTrechoEncontrado();
-//                            idResultSR=t.getidResultado();
-//                            Janela.TextoSubRegra.setText(textoSubregra);
-//                            Janela.SubRegraTextoTrecho.setText(textoTrecho);
-//                    }
-//
-//                    
-//                    	
-//            }
-//    };
-//		
-      
-      private DefaultTableModel criaTableModel(){
-         DefaultTableModel tabela = new javax.swing.table.DefaultTableModel(
-          new Object [][] {
 
-          },
-          new String [] {
-              "idRegra", "Regra", "Trecho Encontrado", "Nome do Elemento", "No Frase", "PosInicial", "PosFinal", "Comentário"
-          }
-      ) {
-          Class[] types = new Class [] {
-              java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
-          };
-          boolean[] canEdit = new boolean [] {
-              false, true, false, false, false, false, false, true
-          };
-
-          public Class getColumnClass(int columnIndex) {
-              return types [columnIndex];
-          }
-
-          public boolean isCellEditable(int rowIndex, int columnIndex) {
-              return canEdit [columnIndex];
-          }
-      };
-        return tabela;
-      }
-
-      private void ajustaTamanhoColunas(){
-        Janela.TabelaResultados.getColumnModel().getColumn(0).setMinWidth(50);
-        Janela.TabelaResultados.getColumnModel().getColumn(0).setPreferredWidth(50);
-        Janela.TabelaResultados.getColumnModel().getColumn(0).setMaxWidth(50);
-        Janela.TabelaResultados.getColumnModel().getColumn(4).setMinWidth(60);
-        Janela.TabelaResultados.getColumnModel().getColumn(4).setPreferredWidth(60);
-        Janela.TabelaResultados.getColumnModel().getColumn(4).setMaxWidth(60);
-        Janela.TabelaResultados.getColumnModel().getColumn(5).setMinWidth(60);
-        Janela.TabelaResultados.getColumnModel().getColumn(5).setPreferredWidth(60);
-        Janela.TabelaResultados.getColumnModel().getColumn(5).setMaxWidth(60);
-        Janela.TabelaResultados.getColumnModel().getColumn(6).setMinWidth(60);
-        Janela.TabelaResultados.getColumnModel().getColumn(6).setPreferredWidth(60);
-        Janela.TabelaResultados.getColumnModel().getColumn(6).setMaxWidth(60);
-      }
       
 }
