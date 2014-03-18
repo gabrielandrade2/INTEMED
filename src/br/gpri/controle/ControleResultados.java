@@ -233,15 +233,8 @@ public class ControleResultados extends Variaveis{
 	}*/
 	
 	protected void geraListaRegras(){
-		DefaultListModel listaRegrasEncontrados = new DefaultListModel();
-		for(int i=0;i<trechosTextoSelecionadoRegras.size();i++){
-                    String s = trechosTextoSelecionadoRegras.get(i).getRegra().getPrevia();
-                    if(s == null)
-                        s = "Nada Encontrado";
-                    listaRegrasEncontrados.addElement(s);				
-		}
-                
-              DefaultTableModel tabela = tabelaoriginal;
+	              
+              DefaultTableModel tabela = criaTableModel();
               for(int i=0; i<tabela.getRowCount(); i++)
                   tabela.removeRow(0);
                 for(TrechoEncontrado t : trechosTextoSelecionadoRegras){
@@ -251,9 +244,10 @@ public class ControleResultados extends Variaveis{
                     Object[] o = {t.getRegra().getId(),t.getRegra().getPrevia(),t.getTrechoEncontrado(),t.getRegra().getNomeElemento(),t.getIndSentenca(),t.getPosInicial(),t.getPosFinal(),t.getComentario()};
                     tabela.addRow(o);
                 }
-//		Janela.ListaRegra.setModel(listaRegrasEncontrados);
-//		Janela.ListaRegra.updateUI();
-//		Janela.ListaRegra.setSelectedIndex(0);
+		Janela.TabelaResultados.setModel(tabela);
+                ajustaTamanhoColunas();
+		Janela.TabelaResultados.updateUI();
+
 	}
 	
 	private void geraListaSubregras(int idRegra){
@@ -709,6 +703,47 @@ public class ControleResultados extends Variaveis{
 //            }
 //    };
 //		
-	
+      
+      private DefaultTableModel criaTableModel(){
+         DefaultTableModel tabela = new javax.swing.table.DefaultTableModel(
+          new Object [][] {
 
+          },
+          new String [] {
+              "idRegra", "Regra", "Trecho Encontrado", "Nome do Elemento", "No Frase", "PosInicial", "PosFinal", "Comentário"
+          }
+      ) {
+          Class[] types = new Class [] {
+              java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+          };
+          boolean[] canEdit = new boolean [] {
+              false, true, false, false, false, false, false, true
+          };
+
+          public Class getColumnClass(int columnIndex) {
+              return types [columnIndex];
+          }
+
+          public boolean isCellEditable(int rowIndex, int columnIndex) {
+              return canEdit [columnIndex];
+          }
+      };
+        return tabela;
+      }
+
+      private void ajustaTamanhoColunas(){
+        Janela.TabelaResultados.getColumnModel().getColumn(0).setMinWidth(50);
+        Janela.TabelaResultados.getColumnModel().getColumn(0).setPreferredWidth(50);
+        Janela.TabelaResultados.getColumnModel().getColumn(0).setMaxWidth(50);
+        Janela.TabelaResultados.getColumnModel().getColumn(4).setMinWidth(60);
+        Janela.TabelaResultados.getColumnModel().getColumn(4).setPreferredWidth(60);
+        Janela.TabelaResultados.getColumnModel().getColumn(4).setMaxWidth(60);
+        Janela.TabelaResultados.getColumnModel().getColumn(5).setMinWidth(60);
+        Janela.TabelaResultados.getColumnModel().getColumn(5).setPreferredWidth(60);
+        Janela.TabelaResultados.getColumnModel().getColumn(5).setMaxWidth(60);
+        Janela.TabelaResultados.getColumnModel().getColumn(6).setMinWidth(60);
+        Janela.TabelaResultados.getColumnModel().getColumn(6).setPreferredWidth(60);
+        Janela.TabelaResultados.getColumnModel().getColumn(6).setMaxWidth(60);
+      }
+      
 }
