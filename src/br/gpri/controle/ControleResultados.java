@@ -289,8 +289,8 @@ public class ControleResultados extends Variaveis{
                        texto_separado[k] = "<font style=\"background-color:#ffc0a0 \">" + texto_separado[k] + "</font style=\"background-color:#ffc0a0 \">";
                    }
 
-                   texto_separado[posInicial] = "<font style=\"background-color:#ffc0a0 \">" + texto_separado[posInicial];
-                   texto_separado[posFinal] = texto_separado[posFinal] + "</font style=\"background-color:#ffc0a0 \">";
+                  // texto_separado[posInicial] = "<font style=\"background-color:#ffc0a0 \">" + texto_separado[posInicial];
+                   //texto_separado[posFinal] = texto_separado[posFinal] + "</font style=\"background-color:#ffc0a0 \">";
                }
 
                 
