@@ -285,6 +285,10 @@ public class ControleResultados extends Variaveis{
                   //texto_separado[posInicial] = "<span style=\"background-color:DarkSalmon\">" + texto_separado[posInicial];
                   // texto_separado[posFinal] = texto_separado[posFinal] + "</span>";
                    
+                  for(int k=posInicial; k<=posFinal; k++){
+                       texto_separado[k] = "<font style=\"background-color:#ffc0a0 \">" + texto_separado[k] + "</font style=\"background-color:#ffc0a0 \">";
+                   }
+
                    texto_separado[posInicial] = "<font style=\"background-color:#ffc0a0 \">" + texto_separado[posInicial];
                    texto_separado[posFinal] = texto_separado[posFinal] + "</font style=\"background-color:#ffc0a0 \">";
                }
@@ -417,8 +421,11 @@ public class ControleResultados extends Variaveis{
                    else
                     color = trechosTextoSelecionadoRegras.get(i).getRegra().getCorElemento();
                    
-                   texto_separado[posInicial] = "<font color=\""+color+"\"><b>" + texto_separado[posInicial];
-                   texto_separado[posFinal] = texto_separado[posFinal] + "</b></font color=\""+color+"\">";
+                   for(int k=posInicial; k<=posFinal; k++){
+                       texto_separado[k] = "<font color=\""+color+"\"><b>" + texto_separado[k] + "</b></font color=\""+color+"\">";
+                   }
+                   //texto_separado[posInicial] = "<font color=\""+color+"\"><b>" + texto_separado[posInicial];
+                   //texto_separado[posFinal] = texto_separado[posFinal] + "</b></font color=\""+color+"\">";
                    
                }
                 texto = new String();
