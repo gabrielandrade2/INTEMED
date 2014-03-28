@@ -299,25 +299,27 @@ public class ControleExecucao extends Variaveis{
 					for(int i=0; i<numTextos; i++){ //Pra cada texto, executa
 						String texto = BD.selectTexto(idUsuario, idArquivo, i);
 						boolean isEncontrado;
+
+                                                System.out.println("Texto "+(i+1));
 						
 						List<TrechoEncontrado> encontrados = Tagger.executaRegra(texto, regrasSelecionadas);
+						System.out.println("");
 						
 						//Console
-						System.out.println("Texto "+(i+1));
-						System.out.println(texto);
-						System.out.println();
+//						System.out.println(texto);
+//						System.out.println();
 						for(int j=0; j<encontrados.size(); j++){
-							System.out.println("Trecho Encontrado: "+encontrados.get(j).getTrechoEncontrado());
-                                                        System.out.println("PosInicial= "+ encontrados.get(j).getPosInicial());
-                                                        System.out.println("PosFinal= "+encontrados.get(j).getPosFinal());
+//							System.out.println("Trecho Encontrado: "+encontrados.get(j).getTrechoEncontrado());
+//                                                        System.out.println("PosInicial= "+ encontrados.get(j).getPosInicial());
+//                                                        System.out.println("PosFinal= "+encontrados.get(j).getPosFinal());
 							if(encontrados.get(j).isSubregra()){
-								System.out.println("subRegra: "+encontrados.get(j).getSubregra().getPrevia());
+//								System.out.println("subRegra: "+encontrados.get(j).getSubregra().getPrevia());
 							}
 							else{
-								System.out.println("Regra: "+encontrados.get(j).getRegra().getPrevia());								
+//								System.out.println("Regra: "+encontrados.get(j).getRegra().getPrevia());								
 							}
 							
-							System.out.println();
+//							System.out.println();
 						}
 						
 						Resultados ResultadoTexto = new Resultados();

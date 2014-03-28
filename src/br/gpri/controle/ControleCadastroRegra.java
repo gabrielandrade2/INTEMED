@@ -13,6 +13,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import activerecord.*;
+import static br.gpri.controle.Variaveis.BD;
 import br.gpri.janelas.JanelaCadastroRegra;
 import br.gpri.nlp.Tagger;
 
@@ -186,7 +187,8 @@ public class ControleCadastroRegra extends Variaveis{
 		
 			Tagger Tagger = new Tagger(BD); 
 			Regra r = Tagger.geraRegra(Janela.TextoSumario1.getText(), Janela.TextoSumario1.getSelectedText(), idElemento, idRegra);
-			r.setIdTexto(linha);
+			Janela.TextoSumario1.setText(null);
+                        r.setIdTexto(linha);
 			r.setIdArquivo(idArquivo);
 			
 			JanelaIndices = new ControleIndice(r);
@@ -240,7 +242,9 @@ public class ControleCadastroRegra extends Variaveis{
 	
 	ListSelectionListener Textos = new ListSelectionListener() {
 		public void valueChanged(ListSelectionEvent Regras) {
-			Janela.TextoSumario1.setText((String) Janela.ListaTexto.getSelectedValue());
+			Tagger Tagger = new Tagger(BD); 
+
+			Janela.TextoSumario1.setText((String) Janela.ListaTexto.getSelectedValue().toString());
 			linha = Janela.ListaTexto.getSelectedIndex();
 			Integer l = linha+1;
 			Janela.Indice.setText(l.toString());

@@ -345,7 +345,7 @@ public class Tagger{
 		List<TrechoEncontrado> encontrados = new ArrayList<TrechoEncontrado>();
 		String trechosEncontradosConcatenados="";
                 int indSentenca=0;
-                //Executa opera√ß√µes de PR√â-PROCESSAMENTO
+                int posicaoToken=0;//Executa opera√ß√µes de PR√â-PROCESSAMENTO
 		texto_medico = preProccessText(texto_medico);
 		
                 //Separa texto em senten√ßas
@@ -353,6 +353,14 @@ public class Tagger{
 		for (String sentenca : sentencas) {
                     indSentenca++;
                     List<Token> tokens = processCogroo(sentenca);
+                    for (int i=0;i < tokens.size(); i++)
+                    {
+                        posicaoToken++;
+                        System.out.print("["+posicaoToken+"]"+tokens.get(i).getLexeme());
+                         System.out.print("|"+tokens.get(i).getMorphologicalTag().toString()+" ");
+                                                                
+                    }
+                    
                     if (temFraseNegativa(sentenca)){
 			//Aqui ele passava pra prÛxima sentenÁa sem incrementar o contador de posiÁıes das frases anteriores, por isos n„o marcava as frases de baixo.
                         contadorPosiÁıesPassadas += tokens.size();
@@ -379,6 +387,7 @@ public class Tagger{
 						if(c.contentEquals(d)){
 							igual = true;
 							trecho += tokens.get(i+j).getLexeme() + " ";
+						//Se toda a compara√ß√£o for igual, se tiver subregras testa
 						}
 						else{
 							igual = false;
@@ -386,7 +395,6 @@ public class Tagger{
 						}
 					}
 						//
-						//Se toda a compara√ß√£o for igual, se tiver subregras testa
 						//Se tudo der certo, adiona na lista de encontrados e limpa a string trecho
 
 //este teste foi tirado para que todas as ocorrÍncias de um termo possam fazer parte do laudo estruturado, sen„o o laudo estruturado
@@ -509,7 +517,7 @@ public class Tagger{
                                         {
                                             diferencaPosicaoTokenRegraTokenSubRegra=(i_sr-i_token_regra)*(i_sr-i_token_regra);
                                         
-                                            System.out.println("trecho_sr->"+trecho_sr+" diferencaPosicaoTokenRegraTokenSubRegra->"+diferencaPosicaoTokenRegraTokenSubRegra);
+//                                            System.out.println("trecho_sr->"+trecho_sr+" diferencaPosicaoTokenRegraTokenSubRegra->"+diferencaPosicaoTokenRegraTokenSubRegra);
 	
                                             t.setSubregra(sr);
                                             t.setIsSubregra(true);
@@ -545,9 +553,9 @@ public class Tagger{
                 aux=text.replaceAll("\\.",". ");
                 String pattern="(\\.)( )([0-9])";
                 text=aux.replaceAll(pattern,"$1$3");
-                System.out.println("retiraPontoLetra");
-                System.out.println(text);
-                System.out.println("<><><><><><><><><><><><><><<><><>< ");
+//                System.out.println("retiraPontoLetra");
+//                System.out.println(text);
+//                System.out.println("<><><><><><><><><><><><><><<><><>< ");
                 return text;
 //		return text.replaceAll("[.][a-z]", "$1").replaceAll("[.][A-Z]", "$1");
 		

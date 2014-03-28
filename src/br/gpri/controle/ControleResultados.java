@@ -365,12 +365,13 @@ public class ControleResultados extends Variaveis{
                    for(int j=0; j<trechosTextoSelecionadoRegras.size(); j++){
                        //Não compara iguais
                        if(i!=j){
+                       //Para caso sejam do mesmo elemento
                             String b = trechosTextoSelecionadoRegras.get(j).getTrechoEncontrado(); //Para debug
                             int posInicial2 = trechosTextoSelecionadoRegras.get(j).getPosInicial();
                             int posFinal2 = trechosTextoSelecionadoRegras.get(j).getPosFinal();
 
                             //Não marca se o trecho encontrado for o mesmo
-                            if(posInicial2 != posInicial || posFinal2 != posFinal){  //Se a posição incial e a final não forem iguais
+                     //       if(posInicial2 != posInicial || posFinal2 != posFinal){  //Se a posição incial e a final não forem iguais
                                 
                                 //Identifica as posições onde há o trecho com sobreposição de regras e coloca a tag de coloração abrindo e fechando em cada uma das palavras
                                 //Fiz isso para dar preferência à tag de sobreposição, porque colocando somente no inicio e fim do trecho, caso outra regra se inicie dentro desse, a cor mudaria para a dessa regra, por ser a tag mais interna.
@@ -394,15 +395,19 @@ public class ControleResultados extends Variaveis{
                                        // texto_separado[posFinal] = texto_separado[posFinal] + "</font color=\"yellow\">";
                                         posSobreposicaoF = posFinal;
                                     
-                                    //Depois de identificar o trecho coloca a tag em todas as palavras
+                                    //Depois de identificar o trecho coloca a tag em todas as palavras 
+                                    //-->>Colocado o teste para só colocar em vermelho quando elementos forem diferentes
                                     for(int k=posSobreposicaoI; k<=posSobreposicaoF; k++){
+                       if(trechosTextoSelecionadoRegras.get(i).getRegra().getElemento()!=trechosTextoSelecionadoRegras.get(j).getRegra().getElemento())
+                       {
                                         texto_separado[k] = "<font color=\"red\">" + texto_separado[k] + "</font color=\"   red\">";
+                       }
                                     }
                                     
                                 }
                            }
                        }
-                   }
+                   //}
                }
                
                
@@ -440,7 +445,7 @@ public class ControleResultados extends Variaveis{
                    texto += " " + token;
                
                texto = texto.substring(1, texto.length());
-               System.out.println(texto);
+//               System.out.println(texto);
         }
         return texto;
    }
