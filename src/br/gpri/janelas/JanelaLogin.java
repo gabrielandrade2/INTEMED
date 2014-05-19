@@ -29,7 +29,7 @@ public class JanelaLogin extends javax.swing.JFrame{
 
         jLabel1.setText("Usuário:");
         jLabel2.setText("Senha:");
-        jLabel3.setText("INTEMED");
+        jLabel3.setText("ESTEMED");
         BotaoLogin.setText("Entrar");
         BotaoCadastro.setText("Cadastro");
         

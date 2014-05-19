@@ -51,7 +51,7 @@ public class JanelaResultados extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("INTEMED");
+        jLabel1.setText("ESTEMED");
 
         jLabel2.setText("Resultados");
 

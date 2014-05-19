@@ -123,7 +123,7 @@ public class Tagger{
 		
 		
 	}
-	private List<Token> processCogroo(String sentenca){
+	public List<Token> processCogroo(String sentenca){
 		//Tokeniza sentença
 		SentenceCogroo sc = new SentenceCogroo(sentenca);
 		List<Token> tokens = null;
@@ -353,11 +353,12 @@ public class Tagger{
 		for (String sentenca : sentencas) {
                     indSentenca++;
                     List<Token> tokens = processCogroo(sentenca);
+                    System.out.print(";"+tokens.size());
                     for (int i=0;i < tokens.size(); i++)
                     {
                         posicaoToken++;
-                        System.out.print("["+posicaoToken+"]"+tokens.get(i).getLexeme());
-                         System.out.print("|"+tokens.get(i).getMorphologicalTag().toString()+" ");
+//                        System.out.print("["+posicaoToken+"]"+tokens.get(i).getLexeme());
+//                         System.out.print("|"+tokens.get(i).getMorphologicalTag().toString()+" ");
                                                                 
                     }
                     

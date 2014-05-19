@@ -39,7 +39,7 @@ public class JanelaIndices extends javax.swing.JFrame {
 
 	        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-	        jLabel1.setText("INTEMED");
+	        jLabel1.setText("ESTEMED");
 
 	        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 	        jLabel2.setText("Indices");

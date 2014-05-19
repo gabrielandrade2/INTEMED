@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import activerecord.Dicionario;
+import br.usp.pcs.lta.cogroo.entity.Token;
 import com.mysql.jdbc.PreparedStatement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -603,7 +604,8 @@ public class BD extends ActiveRecord {
 		List<String> textos = selectTextos(idUsuario, idArquivo);
 		
 		int idTexto =-1;
-		int idTextoAnt=-1;
+		int idTextoAnt=-1;		
+                int idTextoAnt3=-1;
 		boolean once = true;
 		try{
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(
@@ -617,9 +619,21 @@ public class BD extends ActiveRecord {
      + "where res.idtexto=txt.idtexto and exe.idarquivo=txt.idarquivo and "
      + "exe.idusuario=txt.idusuario and exe.id=res.idexecucao and res.isFalsoNegativo=0 and exe.id="+idExecucao
 //     + " order by res.idtexto, res.id;");
-     + " order by res.idtexto, res.indsentenca,posinicial,posfinal;");
+     + " order by res.idtexto, res.indsentenca,posinicial,posfinal desc;");
 		ResultSet res = ps.executeQuery();
 		Resultados ResultadoTexto = new Resultados();
+		Resultados ResultadoTextoAnt = new Resultados();                
+                TrechoEncontrado tAnt3 = new TrechoEncontrado();
+                TrechoEncontrado tAnt5 = new TrechoEncontrado();
+                int posicaoInicialConcatenados3=-1;
+                int posicaoFinalConcatenados3=-1;
+                int posicaoInicialConcatenados5=-1;
+                int posicaoFinalConcatenados5=-1;
+                int totalConcatenadosTM=0;
+                int totalConcatenadosAR=0;
+                boolean fimDeFrase3=false;
+                boolean fimDeFrase5=false;
+                List<String> palavras = new ArrayList<String>();
 				while(res.next()){  
 					if(once){
 						idTexto = res.getInt("res.idTexto");
@@ -632,6 +646,97 @@ public class BD extends ActiveRecord {
 					}
 					ResultadoTexto.setIdTexto(res.getInt("res.idTexto"));
 					ResultadoTexto.setTexto(res.getString("txt.texto")); //Adiciona texto no objeto resultado
+					int idTexto2=res.getInt("res.idTexto");
+					int idTexto3=res.getInt("res.idTexto");
+                                        if (idTextoAnt3==-1)
+                                        {
+                                            idTextoAnt3=idTexto3;
+                                        }
+                                        
+//ALTERAÇÃO PARA IMPRIMIR OS REAULTADOS QUE ESTÃO INTERCALADOS JUNTOS                
+		if(idTextoAnt!=idTexto2||idTextoAnt==-1)
+		{
+//                tAnt = new TrechoEncontrado();
+
+                System.out.println();
+//                System.out.print("concatenados->"+posicaoInicialConcatenados+" "+posicaoFinalConcatenados);
+
+                if (tAnt3.getTrechoEncontrado()!=null)
+                {
+                    if(tAnt3.getRegra().getElemento()==3)
+                        System.out.print(";");
+                    if (posicaoInicialConcatenados3==-1)
+                    {
+                        posicaoInicialConcatenados3=tAnt3.getPosInicial();
+                        posicaoFinalConcatenados3=tAnt3.getPosFinal();
+                    }
+                    if(posicaoInicialConcatenados3!=-1)
+                    {
+                        totalConcatenadosTM++;
+                        for (int i=posicaoInicialConcatenados3;i<posicaoFinalConcatenados3+1;i++)
+                        {
+                             System.out.print(palavras.get(i)+" ");                                                            
+                        }
+                    }
+                }
+                posicaoInicialConcatenados3=-1;
+                posicaoFinalConcatenados3=-1;
+                tAnt3 = new TrechoEncontrado();
+
+                if (tAnt5.getTrechoEncontrado()!=null)
+                {
+                    System.out.println();
+                    if(tAnt5.getRegra().getElemento()==3)
+                        System.out.print(";");
+                    if (posicaoInicialConcatenados5==-1)
+                    {
+                        posicaoInicialConcatenados5=tAnt5.getPosInicial();
+                        posicaoFinalConcatenados5=tAnt5.getPosFinal();
+                    }
+                    if(posicaoInicialConcatenados5!=-1)
+                    {
+                        totalConcatenadosAR++;
+                        for (int i=posicaoInicialConcatenados5;i<posicaoFinalConcatenados5+1;i++)
+                        {
+                             System.out.print(palavras.get(i)+" ");                                                            
+                        }
+                    }
+                }
+                posicaoInicialConcatenados5=-1;
+                posicaoFinalConcatenados5=-1;
+                tAnt5 = new TrechoEncontrado();
+
+                System.out.println();
+                System.out.println("------------------;;"+(res.getInt("res.idTexto")-1)+";totalConcatenadosTM;"+totalConcatenadosTM+";totalConcatenadosAR;"+totalConcatenadosAR);
+                totalConcatenadosTM=0;
+                totalConcatenadosAR=0;
+
+                Tagger tg=new Tagger(this);                        
+                int indSentenca=0;
+                int posicaoToken=0;//Executa operaÃ§Ãµes de PRÃ‰-PROCESSAMENTO
+		String texto_medico = tg.preProccessText(res.getString("txt.texto"));
+                //Separa texto em sentenÃ§as
+		String[] sentencas = tg.cogroo.sentDetect(texto_medico);
+                palavras = new ArrayList<String>();
+		for (String sentenca : sentencas) {
+                    indSentenca++;
+                    List<Token> tokens = tg.processCogroo(sentenca);
+                    for (int i=0;i < tokens.size(); i++)
+                    {
+                        posicaoToken++;
+                        palavras.add(tokens.get(i).getLexeme());
+//                        System.out.print("["+posicaoToken+"]"+tokens.get(i).getLexeme());
+//                         System.out.print("|"+tokens.get(i).getMorphologicalTag().toString()+" ");
+                                                                
+                    }
+                }                                 
+                                        
+                                        
+                }                                        
+                                        
+//FIM DA ALTERAÇÃO PARA IMPRIMIR OS REAULTADOS QUE ESTÃO INTERCALADOS JUNTOS                
+                                       
+                                        
 					ResultadoTexto.setIsEncontrado(res.getBoolean("res.isEncontrado")); //Verifica se é resultado encontrado ou não
 					
                                             TrechoEncontrado t = new TrechoEncontrado();
@@ -660,18 +765,177 @@ public class BD extends ActiveRecord {
                                         t.setComentario(res.getString("res.comentario"));
                                         t.setIndSentenca(res.getInt("res.indsentenca"));
     //executar médoto passando a lista e o idtexto para que este método faça os edits e inserts
-					int idTexto2=res.getInt("res.idTexto");
 					if(idTextoAnt!=idTexto2)
 					{
 //						insereRapidMiner(trechosDistintos, idExecucao, idArquivo, idUsuario, idTexto2);
 						idTextoAnt=idTexto2;
 					}
 					ResultadoTexto.addTrecho(t);
-				}
+//                                                System.out.println("trecho encontrado     "+t.getTrechoEncontrado()+" elemento "+t.getRegra().getElemento()+ " pos ini "+t.getPosInicial()+" pos fin "+t.getPosFinal());
+                                            if(t.getRegra().getElemento()==3)
+                                            {    
+                                            if (tAnt3.getTrechoEncontrado()!=null)
+                                                {
+                                                    if (posicaoInicialConcatenados3==-1)
+                                                    {
+                                                        posicaoInicialConcatenados3=tAnt3.getPosInicial();
+                                                        posicaoFinalConcatenados3=tAnt3.getPosFinal();
+                                                    }
+                                                    if (t.getPosInicial()> tAnt3.getPosFinal()+1||
+                                                            t.getRegra().getElemento()!=tAnt3.getRegra().getElemento())
+                                                    {
+                                                        idTextoAnt3=idTexto3;
+                                                        System.out.println();
+          //                                              System.out.print("concatenados->"+posicaoInicialConcatenados+" "+posicaoFinalConcatenados);
+                                                        if(!tAnt3.getTrechoEncontrado().contentEquals("Nada Encontrado"))
+                                                        {
+                                                            if(tAnt3.getRegra().getElemento()==3)
+                                                                System.out.print(";");
+                                                        }
+                                                        totalConcatenadosTM++;
+                                                        for (int i=posicaoInicialConcatenados3;i<posicaoFinalConcatenados3+1;i++)
+                                                         {
+                                                              System.out.print(palavras.get(i)+" ");                                                            
+                                                            }
+                                                        for (int i=posicaoFinalConcatenados3;i<t.getPosInicial();i++)
+                                                             if(palavras.get(i).contentEquals("."))
+                                                                fimDeFrase3=true;
+                                                        posicaoFinalConcatenados3=t.getPosFinal();
+                                                        posicaoInicialConcatenados3=t.getPosInicial();
+                                                    }
+                                                    else 
+                                                    {
+                                                        posicaoFinalConcatenados3=t.getPosFinal();
+                                                    }
+                                                    if (t.getRegra().getElemento()==3)
+                                                    {
+                                                        tAnt3=t;
+                                                    }
+                                                    
+                                                        
+                                                }
+                                                else
+                                                    if (t.getRegra().getElemento()==3)
+                                                    {
+                                                        tAnt3=t;
+                                                    }
+                                            }
+                   
+                                            if(t.getRegra().getElemento()==5)
+                                            {    
+                                            if (tAnt5.getTrechoEncontrado()!=null)
+                                                {
+                                                    if (posicaoInicialConcatenados5==-1)
+                                                    {
+                                                        posicaoInicialConcatenados5=tAnt5.getPosInicial();
+                                                        posicaoFinalConcatenados5=tAnt5.getPosFinal();
+                                                    }
+                                                    if (t.getPosInicial()> tAnt5.getPosFinal()+1||
+                                                            t.getRegra().getElemento()!=tAnt5.getRegra().getElemento())
+                                                    {
+                                                        idTextoAnt3=idTexto3;
+                                                        System.out.println();
+          //                                              System.out.print("concatenados->"+posicaoInicialConcatenados+" "+posicaoFinalConcatenados);
+                                                        if(!tAnt5.getTrechoEncontrado().contentEquals("Nada Encontrado"))
+                                                        {
+                                                            if(tAnt5.getRegra().getElemento()==3)
+                                                                System.out.print(";");
+                                                        }
+                                                        totalConcatenadosAR++;
+                                                        for (int i=posicaoInicialConcatenados5;i<posicaoFinalConcatenados5+1;i++)
+                                                         {
+                                                              System.out.print(palavras.get(i)+" ");                                                            
+                                                            }
+                                                        for (int i=posicaoFinalConcatenados5;i<t.getPosInicial();i++)
+                                                             if(palavras.get(i).contentEquals("."))
+                                                                fimDeFrase5=true;
+                                                        posicaoFinalConcatenados5=t.getPosFinal();
+                                                        posicaoInicialConcatenados5=t.getPosInicial();
+                                                    }
+                                                    else 
+                                                    {
+                                                        posicaoFinalConcatenados5=t.getPosFinal();
+                                                    }
+                                                    if (t.getRegra().getElemento()==5)
+                                                    {
+                                                        tAnt5=t;
+                                                    }
+                                                    
+                                                        
+                                                }
+                                                else
+                                                    if (t.getRegra().getElemento()==5)
+                                                    {
+                                                        tAnt5=t;
+                                                    }
+                                            }
+                                            if (fimDeFrase3&&fimDeFrase5)
+                                            {
+                                                fimDeFrase3=false;
+                                                fimDeFrase5=false;
+                                                System.out.println();
+                                                System.out.println("fim de frase");
+                                            }
+                                                    
+                       }
                                                 ResultadoTexto.setNumResultado(numResultado);
                                                 numResultado++;
 						lista.add(ResultadoTexto);
+//-------------------------------------
+                                                
+                                            if (tAnt3.getTrechoEncontrado()!=null)
+                                                {
+                                                    if (posicaoInicialConcatenados3==-1)
+                                                    {
+                                                        posicaoInicialConcatenados3=tAnt3.getPosInicial();
+                                                        posicaoFinalConcatenados3=tAnt3.getPosFinal();
+                                                    }
+                                                        System.out.println();
+          //                                              System.out.print("concatenados->"+posicaoInicialConcatenados+" "+posicaoFinalConcatenados);
+                                                        if(!tAnt3.getTrechoEncontrado().contentEquals("Nada Encontrado"))
+                                                        {
+                                                            if(tAnt3.getRegra().getElemento()==3)
+                                                                System.out.print(";");
+                                                        }
+                                                        totalConcatenadosTM++;
+                                                        for (int i=posicaoInicialConcatenados3;i<posicaoFinalConcatenados3+1;i++)
+                                                         {
+                                                              System.out.print(palavras.get(i)+" ");                                                            
+                                                            }
+                                                    }
+                                                    
+                                                        
+                                                
+                                            
+                   
+                                            if (tAnt5.getTrechoEncontrado()!=null)
+                                                {
+                                                    if (posicaoInicialConcatenados5==-1)
+                                                    {
+                                                        posicaoInicialConcatenados5=tAnt5.getPosInicial();
+                                                        posicaoFinalConcatenados5=tAnt5.getPosFinal();
+                                                    }
+                                                        System.out.println();
+          //                                              System.out.print("concatenados->"+posicaoInicialConcatenados+" "+posicaoFinalConcatenados);
+                                                        if(!tAnt5.getTrechoEncontrado().contentEquals("Nada Encontrado"))
+                                                        {
+                                                            if(tAnt5.getRegra().getElemento()==3)
+                                                                System.out.print(";");
+                                                        }
+                                                        totalConcatenadosAR++;
+                                                        for (int i=posicaoInicialConcatenados5;i<posicaoFinalConcatenados5+1;i++)
+                                                         {
+                                                              System.out.print(palavras.get(i)+" ");                                                            
+                                                            }
+                                                    
+                                                        
+                                                }
+                                            
+                System.out.println();
+                System.out.println("------------------;;"+(idTextoAnt-1)+";totalConcatenadosTM;"+totalConcatenadosTM+";totalConcatenadosAR;"+totalConcatenadosAR);
 
+                                                
+//--------------------------------------        
 			}
 			
 			catch(SQLException e){

@@ -44,7 +44,7 @@ public class JanelaExecAnt extends javax.swing.JFrame {
 
         ABotaoVoltar.setText("Voltar");
 
-        jLabel2.setText("INTEMED");
+        jLabel2.setText("ESTEMED");
 
         jScrollPane2.setViewportView(tabelaExec);
 

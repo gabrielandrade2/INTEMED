@@ -84,7 +84,7 @@ public class JanelaExecucao extends javax.swing.JFrame {
 
         jLabel1.setText("Execução");
 
-        jLabel2.setText("INTEMED");
+        jLabel2.setText("ESTEMED");
 
         BotaoOk.setText("OK");
         BotaoOk.addActionListener(new java.awt.event.ActionListener() {

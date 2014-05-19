@@ -167,7 +167,7 @@ public class CadastroRegra extends javax.swing.JFrame {
 
         jLabel6.setText("Texto:");
 
-        jLabel7.setText("INTEMED");
+        jLabel7.setText("ESTEMED");
 
         jScrollPane1.setViewportView(ListaRegras);
 

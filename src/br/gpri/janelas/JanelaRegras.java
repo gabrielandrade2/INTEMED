@@ -50,7 +50,7 @@ public class JanelaRegras extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(TabelaRegras);
 
-        LabelIntemed.setText("INTEMED");
+        LabelIntemed.setText("ESTEMED");
 
         LabelExecucao.setText("Execução: ");
 

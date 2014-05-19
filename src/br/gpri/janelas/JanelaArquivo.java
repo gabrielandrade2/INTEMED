@@ -72,7 +72,7 @@ public class JanelaArquivo extends javax.swing.JFrame {
 
         BotaoAbrir.setText("Importar");
 
-        jLabel2.setText("INTEMED");
+        jLabel2.setText("ESTEMED");
 
         RadioResultados.setText("Resultados");
 
